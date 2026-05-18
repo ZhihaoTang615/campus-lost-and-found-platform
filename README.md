@@ -7,7 +7,7 @@ This project aims to develop a web-based Campus Lost and Found Platform that hel
 ## Team Members and Roles
 
 - Zhihao Tang: Project Manager / GitHub Manager / Backend Support
-- Sihan Zhong: Requirement Analyst / Documentation Manager
+- Sihan Zhong: Requirement Analyst / Documentation Manager (Add requirements and documentation responsibilities)
 - Jingyang Cai: UI/UX Designer / Frontend Developer
 
 ## Main Features
