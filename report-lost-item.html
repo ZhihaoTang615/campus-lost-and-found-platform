@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report Lost Item</title>
+  </head>
+  <body>
+    <header>
+      <h1>Campus Lost and Found Platform</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="report-lost-item.html">Report Lost Item</a>
+        <a href="report-found-item.html">Report Found Item</a>
+      </nav>
+    </header>
+
+    <main>
+      <h2>Report a Lost Item</h2>
+      <p>Please provide the details of the item you lost on campus.</p>
+
+      <form id="lost-item-form">
+        <label for="item-name">Item Name:</label>
+        <input type="text" id="item-name" name="item-name" required />
+
+        <br /><br />
+
+        <label for="category">Category:</label>
+        <select id="category" name="category" required>
+          <option value="">Select a category</option>
+          <option value="student-card">Student Card</option>
+          <option value="keys">Keys</option>
+          <option value="wallet">Wallet</option>
+          <option value="electronics">Electronics</option>
+          <option value="books">Books</option>
+          <option value="other">Other</option>
+        </select>
+
+        <br /><br />
+
+        <label for="location">Location Lost:</label>
+        <input type="text" id="location" name="location" required />
+
+        <br /><br />
+
+        <label for="date-lost">Date Lost:</label>
+        <input type="date" id="date-lost" name="date-lost" required />
+
+        <br /><br />
+
+        <label for="description">Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="5"
+          required
+        ></textarea>
+
+        <br /><br />
+
+        <label for="contact">Contact Information:</label>
+        <input type="text" id="contact" name="contact" required />
+
+        <br /><br />
+
+        <button type="submit">Submit Lost Item Report</button>
+      </form>
+    </main>
+
+    <footer>
+      <p>Campus Lost and Found Platform</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
