@@ -23,11 +23,10 @@ Complete the **Actual Result** and **Status** columns while testing the runnable
 
 ## Testing Summary
 
-- **Test date:** [Enter date]
-- **Tester:** [Enter tester name]
-- **Browser used:** [For example: Google Chrome]
+- **Test date:** 2026.6.12
+- **Tester:** ZHONG SIHAN
+- **Browser used:** Google Chrome
 - **Total tests:** 8
-- **Passed:** [Enter number]
-- **Failed:** [Enter number]
-- **Not tested:** [Enter number]
-- **Main issues found:** [Enter issues, or write “No issues found”]
+- **Passed:** 8
+- **Failed:** 0
+- **Main issues found:**No issues found
