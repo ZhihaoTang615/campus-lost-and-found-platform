@@ -2,11 +2,12 @@ import os
 
 import mysql.connector
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, flash, redirect, render_template, request, url_for
 
-load_dotenv(override=True)
+load_dotenv(dotenv_path=".env", override=True)
 
 app = Flask(__name__)
+app.secret_key = os.getenv("APP_SECRET_KEY")
 
 
 def get_database_connection():
@@ -19,23 +20,106 @@ def get_database_connection():
     )
 
 
+def save_item_report(report_type, date_field):
+    """Save a lost-item or found-item report to the database."""
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_database_connection()
+        cursor = connection.cursor()
+
+        insert_query = """
+            INSERT INTO items (
+                item_name,
+                category,
+                report_type,
+                location,
+                report_date,
+                description,
+                contact_information
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+
+        item_data = (
+            request.form["item-name"],
+            request.form["category"],
+            report_type,
+            request.form["location"],
+            request.form[date_field],
+            request.form["description"],
+            request.form["contact"],
+        )
+
+        cursor.execute(insert_query, item_data)
+        connection.commit()
+
+        return True
+
+    except mysql.connector.Error as error:
+        print(f"Item submission failed: {error}")
+        return False
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+
+        if connection is not None and connection.is_connected():
+            connection.close()
+
+
 @app.route("/")
 def home():
-    """Return a simple message to confirm that the Flask server is running."""
-    return "Campus Lost and Found Platform backend is running."
+    """Display the homepage."""
+    return render_template("index.html")
+
+
+@app.route("/report-lost-item", methods=["GET", "POST"])
+def report_lost_item():
+    """Display the lost-item form and save submitted reports."""
+    if request.method == "POST":
+        if save_item_report("lost", "date-lost"):
+            flash("Lost item report submitted successfully.")
+        else:
+            flash("Unable to save the lost item report.")
+
+        return redirect(url_for("report_lost_item"))
+
+    return render_template("report-lost-item.html")
+
+
+@app.route("/report-found-item", methods=["GET", "POST"])
+def report_found_item():
+    """Display the found-item form and save submitted reports."""
+    if request.method == "POST":
+        if save_item_report("found", "date-found"):
+            flash("Found item report submitted successfully.")
+        else:
+            flash("Unable to save the found item report.")
+
+        return redirect(url_for("report_found_item"))
+
+    return render_template("report-found-item.html")
+
+
+@app.route("/item-details")
+def item_details():
+    """Display the item-details page."""
+    return render_template("item-details.html")
 
 
 @app.route("/db-test")
 def database_test():
     """Test whether the Flask application can connect to the database."""
     connection = None
+    cursor = None
 
     try:
         connection = get_database_connection()
         cursor = connection.cursor()
         cursor.execute("SHOW TABLES")
         tables = [row[0] for row in cursor.fetchall()]
-        cursor.close()
 
         return {
             "message": "Database connection successful.",
@@ -44,10 +128,14 @@ def database_test():
 
     except mysql.connector.Error as error:
         print(f"Database connection failed: {error}")
+
         return {
             "message": "Database connection failed. Check the terminal for details."
         }, 500
 
     finally:
+        if cursor is not None:
+            cursor.close()
+
         if connection is not None and connection.is_connected():
             connection.close()
