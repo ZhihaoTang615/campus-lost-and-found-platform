@@ -38,6 +38,10 @@ The graph below compares the ideal trend with the actual progress during Iterati
 
 ![Iteration 1 Burn Down Graph](images/iteration-1-burndown-comparison.png)
 
+## Acceptance Testing Summary
+
+A total of 8 acceptance tests were completed. 8 tests passed and 0 tests failed. No issues were found.
+
 ## Current Limitations
 
 The Iteration 1 prototype provides a runnable front-end interface. The submitted report data is not yet stored in a database. Database integration will be implemented in a later iteration.
