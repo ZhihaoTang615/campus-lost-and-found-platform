@@ -36,7 +36,11 @@ Iteration 1 focused on implementing the core reporting and item-detail services 
 
 The graph below compares the ideal trend with the actual progress during Iteration 1. The iteration started with 8 person-days of estimated work. After completing US01, US02, and US05, the remaining effort gradually decreased to 0 person-days. The actual progress was slightly faster than the ideal trend.
 
-![Iteration 1 Burn Down Graph](images/iteration-1-burndown.png)
+![Iteration 1 Burn Down Graph](images/iteration-1-burndown-comparison.png)
+
+## Acceptance Testing Summary
+
+A total of 8 acceptance tests were completed. 8 tests passed and 0 tests failed. No issues were found.
 
 ## Current Limitations
 
