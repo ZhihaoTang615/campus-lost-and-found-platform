@@ -32,6 +32,12 @@ Iteration 1 focused on implementing the core reporting and item-detail services 
 
 ![Iteration 1 Item Details](images/iteration-1-item-details.png)
 
+## Iteration 1 Burn Down Graph
+
+The graph below compares the ideal trend with the actual progress during Iteration 1. The iteration started with 8 person-days of estimated work. After completing US01, US02, and US05, the remaining effort gradually decreased to 0 person-days. The actual progress was slightly faster than the ideal trend.
+
+![Iteration 1 Burn Down Graph](images/iteration-1-burndown.png)
+
 ## Current Limitations
 
 The Iteration 1 prototype provides a runnable front-end interface. The submitted report data is not yet stored in a database. Database integration will be implemented in a later iteration.
