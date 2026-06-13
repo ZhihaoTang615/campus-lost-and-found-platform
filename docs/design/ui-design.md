@@ -203,6 +203,30 @@ This is important because many students access websites using smartphones.
 
 ---
 
+## Search Results Prototype
+
+![Search Results Prototype](images/search-results-prototype.png)
+
+---
+
+## Filter Panel Prototype
+
+![Filter Panel Prototype](images/filter-panel-prototype.png)
+
+---
+
+## Photo Upload Prototype
+
+![Photo Upload Prototype](images/photo-upload-prototype.png)
+
+---
+
+## Claim Request Prototype
+
+![Claim Request Prototype](images/claim-request-prototype.png)
+
+---
+
 # Conclusion
 
 The interface design focuses on simplicity, clarity, and usability to ensure that university students can efficiently report and recover lost items.
