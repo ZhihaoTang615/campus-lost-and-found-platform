@@ -1,3 +1,4 @@
+
 import os
 
 import mysql.connector
@@ -102,33 +103,69 @@ def report_found_item():
 
     return render_template("report-found-item.html")
 
+
 @app.route("/items")
 def items():
-    """Display all reported lost and found items."""
+    """Display all items and allow users to search by keyword."""
     connection = None
     cursor = None
+    search_query = request.args.get("q", "").strip()
 
     try:
         connection = get_database_connection()
         cursor = connection.cursor(dictionary=True)
 
-        select_query = """
-            SELECT
-                id,
-                item_name,
-                category,
-                report_type,
-                location,
-                report_date,
-                status
-            FROM items
-            ORDER BY created_at DESC, id DESC
-        """
+        if search_query:
+            select_query = """
+                SELECT
+                    id,
+                    item_name,
+                    category,
+                    report_type,
+                    location,
+                    report_date,
+                    status
+                FROM items
+                WHERE item_name LIKE %s
+                   OR description LIKE %s
+                   OR location LIKE %s
+                ORDER BY created_at DESC, id DESC
+            """
 
-        cursor.execute(select_query)
+            search_pattern = f"%{search_query}%"
+
+            cursor.execute(
+                select_query,
+                (
+                    search_pattern,
+                    search_pattern,
+                    search_pattern,
+                ),
+            )
+
+        else:
+            select_query = """
+                SELECT
+                    id,
+                    item_name,
+                    category,
+                    report_type,
+                    location,
+                    report_date,
+                    status
+                FROM items
+                ORDER BY created_at DESC, id DESC
+            """
+
+            cursor.execute(select_query)
+
         item_records = cursor.fetchall()
 
-        return render_template("items.html", items=item_records)
+        return render_template(
+            "items.html",
+            items=item_records,
+            search_query=search_query,
+        )
 
     except mysql.connector.Error as error:
         print(f"Unable to load items: {error}")
@@ -136,6 +173,7 @@ def items():
         return render_template(
             "items.html",
             items=[],
+            search_query=search_query,
         ), 500
 
     finally:
@@ -144,6 +182,7 @@ def items():
 
         if connection is not None and connection.is_connected():
             connection.close()
+
 
 @app.route("/item-details")
 def item_details():
