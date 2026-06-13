@@ -91,24 +91,82 @@ Information should be presented clearly and be easy to read.
 
 ---
 
-# Search Results Page (Future)
+# Search Results Page
 
-Future search functionality will allow users to:
+The Search Results page allows users to search for lost and found items using keywords.
 
-- Search by keyword
-- Filter by category
-- Filter by item status
-- Sort results
+The page should display search results as item cards.
+
+Each item card should contain:
+
+* Item image
+* Item name
+* Category
+* Location
+* Date reported
+* Report type (Lost or Found)
+
+Users can click an item card to view the full item details page.
+
+The page should support pagination when a large number of items are returned.
 
 ---
 
-# Claim Request Page (Future)
+# Filter Panel
 
-Users will be able to:
+The filter panel helps users narrow down search results.
 
-- Submit ownership claims
-- Provide evidence
-- Track claim status
+Available filters include:
+
+* Lost Items
+* Found Items
+* Electronics
+* Bags
+* Keys
+* Documents
+* Other Categories
+
+Users may apply multiple filters simultaneously.
+
+On desktop devices, filters should appear on the left side of the page.
+
+On mobile devices, filters should be displayed in a collapsible menu.
+
+---
+
+# Photo Upload Interface
+
+Users reporting a lost or found item should be able to upload a photo.
+
+The upload interface should include:
+
+* Upload button
+* Image preview
+* Remove image option
+
+Supported file formats:
+
+* JPG
+* PNG
+
+Images help students identify items more accurately and improve matching success.
+
+---
+
+# Claim Request Page
+
+Users who believe an item belongs to them may submit a claim request.
+
+The claim form should include:
+
+- Full name
+- Contact information
+- Description of ownership evidence
+- Additional comments
+
+After submission, users should receive a confirmation message.
+
+The claim will then be reviewed by an administrator.
 
 ---
 
@@ -148,3 +206,5 @@ This is important because many students access websites using smartphones.
 # Conclusion
 
 The interface design focuses on simplicity, clarity, and usability to ensure that university students can efficiently report and recover lost items.
+
+Iteration 2 extends the design by introducing search functionality, filtering tools, photo uploads, and claim request workflows to improve the overall user experience.
