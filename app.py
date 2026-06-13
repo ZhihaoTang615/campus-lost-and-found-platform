@@ -106,65 +106,76 @@ def report_found_item():
 
 @app.route("/items")
 def items():
-    """Display all items and allow users to search by keyword."""
+    """Display items and allow users to search and filter results."""
     connection = None
     cursor = None
+
     search_query = request.args.get("q", "").strip()
+    report_type = request.args.get("report_type", "").strip()
+    category = request.args.get("category", "").strip()
 
     try:
         connection = get_database_connection()
         cursor = connection.cursor(dictionary=True)
 
+        select_query = """
+            SELECT
+                id,
+                item_name,
+                category,
+                report_type,
+                location,
+                report_date,
+                status
+            FROM items
+        """
+
+        conditions = []
+        parameters = []
+
         if search_query:
-            select_query = """
-                SELECT
-                    id,
-                    item_name,
-                    category,
-                    report_type,
-                    location,
-                    report_date,
-                    status
-                FROM items
-                WHERE item_name LIKE %s
-                   OR description LIKE %s
-                   OR location LIKE %s
-                ORDER BY created_at DESC, id DESC
-            """
+            conditions.append(
+                """
+                (
+                    item_name LIKE %s
+                    OR description LIKE %s
+                    OR location LIKE %s
+                )
+                """
+            )
 
             search_pattern = f"%{search_query}%"
 
-            cursor.execute(
-                select_query,
-                (
+            parameters.extend(
+                [
                     search_pattern,
                     search_pattern,
                     search_pattern,
-                ),
+                ]
             )
 
-        else:
-            select_query = """
-                SELECT
-                    id,
-                    item_name,
-                    category,
-                    report_type,
-                    location,
-                    report_date,
-                    status
-                FROM items
-                ORDER BY created_at DESC, id DESC
-            """
+        if report_type:
+            conditions.append("report_type = %s")
+            parameters.append(report_type)
 
-            cursor.execute(select_query)
+        if category:
+            conditions.append("category = %s")
+            parameters.append(category)
 
+        if conditions:
+            select_query += " WHERE " + " AND ".join(conditions)
+
+        select_query += " ORDER BY created_at DESC, id DESC"
+
+        cursor.execute(select_query, tuple(parameters))
         item_records = cursor.fetchall()
 
         return render_template(
             "items.html",
             items=item_records,
             search_query=search_query,
+            selected_report_type=report_type,
+            selected_category=category,
         )
 
     except mysql.connector.Error as error:
@@ -174,6 +185,8 @@ def items():
             "items.html",
             items=[],
             search_query=search_query,
+            selected_report_type=report_type,
+            selected_category=category,
         ), 500
 
     finally:

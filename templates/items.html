@@ -31,8 +31,27 @@
           value="{{ search_query }}"
           placeholder="Enter item name, description, or location"
         />
-        <button type="submit">Search</button>
-        <a href="{{ url_for('items') }}">Clear Search</a>
+
+        <label for="report-type">Report Type:</label>
+        <select id="report-type" name="report_type">
+          <option value="">All Types</option>
+          <option value="lost">Lost</option>
+          <option value="found">Found</option>
+        </select>
+
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+          <option value="">All Categories</option>
+          <option value="student-card">Student Card</option>
+          <option value="keys">Keys</option>
+          <option value="wallet">Wallet</option>
+          <option value="electronics">Electronics</option>
+          <option value="books">Books</option>
+          <option value="other">Other</option>
+        </select>
+
+        <button type="submit">Apply</button>
+        <a href="{{ url_for('items') }}">Clear Filters</a>
       </form>
 
       <br />
@@ -56,7 +75,7 @@
 
       <hr />
       {% endfor %} {% else %}
-      <p>No lost or found items have been reported yet.</p>
+      <p>No lost or found items match your search or filters.</p>
       {% endif %}
     </main>
 
