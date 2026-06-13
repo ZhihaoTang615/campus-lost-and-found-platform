@@ -102,11 +102,98 @@ def report_found_item():
 
     return render_template("report-found-item.html")
 
+@app.route("/items")
+def items():
+    """Display all reported lost and found items."""
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_database_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        select_query = """
+            SELECT
+                id,
+                item_name,
+                category,
+                report_type,
+                location,
+                report_date,
+                status
+            FROM items
+            ORDER BY created_at DESC, id DESC
+        """
+
+        cursor.execute(select_query)
+        item_records = cursor.fetchall()
+
+        return render_template("items.html", items=item_records)
+
+    except mysql.connector.Error as error:
+        print(f"Unable to load items: {error}")
+
+        return render_template(
+            "items.html",
+            items=[],
+        ), 500
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+
+        if connection is not None and connection.is_connected():
+            connection.close()
 
 @app.route("/item-details")
 def item_details():
-    """Display the item-details page."""
-    return render_template("item-details.html")
+    """Redirect users to the item list before selecting an item."""
+    return redirect(url_for("items"))
+
+
+@app.route("/items/<int:item_id>")
+def item_detail(item_id):
+    """Display the details of one selected item."""
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_database_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        select_query = """
+            SELECT
+                id,
+                item_name,
+                category,
+                report_type,
+                location,
+                report_date,
+                description,
+                contact_information,
+                status
+            FROM items
+            WHERE id = %s
+        """
+
+        cursor.execute(select_query, (item_id,))
+        item = cursor.fetchone()
+
+        if item is None:
+            return "Item not found.", 404
+
+        return render_template("item-details.html", item=item)
+
+    except mysql.connector.Error as error:
+        print(f"Unable to load item details: {error}")
+        return "Unable to load item details.", 500
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+
+        if connection is not None and connection.is_connected():
+            connection.close()
 
 
 @app.route("/db-test")

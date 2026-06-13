@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Item Details</title>
+    <title>Browse Items</title>
   </head>
 
   <body>
@@ -15,30 +15,34 @@
         <a href="{{ url_for('items') }}">Browse Items</a>
         <a href="{{ url_for('report_lost_item') }}">Report Lost Item</a>
         <a href="{{ url_for('report_found_item') }}">Report Found Item</a>
+        <a href="{{ url_for('item_details') }}">Item Details</a>
       </nav>
     </header>
 
     <main>
-      <h2>Item Details</h2>
+      <h2>Browse Lost and Found Items</h2>
 
+      {% if items %} {% for item in items %}
       <section>
         <h3>{{ item.item_name }}</h3>
 
         <p><strong>Report Type:</strong> {{ item.report_type }}</p>
         <p><strong>Category:</strong> {{ item.category }}</p>
-        <p><strong>Status:</strong> {{ item.status }}</p>
         <p><strong>Location:</strong> {{ item.location }}</p>
         <p><strong>Date:</strong> {{ item.report_date }}</p>
-        <p><strong>Description:</strong> {{ item.description }}</p>
+        <p><strong>Status:</strong> {{ item.status }}</p>
+
         <p>
-          <strong>Contact Information:</strong>
-          {{ item.contact_information }}
+          <a href="{{ url_for('item_detail', item_id=item.id) }}">
+            View Details
+          </a>
         </p>
       </section>
 
-      <p>
-        <a href="{{ url_for('items') }}">Return to Browse Items</a>
-      </p>
+      <hr />
+      {% endfor %} {% else %}
+      <p>No lost or found items have been reported yet.</p>
+      {% endif %}
     </main>
 
     <footer>
