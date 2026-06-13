@@ -227,6 +227,16 @@ This is important because many students access websites using smartphones.
 
 ---
 
+## Design Tools
+
+The interface prototypes were created using Figma.
+
+Figma design files were used to plan page layouts, navigation structures, and user interactions before implementation.
+
+Figma Prototype Link: https://www.figma.com/design/uW6BKB70chZFDM6twSy4H9/Untitled?node-id=0-1&t=JADnl2OYpQjxtCNL-1
+
+---
+
 # Conclusion
 
 The interface design focuses on simplicity, clarity, and usability to ensure that university students can efficiently report and recover lost items.
