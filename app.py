@@ -4,12 +4,17 @@ import os
 import mysql.connector
 from dotenv import load_dotenv
 from flask import Flask, flash, redirect, render_template, request, url_for
+from werkzeug.utils import secure_filename
 
 load_dotenv(dotenv_path=".env", override=True)
 
 app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET_KEY")
 
+UPLOAD_FOLDER = "static/uploads"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 def get_database_connection():
     """Create and return a connection to the MySQL database."""
@@ -20,11 +25,27 @@ def get_database_connection():
         database=os.getenv("DB_NAME"),
     )
 
+def is_allowed_file(filename):
+    """Return True if the uploaded file has an allowed image extension."""
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def save_item_report(report_type, date_field):
     """Save a lost-item or found-item report to the database."""
     connection = None
     cursor = None
+    image_path = None
+
+    uploaded_file = request.files.get("item-photo")
+
+    if uploaded_file and uploaded_file.filename:
+        if is_allowed_file(uploaded_file.filename):
+            filename = secure_filename(uploaded_file.filename)
+            save_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            uploaded_file.save(save_path)
+            image_path = f"uploads/{filename}"
+        else:
+            flash("Invalid image file type. Please upload PNG, JPG, JPEG, or GIF.")
+            return False
 
     try:
         connection = get_database_connection()
@@ -38,9 +59,10 @@ def save_item_report(report_type, date_field):
                 location,
                 report_date,
                 description,
-                contact_information
+                contact_information,
+                image_path
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
 
         item_data = (
@@ -51,6 +73,7 @@ def save_item_report(report_type, date_field):
             request.form[date_field],
             request.form["description"],
             request.form["contact"],
+            image_path,
         )
 
         cursor.execute(insert_query, item_data)
