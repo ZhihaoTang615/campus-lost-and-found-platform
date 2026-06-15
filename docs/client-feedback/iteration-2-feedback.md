@@ -24,8 +24,8 @@ The purpose of the feedback session was to evaluate the prototype from three mai
 
 ## Participants
 
-| Participant | Participant Type   | Interview Date      |
-| ----------- | ------------------ | ------------------- |
+| Participant | Participant Type   | Interview Date     |
+| ----------- | ------------------ | -------------------|
 | Student 1   | University student | 2026.6.14 |
 | Student 2   | University student | 2026.6.14 |
 | Student 3   | University student | 2026 6.14 |
