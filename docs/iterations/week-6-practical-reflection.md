@@ -32,6 +32,16 @@ The actual velocity of Iteration 1 was **8 person-days**.
 
 Only completed Iteration 1 user stories were included in this calculation.
 
+### Iteration 1 Burndown Rate Graph
+
+The Iteration 1 burndown rate graph shows the remaining work across Iteration 1. The planned workload for Iteration 1 was 8 person-days, based on the completed user stories: US01 - Report Lost Item, US02 - Report Found Item, and US05 - View Item Details.
+
+The graph compares the ideal burndown line with the actual team progress. The ideal line shows the expected steady reduction of remaining work across the iteration. The actual line shows that the remaining work did not decrease every day because work was reduced when completed user stories were finished.
+
+By the end of Iteration 1, all planned user stories were completed and the remaining work reached 0.
+
+![Iteration 1 Burndown Rate Graph](images/week6-iteration1-burndown-rate-.png)
+
 ---
 
 ## 2. SRP and DRY Review
@@ -130,6 +140,7 @@ Based on the Iteration 1 velocity, our team decided to focus on the four main It
 ## 4. Iteration 2 Task and User Story Tracking
 
 The team monitors Iteration 2 work using GitHub Issues and the GitHub Project Board.
+
 ![Week 6 Board Status](images/week-6-board-status.png)
 
 The board uses the following status columns:
@@ -257,3 +268,18 @@ Example command:
 
 ```bash
 python -m flask --app app run --debug
+```
+
+The local Flask prototype can be opened at:
+
+```text
+http://127.0.0.1:5000/
+```
+
+---
+
+## Summary
+
+In Practical 6, the team reflected on Iteration 1, calculated the actual velocity, reviewed the class design using SRP and DRY, and used the Iteration 1 velocity to adjust the Iteration 2 backlog.
+
+The actual velocity of Iteration 1 was 8 person-days. This was used to keep the Iteration 2 backlog realistic. The team also monitored Iteration 2 tasks using GitHub Issues and the GitHub Project Board, documented completed and unfinished user stories, and updated the runnable prototype for the completed or partially completed user stories.
