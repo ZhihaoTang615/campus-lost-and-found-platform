@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Claim Item</title>
+  </head>
+
+  <body>
+    <header>
+      <h1>Campus Lost and Found Platform</h1>
+
+      <nav>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('items') }}">Browse Items</a>
+        <a href="{{ url_for('item_details') }}">Item Details</a>
+        <a href="{{ url_for('report_lost_item') }}">Report Lost Item</a>
+        <a href="{{ url_for('report_found_item') }}">Report Found Item</a>
+      </nav>
+    </header>
+
+    <main>
+      <h2>Claim Item</h2>
+
+      <section>
+        <h3>{{ item.item_name }}</h3>
+
+        <p><strong>Location Found:</strong> {{ item.location }}</p>
+        <p><strong>Date Found:</strong> {{ item.report_date }}</p>
+      </section>
+
+      <form method="POST">
+        <label>Your Name</label>
+        <input type="text" name="name" required>
+
+        <label>Message</label>
+        <textarea name="message"></textarea>
+
+        <button type="submit">Submit Claim</button>
+      </form>
+    </main>
+  </body>
+</html>
