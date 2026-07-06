@@ -246,7 +246,8 @@ def item_detail(item_id):
                 report_date,
                 description,
                 contact_information,
-                status
+                status,
+                image_path
             FROM items
             WHERE id = %s
         """
@@ -301,3 +302,33 @@ def database_test():
 
         if connection is not None and connection.is_connected():
             connection.close()
+
+
+@app.route("/claim-request/<int:item_id>", methods=["GET", "POST"])
+def claim_request(item_id):
+    connection = get_database_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM items WHERE id = %s", (item_id,))
+    item = cursor.fetchone()
+
+    if request.method == "POST":
+        name = request.form["name"]
+        message = request.form["message"]
+
+        print(f"Claim request: {name}, {message}, item {item_id}")
+
+        flash("Claim submitted successfully!")
+        return redirect(url_for("item_detail", item_id=item_id))
+
+    cursor.close()
+    connection.close()
+
+    return render_template("claim-request.html", item=item)
+
+
+print("APP FILE LOADED")
+
+if __name__ == "__main__":
+    print("STARTING FLASK SERVER")
+    app.run(debug=True)
