@@ -2,9 +2,11 @@
 
 ## Context
 
-Our team is currently working on Iteration 2 of the Campus Lost and Found Platform. Practical 6 focuses on reflecting on Iteration 1 and using the result to adjust the Iteration 2 backlog and task tracking.
+Our team is currently working on Iteration 2 of the Campus Lost and Found Platform.
 
-This practical also connects with the Week 6 topic of version control. Our team uses GitHub commits, branches, issues, and the project board to track changes and manage development work.
+Practical 6 focuses on reflecting on Iteration 1 and using the result to adjust the Iteration 2 backlog and task tracking. The main purpose is to make sure our Iteration 2 plan is realistic based on the actual velocity from Iteration 1.
+
+This practical also connects with the Week 6 topic of version control. Our team uses GitHub commits, branches, issues, pull requests, and the project board to track changes and manage development work.
 
 ---
 
@@ -18,11 +20,17 @@ Iteration 1 included the following completed user stories:
 | US02 - Report Found Item | Users can submit a found item report | 3 person-days | Completed |
 | US05 - View Item Details | Users can view item details | 2 person-days | Completed |
 
+### Velocity Calculation
+
 Actual Velocity = 3 + 3 + 2
 
 Actual Velocity = 8 person-days
 
-Therefore, the actual velocity of Iteration 1 was **8 person-days**.
+### Result
+
+The actual velocity of Iteration 1 was **8 person-days**.
+
+Only completed Iteration 1 user stories were included in this calculation.
 
 ---
 
@@ -30,27 +38,71 @@ Therefore, the actual velocity of Iteration 1 was **8 person-days**.
 
 The team reviewed the main classes using the Single Responsibility Principle and the DRY principle.
 
-| Class | Responsibility | SRP / DRY Finding |
-|---|---|---|
-| User | Stores user information and submits reports or claims | Should focus only on user-related actions |
-| Item | Stores common lost and found item information | Should store shared item fields to avoid duplication |
-| LostItemReport | Records lost item report details | Should only contain lost-report-specific information |
-| FoundItemReport | Records found item report details | Should only contain found-report-specific information |
-| Photo | Handles uploaded item photo information | Keeps photo logic separate from item/report classes |
-| ClaimRequest | Handles claim request information and status | Should focus only on claim workflow |
-| Admin | Reviews claims and updates item status | Should focus on administrative actions |
+### SRP Review
 
-### Findings
+| Class | Main Responsibility | SRP Finding |
+|---|---|---|
+| User | Stores user information and allows users to submit reports or claim requests | Mostly satisfies SRP because it focuses on user-related actions |
+| Item | Stores common lost and found item information | Satisfies SRP if it only manages item details and item status |
+| LostItemReport | Records lost item report details | Satisfies SRP because it focuses on the lost item reporting process |
+| FoundItemReport | Records found item report details | Satisfies SRP because it focuses on the found item reporting process |
+| Photo | Manages uploaded item photo information | Satisfies SRP because it only handles photo-related information |
+| ClaimRequest | Manages claim request information and claim status | Satisfies SRP because it focuses on the claim workflow |
+| Admin | Reviews claim requests and updates item status | Satisfies SRP because it focuses on administrative review actions |
+
+### SRP Findings
 
 The design mostly satisfies SRP because each class has a clear responsibility.
 
-The design also supports DRY because common fields such as item name, category, description, location, date, photo, status, and contact information are stored in the Item class instead of being repeated separately in LostItemReport and FoundItemReport.
+The Item class should only store common item information such as item name, report type, category, location, date, description, photo path, contact information, and status.
+
+The Item class should not directly handle claim review, admin actions, or user account management.
+
+The Photo class should manage uploaded photo information separately.
+
+The ClaimRequest class should manage claim request data and claim status.
+
+The Admin class should handle review actions, such as approving or rejecting claim requests.
+
+---
+
+### DRY Review
+
+The DRY principle means that repeated information and repeated logic should be avoided.
+
+Lost item reports and found item reports share many common fields, including:
+
+- item name
+- category
+- description
+- location
+- date
+- photo
+- status
+- contact information
+
+To avoid repetition, these common fields should be stored in the Item class. LostItemReport and FoundItemReport should only store report-specific details.
+
+### DRY Findings
+
+Our team identified the following DRY points:
+
+1. Lost item reports and found item reports share common item fields.
+2. Search and filter should use the same item data source instead of duplicated item lists.
+3. Photo upload logic should not be repeated separately in multiple report classes.
+4. Item details should reuse item data instead of creating a separate duplicated details structure.
+
+### Design Decision
+
+We decided to keep common item information in the Item class. LostItemReport and FoundItemReport keep only report-specific details. Photo upload is handled separately, and claim request logic is handled by the ClaimRequest class.
+
+This design is good enough for the current prototype because it is clear, maintainable, and supports the main features needed for Iteration 2.
 
 ---
 
 ## 3. Updating Iteration 2 Backlog Using Iteration 1 Velocity
 
-Since the actual velocity of Iteration 1 was 8 person-days, our Iteration 2 backlog should stay close to 8 person-days. This helps the team avoid overcommitting.
+The actual velocity of Iteration 1 was 8 person-days. Therefore, our Iteration 2 backlog should stay close to 8 person-days to avoid overcommitting.
 
 The adjusted Iteration 2 backlog is:
 
@@ -61,9 +113,17 @@ The adjusted Iteration 2 backlog is:
 | US06 - Upload Item Photo | Users can upload an item photo when submitting a report | 2 person-days | High |
 | US07 - Submit Claim Request | Users can submit a claim request for a found item | 2 person-days | High |
 
-Total planned Iteration 2 workload = 8 person-days.
+### Total Planned Work
+
+Total planned Iteration 2 workload = 2 + 2 + 2 + 2
+
+Total planned Iteration 2 workload = 8 person-days
 
 This matches the actual velocity from Iteration 1.
+
+### Planning Decision
+
+Based on the Iteration 1 velocity, our team decided to focus on the four main Iteration 2 user stories first. Advanced features, such as admin dashboard improvements, automatic notifications, claim history, and full image display in every page, can be moved to the next iteration if they cannot be completed within the current iteration.
 
 ---
 
@@ -71,7 +131,7 @@ This matches the actual velocity from Iteration 1.
 
 The team monitors Iteration 2 work using GitHub Issues and the GitHub Project Board.
 
-The board uses the following status labels:
+The board uses the following status columns:
 
 | Status | Meaning |
 |---|---|
@@ -79,42 +139,49 @@ The board uses the following status labels:
 | In Progress | The task is currently being worked on |
 | Done | The task has been completed |
 
-Examples of Iteration 2 tasks include:
+The board also uses assignees and labels so that each team member can track their responsibilities.
 
-| Task | Related User Story | Status |
-|---|---|---|
-| Create search results page prototype | US03 | Done |
-| Implement search item logic | US03 | Done / In Progress |
-| Improve search and filter UI | US03 / US04 | Done / In Progress |
-| Add photo upload field to report forms | US06 | Done |
-| Add uploaded photo preview display | US06 | Todo / In Progress |
-| Improve item details page | US05 / US07 | In Progress |
-| Improve claim request form UI | US07 | In Progress |
-| Test core Iteration 2 workflow | US03 / US04 / US06 / US07 | Todo |
+### Current Iteration 2 Board Summary
+
+| Status | Example Tasks |
+|---|---|
+| Todo | Display uploaded item photos in list and details pages; Test core Iteration 2 workflow |
+| In Progress | Improve search and filter UI; Add photo upload preview to report form; Improve item details page; Improve claim request form UI |
+| Done | US06 - Upload Item Photo; TASK07 - Connect photo upload to lost and found forms; US07 - Submit Claim Request; Week 5 documentation tasks |
+
+### Tracking Decision
+
+The board is used to make unfinished work visible. Completed tasks are moved to Done. Tasks that still need work remain in Todo or In Progress instead of being treated as completed.
 
 ---
 
 ## 5. Completed vs Unfinished User Stories
 
-### Completed / Partially Completed User Stories
+At the current stage of Iteration 2, the team reviewed which user stories are completed, partially completed, or unfinished.
 
-| User Story | Status | Evidence |
+### Completed or Partially Completed User Stories
+
+| User Story | Current Status | Evidence |
 |---|---|---|
-| US03 - Search Items | Completed / In Progress | Browse Items page includes search input and item results |
-| US04 - Filter Items | Completed / In Progress | Browse Items page includes report type and category filters |
+| US03 - Search Items | In Progress / Partially Completed | Browse Items page includes a search input and item results |
+| US04 - Filter Items | In Progress / Partially Completed | Browse Items page includes report type and category filters |
 | US06 - Upload Item Photo | Partially Completed | Report Lost Item and Report Found Item pages include photo upload fields |
-| US07 - Submit Claim Request | In Progress | Claim request form UI is being improved |
+| US07 - Submit Claim Request | In Progress / Partially Completed | Claim request work is tracked on the board and the UI is being improved |
 
 ### Unfinished Work
 
-The following work still needs to be completed or improved:
-
 | Unfinished Work | Reason | Next Action |
 |---|---|---|
-| Photo preview display | Upload field exists, but preview display still needs improvement | Continue in Iteration 2 |
-| Claim request workflow | UI exists / planned, but full workflow needs testing | Continue implementation and testing |
-| Full admin review dashboard | Advanced feature beyond current core scope | Move to Next if not completed |
-| Automatic notification | Advanced feature | Move to Next if not completed |
+| Display uploaded item photos in list and details pages | Uploaded photos can be selected, but image display still needs improvement | Continue implementation in Iteration 2 |
+| Full photo preview display | Upload field exists, but preview display still needs improvement | Keep in In Progress |
+| Full claim request workflow testing | Claim request feature still needs workflow testing | Test after UI and backend are ready |
+| Core Iteration 2 workflow testing | Search, filter, upload, and claim need final testing together | Keep as Todo / In Progress |
+| Admin review dashboard | Advanced feature beyond the current core scope | Move to next iteration if needed |
+| Automatic notification | Advanced feature beyond the current core scope | Move to next iteration if needed |
+
+### Summary
+
+The team is making progress on the main Iteration 2 user stories, but some tasks are still unfinished. These tasks remain visible on the GitHub Project Board so they can be tracked honestly.
 
 ---
 
@@ -124,33 +191,68 @@ The runnable prototype has been updated for completed or partially completed Ite
 
 | User Story | Prototype Page | Status |
 |---|---|---|
-| US03 - Search Items | Browse Items page | Updated |
-| US04 - Filter Items | Browse Items page | Updated |
+| US03 - Search Items | Browse Items page | Updated / In Progress |
+| US04 - Filter Items | Browse Items page | Updated / In Progress |
 | US06 - Upload Item Photo | Report Lost Item and Report Found Item pages | Updated |
 | US07 - Submit Claim Request | Claim Request page / form | In Progress |
 
-The current dynamic version runs through Flask. The updated prototype pages are documented with screenshots in the repository.
+The current dynamic version runs locally through Flask. The updated prototype pages are documented with screenshots in the repository.
+
+The prototype currently includes:
+
+- Browse Items page with search and filter controls
+- Report Lost Item page with photo upload field
+- Report Found Item page with photo upload field
+- Item Details page for viewing item information
+- Claim request work tracked as part of Iteration 2
 
 ---
 
-## 7. Version Control and Build Notes
+## 7. Version Control Practice
 
-The team used GitHub for version control. Feature work was committed with meaningful commit messages and merged into the main branch after review.
+The team used GitHub for version control during Iteration 2.
 
-Examples of version control practice:
+Examples of version control practice include:
 
-- Use feature branches for separate work.
-- Commit changes with clear messages.
-- Merge completed work back into main.
-- Use GitHub Issues and Project Board to track progress.
-- Keep documentation and screenshots in the repository.
+- Using a feature branch for photo upload form changes
+- Committing changes with meaningful commit messages
+- Publishing the feature branch to GitHub
+- Creating and merging a pull request
+- Pulling the updated main branch after merge
+- Using GitHub Issues and Project Board to track work
 
-The project can be run locally using Flask. The basic setup is documented in the repository through files such as README.md and requirements.txt.
+Example branch:
+
+- feature/connect-photo-upload-forms
+
+Example commit message:
+
+- feat: connect photo upload fields to report forms
+
+This supports the Week 6 version control focus because team changes are stored in the repository, tracked by commits, and merged back into the main branch after review.
 
 ---
 
-## Summary
+## 8. Build and Run Notes
 
-In Practical 6, our team used the actual velocity from Iteration 1 to adjust the Iteration 2 backlog. Since Iteration 1 velocity was 8 person-days, Iteration 2 was planned around 8 person-days of work.
+The project can be run locally through Flask.
 
-The team also reviewed SRP and DRY, monitored Iteration 2 tasks through GitHub Issues and Project Board labels, documented completed and unfinished user stories, and updated the runnable prototype for completed user stories.
+The project includes files such as:
+
+- app.py
+- templates/
+- static/
+- requirements.txt
+- database.sql
+
+The basic local run process is:
+
+1. Open the project folder.
+2. Install dependencies from requirements.txt if needed.
+3. Run the Flask application.
+4. Open the local browser address.
+
+Example command:
+
+```bash
+python -m flask --app app run --debug
