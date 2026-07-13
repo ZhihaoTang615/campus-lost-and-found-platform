@@ -3,102 +3,146 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Report Found Item</title>
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
   </head>
 
-  <body>
-    <header>
-      <h1>Campus Lost and Found Platform</h1>
+  <body class="report-page">
+    <header class="site-header">
+      <div class="header-content">
+        <h1>Campus Lost and Found Platform</h1>
 
-      <nav>
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('items') }}">Browse Items</a>
-        <a href="{{ url_for('report_lost_item') }}">Report Lost Item</a>
-        <a href="{{ url_for('report_found_item') }}">Report Found Item</a>
-        <a href="{{ url_for('item_details') }}">Item Details</a>
-      </nav>
+        <p>Report and search for lost or found items on campus.</p>
+
+        <nav class="main-nav" aria-label="Primary navigation">
+          <a href="{{ url_for('home') }}"> Home </a>
+
+          <a href="{{ url_for('items') }}"> Browse Items </a>
+
+          <a href="{{ url_for('report_lost_item') }}"> Report Lost Item </a>
+
+          <a
+            href="{{ url_for('report_found_item') }}"
+            class="active"
+            aria-current="page"
+          >
+            Report Found Item
+          </a>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      <h2>Report a Found Item</h2>
-      <p>Please provide the details of the item you found on campus.</p>
+    <main class="page-main">
+      <section class="page-heading">
+        <p class="eyebrow">Found item report</p>
+
+        <h2>Report a Found Item</h2>
+
+        <p>Please provide the details of the item you found on campus.</p>
+      </section>
 
       {% with messages = get_flashed_messages() %} {% if messages %}
-      <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
+      <div class="flash-messages" role="status">
+        <ul>
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
       {% endif %} {% endwith %}
 
-      <form
-        id="found-item-form"
-        action="{{ url_for('report_found_item') }}"
-        method="post"
-        enctype="multipart/form-data"
-      >
-        <label for="item-name">Item Name:</label>
-        <input type="text" id="item-name" name="item-name" required />
+      <section class="form-section">
+        <form
+          id="found-item-form"
+          action="{{ url_for('report_found_item') }}"
+          method="post"
+          enctype="multipart/form-data"
+          class="report-form"
+        >
+          <div class="form-group">
+            <label for="item-name">Item Name</label>
 
-        <br /><br />
+            <input type="text" id="item-name" name="item-name" required />
+          </div>
 
-        <label for="item-photo">Item Photo:</label>
-        <input
-          type="file"
-          id="item-photo"
-          name="item-photo"
-          accept=".png,.jpg,.jpeg,.gif"
-        />
+          <div class="form-group">
+            <label for="category">Category</label>
 
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
-          <option value="">Select a category</option>
-          <option value="student-card">Student Card</option>
-          <option value="keys">Keys</option>
-          <option value="wallet">Wallet</option>
-          <option value="electronics">Electronics</option>
-          <option value="books">Books</option>
-          <option value="other">Other</option>
-        </select>
+            <select id="category" name="category" required>
+              <option value="">Select a category</option>
+              <option value="student-card">Student Card</option>
+              <option value="keys">Keys</option>
+              <option value="wallet">Wallet</option>
+              <option value="electronics">Electronics</option>
+              <option value="books">Books</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
 
-        <br /><br />
+          <div class="form-group">
+            <label for="location">Location Found</label>
 
-        <label for="location">Location Found:</label>
-        <input type="text" id="location" name="location" required />
+            <input type="text" id="location" name="location" required />
+          </div>
 
-        <br /><br />
+          <div class="form-group">
+            <label for="date-found">Date Found</label>
 
-        <label for="date-found">Date Found:</label>
-        <input type="date" id="date-found" name="date-found" required />
+            <input type="date" id="date-found" name="date-found" required />
+          </div>
 
-        <br /><br />
+          <div class="form-group">
+            <label for="description">Description</label>
 
-        <label for="description">Description:</label>
-        <textarea
-          id="description"
-          name="description"
-          rows="5"
-          required
-        ></textarea>
+            <textarea
+              id="description"
+              name="description"
+              rows="5"
+              required
+            ></textarea>
+          </div>
 
-        <br /><br />
+          <div class="form-group">
+            <label for="item-photo">Item Photo</label>
 
-        <label for="contact">Contact Information:</label>
-        <input type="text" id="contact" name="contact" required />
+            <input
+              type="file"
+              id="item-photo"
+              name="item-photo"
+              accept=".png,.jpg,.jpeg,.gif"
+            />
 
-        <br /><br />
+            <small> Accepted formats: PNG, JPG, JPEG, and GIF. </small>
+          </div>
 
-        <button type="submit">Submit Found Item Report</button>
-      </form>
+          <div class="form-group">
+            <label for="contact">Contact Information</label>
+
+            <input type="text" id="contact" name="contact" required />
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn">Submit Found Item Report</button>
+
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">
+              Cancel
+            </a>
+          </div>
+        </form>
+      </section>
     </main>
 
-    <footer>
+    <footer class="site-footer">
       <p>Campus Lost and Found Platform</p>
     </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
     <script src="{{ url_for('static', filename='js/ui-feedback.js') }}"></script>
   </body>
 </html>
