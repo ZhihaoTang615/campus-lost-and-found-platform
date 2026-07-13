@@ -154,32 +154,45 @@ Each selected user story includes at least three test cases.
 
 ## 6. US05 - View Item Details
 
-### Test Case 1: Open static item details page
+### US05-TC01: Redirect from the old item details route
 
 | Field | Details |
 |---|---|
-| Test Type | Black-box |
-| Input | User opens `/item-details` |
-| Steps | Go to the item details page |
-| Expected Result | The page loads successfully |
+| Test Type | Black-box / White-box |
+| Input | GET request to `/item-details` |
+| Steps | 1. Open `/item-details` 2. Check the HTTP response status 3. Check the redirect location |
+| Expected Result | The system returns HTTP 302 and redirects the user to `/items` |
+| Actual Result | The system returned HTTP 302 and redirected the user to `/items` |
+| Status | Pass |
 
-### Test Case 2: Open dynamic item details page
+### US05-TC02: Open a dynamic item details page
+
+| Field | Details |
+|---|---|
+| Test Type | Grey-box |
+| Input | GET request to `/items/1` with a mocked database item |
+| Steps | 1. Create sample item data 2. Replace the real database connection with a fake connection 3. Open `/items/1` 4. Check the response |
+| Expected Result | The system returns HTTP 200 and displays the selected item details page |
+| Actual Result | The page failed during template rendering because `item-details.html` references a missing Flask endpoint named `claim` |
+| Status | Fail |
+
+### US05-TC03: Display important item information
 
 | Field | Details |
 |---|---|
 | Test Type | Black-box / Grey-box |
-| Input | A specific item ID, such as `/items/1` |
-| Steps | Open the dynamic item details page |
-| Expected Result | The system displays item details or returns a handled not-found page without crashing |
+| Input | Sample item: Black Backpack, Bag, JCU Library |
+| Steps | 1. Open `/items/1` using mocked item data 2. Read the rendered page content 3. Check the item name, category, and location |
+| Expected Result | The page displays `Black Backpack`, `Bag`, and `JCU Library` |
+| Actual Result | The page could not be rendered because the Flask `claim` endpoint is missing |
+| Status | Fail |
 
-### Test Case 3: Check item details content
+### US05 Test Execution Summary
 
-| Field | Details |
-|---|---|
-| Test Type | Black-box |
-| Input | Item details page |
-| Steps | Open the item details page and check visible fields |
-| Expected Result | Item name, category, location, description, status, or related item information should be displayed |
+The automated tests were executed with:
+
+```bash
+python -m pytest tests/test_item_details.py -v
 
 ---
 
