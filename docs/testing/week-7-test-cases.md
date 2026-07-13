@@ -154,7 +154,7 @@ Each selected user story includes at least three test cases.
 
 ## 6. US05 - View Item Details
 
-### US05-TC01: Redirect from the old item details route
+### US05-TC01: Redirect from the general item details route
 
 | Field | Details |
 |---|---|
@@ -165,34 +165,34 @@ Each selected user story includes at least three test cases.
 | Actual Result | The system returned HTTP 302 and redirected the user to `/items` |
 | Status | Pass |
 
-### US05-TC02: Open a dynamic item details page
-
-| Field | Details |
-|---|---|
-| Test Type | Grey-box |
-| Input | GET request to `/items/1` with a mocked database item |
-| Steps | 1. Create sample item data 2. Replace the real database connection with a fake connection 3. Open `/items/1` 4. Check the response |
-| Expected Result | The system returns HTTP 200 and displays the selected item details page |
-| Actual Result | The page failed during template rendering because `item-details.html` references a missing Flask endpoint named `claim` |
-| Status | Fail |
-
-### US05-TC03: Display important item information
+### US05-TC02: Display an existing item’s details
 
 | Field | Details |
 |---|---|
 | Test Type | Black-box / Grey-box |
-| Input | Sample item: Black Backpack, Bag, JCU Library |
-| Steps | 1. Open `/items/1` using mocked item data 2. Read the rendered page content 3. Check the item name, category, and location |
-| Expected Result | The page displays `Black Backpack`, `Bag`, and `JCU Library` |
-| Actual Result | The page could not be rendered because the Flask `claim` endpoint is missing |
-| Status | Fail |
+| Input | GET request to `/items/1` with mocked item data |
+| Steps | 1. Provide a sample item through the fake database 2. Open `/items/1` 3. Check the response and visible item information |
+| Expected Result | The system returns HTTP 200 and displays the selected item information |
+| Actual Result | The system returned HTTP 200 and displayed the item name and location correctly |
+| Status | Pass |
+
+### US05-TC03: Handle a missing item
+
+| Field | Details |
+|---|---|
+| Test Type | Black-box / Grey-box |
+| Input | GET request to `/items/999` with no matching database item |
+| Steps | 1. Configure the fake database to return no item 2. Open `/items/999` 3. Check the status code and error message |
+| Expected Result | The system returns HTTP 404 and displays a handled `Item not found` response |
+| Actual Result | The system returned HTTP 404 and displayed `Item not found` |
+| Status | Pass |
 
 ### US05 Test Execution Summary
 
-The automated tests were executed with:
+The complete automated test suite was executed with:
 
 ```bash
-python -m pytest tests/test_item_details.py -v
+python -m pytest -v
 
 ---
 
