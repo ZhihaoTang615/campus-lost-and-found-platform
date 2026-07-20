@@ -13,6 +13,7 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+CLAIM_PENDING_STATUS = "pending"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
@@ -33,6 +34,38 @@ def is_allowed_file(filename):
         "." in filename
         and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
     )
+
+
+def save_claim_request(
+    cursor,
+    connection,
+    item_id,
+    claimant_name,
+    claimant_contact,
+    verification_details,
+):
+    """Store a new claim request with an initial pending status."""
+    insert_query = """
+        INSERT INTO claims (
+            item_id,
+            claimant_name,
+            claimant_contact,
+            verification_details,
+            status
+        )
+        VALUES (%s, %s, %s, %s, %s)
+    """
+
+    claim_data = (
+        item_id,
+        claimant_name,
+        claimant_contact,
+        verification_details,
+        CLAIM_PENDING_STATUS,
+    )
+
+    cursor.execute(insert_query, claim_data)
+    connection.commit()
 
 
 def save_item_report(report_type, date_field):
@@ -351,27 +384,14 @@ def claim_request(item_id):
             claimant_contact = request.form["contact"].strip()
             verification_details = request.form["message"].strip()
 
-            insert_query = """
-                INSERT INTO claims (
-                    item_id,
-                    claimant_name,
-                    claimant_contact,
-                    verification_details,
-                    status
-                )
-                VALUES (%s, %s, %s, %s, %s)
-            """
-
-            claim_data = (
-                item_id,
-                claimant_name,
-                claimant_contact,
-                verification_details,
-                "pending",
+            save_claim_request(
+                cursor=cursor,
+                connection=connection,
+                item_id=item_id,
+                claimant_name=claimant_name,
+                claimant_contact=claimant_contact,
+                verification_details=verification_details,
             )
-
-            cursor.execute(insert_query, claim_data)
-            connection.commit()
 
             flash("Claim submitted successfully!")
 
