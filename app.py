@@ -1,10 +1,10 @@
-
 import os
 
 import mysql.connector
 from dotenv import load_dotenv
 from flask import Flask, flash, redirect, render_template, request, url_for
 from werkzeug.utils import secure_filename
+
 
 load_dotenv(dotenv_path=".env", override=True)
 
@@ -13,8 +13,10 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+CLAIM_PENDING_STATUS = "pending"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
 
 def get_database_connection():
     """Create and return a connection to the MySQL database."""
@@ -25,9 +27,46 @@ def get_database_connection():
         database=os.getenv("DB_NAME"),
     )
 
+
 def is_allowed_file(filename):
-    """Return True if the uploaded file has an allowed image extension."""
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    """Return True when a filename uses an allowed image extension."""
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    )
+
+
+def save_claim_request(
+    cursor,
+    connection,
+    item_id,
+    claimant_name,
+    claimant_contact,
+    verification_details,
+):
+    """Store a new claim request with an initial pending status."""
+    insert_query = """
+        INSERT INTO claims (
+            item_id,
+            claimant_name,
+            claimant_contact,
+            verification_details,
+            status
+        )
+        VALUES (%s, %s, %s, %s, %s)
+    """
+
+    claim_data = (
+        item_id,
+        claimant_name,
+        claimant_contact,
+        verification_details,
+        CLAIM_PENDING_STATUS,
+    )
+
+    cursor.execute(insert_query, claim_data)
+    connection.commit()
+
 
 def save_item_report(report_type, date_field):
     """Save a lost-item or found-item report to the database."""
@@ -38,14 +77,21 @@ def save_item_report(report_type, date_field):
     uploaded_file = request.files.get("item-photo")
 
     if uploaded_file and uploaded_file.filename:
-        if is_allowed_file(uploaded_file.filename):
-            filename = secure_filename(uploaded_file.filename)
-            save_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-            uploaded_file.save(save_path)
-            image_path = f"uploads/{filename}"
-        else:
-            flash("Invalid image file type. Please upload PNG, JPG, JPEG, or GIF.")
+        if not is_allowed_file(uploaded_file.filename):
+            flash(
+                "Invalid image file type. "
+                "Please upload PNG, JPG, JPEG, or GIF."
+            )
             return False
+
+        filename = secure_filename(uploaded_file.filename)
+        save_path = os.path.join(
+            app.config["UPLOAD_FOLDER"],
+            filename,
+        )
+
+        uploaded_file.save(save_path)
+        image_path = f"uploads/{filename}"
 
     try:
         connection = get_database_connection()
@@ -258,7 +304,10 @@ def item_detail(item_id):
         if item is None:
             return "Item not found.", 404
 
-        return render_template("item-details.html", item=item)
+        return render_template(
+            "item-details.html",
+            item=item,
+        )
 
     except mysql.connector.Error as error:
         print(f"Unable to load item details: {error}")
@@ -274,13 +323,14 @@ def item_detail(item_id):
 
 @app.route("/db-test")
 def database_test():
-    """Test whether the Flask application can connect to the database."""
+    """Test whether Flask can connect to the database."""
     connection = None
     cursor = None
 
     try:
         connection = get_database_connection()
         cursor = connection.cursor()
+
         cursor.execute("SHOW TABLES")
         tables = [row[0] for row in cursor.fetchall()]
 
@@ -293,7 +343,10 @@ def database_test():
         print(f"Database connection failed: {error}")
 
         return {
-            "message": "Database connection failed. Check the terminal for details."
+            "message": (
+                "Database connection failed. "
+                "Check the terminal for details."
+            )
         }, 500
 
     finally:
@@ -304,30 +357,70 @@ def database_test():
             connection.close()
 
 
-@app.route("/claim-request/<int:item_id>", methods=["GET", "POST"])
+@app.route(
+    "/claim-request/<int:item_id>",
+    methods=["GET", "POST"],
+)
 def claim_request(item_id):
-    connection = get_database_connection()
-    cursor = connection.cursor(dictionary=True)
+    """Display and process a claim request for a selected item."""
+    connection = None
+    cursor = None
 
-    cursor.execute("SELECT * FROM items WHERE id = %s", (item_id,))
-    item = cursor.fetchone()
+    try:
+        connection = get_database_connection()
+        cursor = connection.cursor(dictionary=True)
 
-    if request.method == "POST":
-        name = request.form["name"]
-        message = request.form["message"]
+        cursor.execute(
+            "SELECT * FROM items WHERE id = %s",
+            (item_id,),
+        )
+        item = cursor.fetchone()
 
-        print(f"Claim request: {name}, {message}, item {item_id}")
+        if item is None:
+            return "Item not found.", 404
 
-        flash("Claim submitted successfully!")
-        return redirect(url_for("item_detail", item_id=item_id))
+        if request.method == "POST":
+            claimant_name = request.form["name"].strip()
+            claimant_contact = request.form["contact"].strip()
+            verification_details = request.form["message"].strip()
 
-    cursor.close()
-    connection.close()
+            save_claim_request(
+                cursor=cursor,
+                connection=connection,
+                item_id=item_id,
+                claimant_name=claimant_name,
+                claimant_contact=claimant_contact,
+                verification_details=verification_details,
+            )
 
-    return render_template("claim-request.html", item=item)
+            flash("Claim submitted successfully!")
+
+            return redirect(
+                url_for(
+                    "item_detail",
+                    item_id=item_id,
+                )
+            )
+
+        return render_template(
+            "claim-request.html",
+            item=item,
+        )
+
+    except mysql.connector.Error as error:
+        print(f"Claim request failed: {error}")
+        return "Unable to process the claim request.", 500
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+
+        if connection is not None and connection.is_connected():
+            connection.close()
 
 
 print("APP FILE LOADED")
+
 
 if __name__ == "__main__":
     print("STARTING FLASK SERVER")
