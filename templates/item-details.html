@@ -51,12 +51,26 @@
 
         {% if item.image_path %}
         <div class="item-image-container">
+
           <img
             src="{{ url_for('static', filename=item.image_path) }}"
             alt="Photo of {{ item.item_name }}"
             class="item-image"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           />
+
+          <div class="item-image-placeholder" style="display:none;">
+            <p>No photo available for this item.</p>
+          </div>
+
         </div>
+
+        {% else %}
+
+        <div class="item-image-placeholder">
+          <p>No photo available for this item.</p>
+        </div>
+
         {% endif %}
 
         <div class="item-information item-details-information">

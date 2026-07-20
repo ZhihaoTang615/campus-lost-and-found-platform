@@ -515,6 +515,52 @@ a:active {
   color: var(--color-text-muted);
 }
 
+.item-image-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+
+.item-image {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+
+.item-image-placeholder {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 4 / 3;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  padding: 20px;
+
+  text-align: center;
+}
+
+
+@media (max-width: 600px) {
+
+  .item-image {
+    max-width: 100%;
+  }
+
+
+  .item-image-placeholder {
+    max-width: 100%;
+  }
+
+}
+
 .status,
 .badge {
   display: inline-flex;
