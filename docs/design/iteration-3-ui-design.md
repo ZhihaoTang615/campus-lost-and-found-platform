@@ -77,3 +77,46 @@ The Claim Request page allows a student to submit a request to claim a found ite
 4. Users can submit the claim successfully.
 5. A success message is displayed after submission.
 6. Invalid or incomplete input is handled safely.
+
+## Form Fields
+
+| Field | Type | Required |
+|--------|------|----------|
+| Your Name | Text | Yes |
+| Contact Information | Text | Yes |
+| Claim Message | Text Area | Yes |
+
+## Buttons
+
+- Submit Claim
+- Back to Item Details
+
+## Status
+
+After a successful submission, the system displays a confirmation message to inform the user that the claim request has been received.
+
+## Normal State
+
+The page displays the selected item information together with the claim request form.
+
+## Empty State
+
+If the selected item cannot be found, a message is displayed indicating that the item is unavailable.
+
+## Error State
+
+If required fields are missing or invalid, validation messages are displayed and the form is not submitted.
+
+## Expected User Actions
+
+1. Open the Item Details page.
+2. Click **Submit Claim Request**.
+3. Enter the required information.
+4. Click **Submit Claim**.
+5. Receive a confirmation message.
+
+---
+
+## Design Summary
+
+The Iteration 3 UI design improves the uploaded photo display and claim request workflow while remaining compatible with the existing backend implementation. The design also considers accessibility, responsive layouts, and clear feedback for normal, empty, and error states.
