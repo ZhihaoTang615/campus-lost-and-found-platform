@@ -1,10 +1,10 @@
-
 import os
 
 import mysql.connector
 from dotenv import load_dotenv
 from flask import Flask, flash, redirect, render_template, request, url_for
 from werkzeug.utils import secure_filename
+
 
 load_dotenv(dotenv_path=".env", override=True)
 
@@ -16,6 +16,7 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+
 def get_database_connection():
     """Create and return a connection to the MySQL database."""
     return mysql.connector.connect(
@@ -25,9 +26,11 @@ def get_database_connection():
         database=os.getenv("DB_NAME"),
     )
 
+
 def is_allowed_file(filename):
     """Return True if the uploaded file has an allowed image extension."""
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def save_item_report(report_type, date_field):
     """Save a lost-item or found-item report to the database."""
@@ -306,17 +309,39 @@ def database_test():
 
 @app.route("/claim-request/<int:item_id>", methods=["GET", "POST"])
 def claim_request(item_id):
+    """Display and process a claim request for a selected item."""
     connection = get_database_connection()
     cursor = connection.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM items WHERE id = %s", (item_id,))
+    cursor.execute(
+        "SELECT * FROM items WHERE id = %s",
+        (item_id,),
+    )
     item = cursor.fetchone()
 
     if request.method == "POST":
         name = request.form["name"]
         message = request.form["message"]
 
-        print(f"Claim request: {name}, {message}, item {item_id}")
+        insert_query = """
+            INSERT INTO claim_requests (
+                item_id,
+                claimant_name,
+                message,
+                status
+            )
+            VALUES (%s, %s, %s, %s)
+        """
+
+        claim_data = (
+            item_id,
+            name,
+            message,
+            "Pending",
+        )
+
+        cursor.execute(insert_query, claim_data)
+        connection.commit()
 
         flash("Claim submitted successfully!")
         return redirect(url_for("item_detail", item_id=item_id))
@@ -328,6 +353,7 @@ def claim_request(item_id):
 
 
 print("APP FILE LOADED")
+
 
 if __name__ == "__main__":
     print("STARTING FLASK SERVER")
