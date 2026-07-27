@@ -161,22 +161,35 @@ These images provide evidence for:
 
 ## 7. Final Pytest Result
 
-The final Iteration 3 regression test is tracked by:
+The final Iteration 3 regression test was completed on the latest integrated `main` branch.
+
+Final result:
+
+- **19 tests collected**
+- **19 tests passed**
+- **0 failures**
+- **Runtime: 0.08 seconds**
+
+The final regression suite includes coverage for:
+
+- US01 – Report Lost Item
+- US02 – Report Found Item
+- US03 – Search Items
+- US04 – Filter Items
+- US05 – View Item Details
+- US06 – Upload/Display Item Photo
+- US07 – Submit Claim Request
+- Empty claim validation regression for Bug #72
+
+Final evidence image:
+
+`docs/testing/images/iteration-3-final-regression-19-passed.png`
+
+Related Issue:
 
 - Issue #61 – Run final Iteration 3 regression testing
 
-**Status:** Pending final Issue #61 completion.
-
-The final result must only be added after the complete pytest suite has been run against the final integrated `main` branch.
-
-Required final evidence:
-
-- final pytest result;
-- number of tests passed;
-- screenshot path;
-- confirmation that no regression failure remains.
-
-This section must be updated before Issue #63 is moved to Done.
+**Status:** Completed.
 
 ---
 
@@ -321,12 +334,12 @@ Before Issue #63 can move to Done:
 - [x] GREEN evidence exists
 - [x] exact REFACTOR commit confirmed
 - [x] mock test exists
-- [ ] final pytest result added
+- [x] final pytest result added
 - [ ] final Board screenshot added
 - [x] Issue references collected
 - [x] Pull Request references collected
 - [ ] final GitHub Pages URL verified
 - [x] team responsibility summary completed
 - [ ] final links checked
-- [ ] Issue #61 moved to Done after final regression testing
+- [x] Issue #61 moved to Done after final regression testing
 - [ ] Issue #63 moved to Done only after this evidence is complete
