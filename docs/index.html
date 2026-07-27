@@ -3,126 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Lost and Found Platform - Iteration 3</title>
+    <title>Campus Lost and Found Platform</title>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 900px;
-            margin: auto;
-            padding: 30px;
-            line-height: 1.6;
+
+        body{
+            font-family:Arial,sans-serif;
+            max-width:1000px;
+            margin:auto;
+            padding:40px;
+            line-height:1.7;
+            background:#fafafa;
+            color:#333;
         }
 
-        h1, h2 {
-            color: #333;
+        h1{
+            text-align:center;
         }
 
-        .feature {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+        h2{
+            margin-top:40px;
+            color:#222;
         }
 
-        img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
+        .section{
+            background:white;
+            border:1px solid #ddd;
+            border-radius:10px;
+            padding:20px;
+            margin-bottom:25px;
         }
 
-        .status {
-            color: green;
-            font-weight: bold;
+        .completed{
+            color:green;
+            font-weight:bold;
         }
+
+        img{
+            width:100%;
+            max-width:850px;
+            border-radius:8px;
+            border:1px solid #ccc;
+            margin-top:15px;
+            margin-bottom:15px;
+        }
+
+        ul{
+            margin-top:10px;
+        }
+
+        code{
+            background:#eee;
+            padding:2px 5px;
+            border-radius:4px;
+        }
+
     </style>
+
 </head>
 
 <body>
 
-<h1>
-    Campus Lost and Found Platform
-</h1>
+<h1>Campus Lost and Found Platform</h1>
 
-<h2>
-    Iteration 3 Completed Work
-</h2>
+<p align="center">
+CP3407 Advanced Software Engineering<br>
+Final Delivered Solution
+</p>
+
+<hr>
+
+<div class="section">
+
+<h2>Project Overview</h2>
 
 <p>
-    This page demonstrates the completed and verified functionality
-    implemented during Iteration 3.
-</p>
 
+The Campus Lost and Found Platform is a web application designed to help students
+report lost items, report found items, browse available records, and submit
+ownership claims for found property.
 
-<div class="feature">
+The platform improves the efficiency of campus lost-and-found management through
+a simple and user-friendly interface supported by a Flask backend and MySQL database.
 
-<h2>US06 - Display Uploaded Photo</h2>
-
-<p class="status">
-Completed
-</p>
-
-<p>
-Users can view uploaded item photos on the Item Details page.
-The interface displays images using the stored image path and
-provides a placeholder when no image is available.
-</p>
-
-<ul>
-<li>Uploaded photo displayed on Item Details page</li>
-<li>Responsive photo layout implemented</li>
-<li>No-image placeholder supported</li>
-<li>Alternative text provided for accessibility</li>
-</ul>
-
-</div>
-
-
-<div class="feature">
-
-<h2>US07 - Submit Claim Request</h2>
-
-<p class="status">
-Completed
-</p>
-
-<p>
-Users can submit a claim request with the following information:
-</p>
-
-<ul>
-<li>Name</li>
-<li>Contact Information</li>
-<li>Claim Message</li>
-</ul>
-
-<p>
-The submitted claim information is stored successfully and verified
-through testing evidence.
 </p>
 
 </div>
 
+<div class="section">
 
-<div class="feature">
+<h2>Delivered Features</h2>
+
+<ul>
+
+<li>Report Lost Item</li>
+
+<li>Report Found Item</li>
+
+<li>Browse Items</li>
+
+<li>Search Items</li>
+
+<li>Filter Items</li>
+
+<li>Item Details</li>
+
+<li>Uploaded Photo Display</li>
+
+<li>Submit Claim Request</li>
+
+</ul>
+
+</div>
+
+<div class="section">
+
+<h2>Iteration Progress</h2>
+
+<h3>Iteration 1</h3>
+
+<ul>
+
+<li>US01 Report Lost Item</li>
+
+<li>US02 Report Found Item</li>
+
+<li>US05 Browse Items</li>
+
+</ul>
+
+<h3>Iteration 2</h3>
+
+<ul>
+
+<li>US03 Search Items</li>
+
+<li>US04 Filter Items</li>
+
+<li>US06 Display Uploaded Photo (continued)</li>
+
+<li>US07 Submit Claim Request</li>
+
+</ul>
+
+<h3>Iteration 3</h3>
+
+<ul>
+
+<li class="completed">Completed US06 Uploaded Photo Display</li>
+
+<li class="completed">Completed US07 Claim Request Persistence</li>
+
+<li>TDD Development</li>
+
+<li>Regression Testing</li>
+
+</ul>
+
+<p>
+
+Only completed and verified functionality is presented.
+
+US08–US11 were not implemented and therefore are not shown as completed.
+
+</p>
+
+</div>
+
+<div class="section">
+
+<h2>UI Demonstration</h2>
+
+<p>
+
+The final interface demonstrates:
+
+</p>
+
+<ul>
+
+<li>Home Page</li>
+
+<li>Report Lost Item</li>
+
+<li>Report Found Item</li>
+
+<li>Browse Items</li>
+
+<li>Search & Filter</li>
+
+<li>Item Details</li>
+
+<li>Uploaded Photo Display</li>
+
+<li>Claim Request Form</li>
+
+<li>Submission Success Feedback</li>
+
+</ul>
+
+<p>
+
+(Insert your final screenshots below if available.)
+
+</p>
+
+</div>
+
+<div class="section">
 
 <h2>Testing Evidence</h2>
 
 <ul>
-<li>RED test evidence</li>
-<li>GREEN test evidence</li>
-<li>Full regression test result</li>
-<li>Database storage verification</li>
+
+<li>RED Test</li>
+
+<li>GREEN Test</li>
+
+<li>Regression Test</li>
+
+<li>MySQL Persistence Verification</li>
+
 </ul>
+
+<p>
+
+Testing evidence was produced during Iteration 3 and verifies the implemented functionality.
+
+</p>
 
 </div>
 
+<div class="section">
 
-<h2>Iteration 3 Status</h2>
+<h2>Repository</h2>
 
-<p class="status">
-Completed functionality only is presented on this page.
+<p>
+
+GitHub Repository:
+
 </p>
 
+<p>
+
+<a href="https://github.com/ZhihaoTang615/campus-lost-and-found-platform">
+https://github.com/ZhihaoTang615/campus-lost-and-found-platform
+</a>
+
+</p>
+
+<p>
+
+GitHub Pages:
+
+</p>
+
+<p>
+
+<a href="https://zhihaotang615.github.io/campus-lost-and-found-platform/">
+https://zhihaotang615.github.io/campus-lost-and-found-platform/
+</a>
+
+</p>
+
+</div>
+
+<div class="section">
+
+<h2>Delivered Solution Summary</h2>
+
+<p>
+
+The final delivered solution provides a complete workflow for reporting,
+browsing, searching and claiming lost-and-found items while presenting a clean,
+responsive user interface supported by verified backend functionality and
+Iteration 3 testing evidence.
+
+</p>
+
+</div>
 
 </body>
+
 </html>
