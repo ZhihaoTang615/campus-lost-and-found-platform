@@ -33,13 +33,17 @@ Iteration 2 originally included the following user stories:
 | US06 - Upload Item Photo    | Incomplete   | Uploaded images were saved but not displayed correctly   |
 | US07 - Submit Claim Request | Incomplete   | Submitted claim requests were not stored in the database |
 
-The final actual velocity of Iteration 2 was:
+
+
+```
+The final Iteration 2 velocity ratio was:
 
 ```text
-2 person-days
+14 / 45 = 0.31
 ```
+The team had 45 person-days of available capacity and 14 person-days of estimated user-story work.
 
-Only US03 fully delivered its intended user value.
+In terms of fully completed end-to-end user-story value during Iteration 2, only US03, estimated at 2 person-days, fully satisfied its intended acceptance expectations.
 
 ---
 
@@ -414,9 +418,10 @@ The team will make the following changes:
 
 ### 9.1 Reduce the Planned Scope
 
-The Iteration 2 actual velocity was only 2 person-days.
+The Iteration 2 velocity ratio was `0.31`, based on 14 person-days of estimated user-story work and 45 person-days of available team capacity.
 
-Therefore, Iteration 3 should not automatically include all remaining and new user stories.
+However, only 2 person-days of end-to-end user-story value fully satisfied the Iteration 2 completion expectations. Therefore, Iteration 3 should not automatically include all remaining and new user stories.
+
 
 The team will select a small amount of high-priority work and divide it into testable tasks.
 
