@@ -384,6 +384,17 @@ def claim_request(item_id):
             claimant_contact = request.form["contact"].strip()
             verification_details = request.form["message"].strip()
 
+            if (
+                not claimant_name
+                or not claimant_contact
+                or not verification_details
+            ):
+                flash("All claim fields are required.")
+                return render_template(
+                    "claim-request.html",
+                    item=item,
+                ), 200
+
             save_claim_request(
                 cursor=cursor,
                 connection=connection,

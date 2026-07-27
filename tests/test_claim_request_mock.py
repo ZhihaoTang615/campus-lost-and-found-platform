@@ -76,3 +76,36 @@ def test_claim_request_stores_pending_claim_with_mock_database(client):
     mock_connection.commit.assert_called_once()
     mock_cursor.close.assert_called_once()
     mock_connection.close.assert_called_once()
+
+def test_empty_claim_request_is_rejected(client):
+    """US07 bug regression: empty claim fields must not be stored."""
+
+    mock_cursor = MagicMock()
+    mock_cursor.fetchone.return_value = sample_found_item()
+
+    mock_connection = MagicMock()
+    mock_connection.cursor.return_value = mock_cursor
+    mock_connection.is_connected.return_value = True
+
+    with patch.object(
+        app_module,
+        "get_database_connection",
+        return_value=mock_connection,
+    ):
+        response = client.post(
+            "/claim-request/1",
+            data={
+                "name": "",
+                "contact": "",
+                "message": "",
+            },
+            follow_redirects=False,
+        )
+
+    assert response.status_code == 200
+    assert b"All claim fields are required." in response.data
+
+    # Only the SELECT for loading the item should run.
+    # No INSERT should happen for an invalid claim.
+    assert mock_cursor.execute.call_count == 1
+    mock_connection.commit.assert_not_called()
