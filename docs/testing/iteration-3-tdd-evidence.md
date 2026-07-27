@@ -264,7 +264,7 @@ The published page documents:
 - testing evidence;
 - completed Iteration 3 functionality only.
 
-**Final GitHub Pages URL:** Pending final URL verification.
+**Final GitHub Pages URL:** https://zhihaotang615.github.io/campus-lost-and-found-platform/
 
 ---
 
@@ -343,6 +343,6 @@ Before Issue #63 can move to Done:
 - [x] Pull Request references collected
 - [x] final GitHub Pages URL verified
 - [x] team responsibility summary completed
-- [ ] final links checked
+- [x] final links checked
 - [x] Issue #61 moved to Done after final regression testing
 - [ ] Issue #63 moved to Done only after this evidence is complete
