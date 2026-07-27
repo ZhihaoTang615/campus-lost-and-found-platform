@@ -61,13 +61,23 @@ The implementation stores:
 - verification details;
 - initial status `pending`.
 
+
 ### REFACTOR
 
-The US07 implementation was refactored while maintaining passing tests.
+After the GREEN stage, the US07 claim persistence implementation was refactored to improve separation of responsibilities while preserving the required behaviour.
 
-Refactor evidence must reference the actual refactor commit or PR commit from the merged US07 work.
+The claim persistence logic was extracted into a dedicated helper function.
 
-**Status:** Link to the exact refactor commit to be confirmed before final merge.
+**Refactor commit:**
+
+- `876f0be5518e76411ba7260ea1c6e7c577a1b851` – `refactor: extract claim persistence helper`
+
+Related Pull Request:
+
+- PR #52 – Complete US07 claim request storage using TDD
+
+The refactor maintained the passing claim-storage test and kept the claim persistence behaviour unchanged.
+
 
 ---
 
@@ -309,7 +319,7 @@ Before Issue #63 can move to Done:
 
 - [x] RED evidence exists
 - [x] GREEN evidence exists
-- [ ] exact REFACTOR commit confirmed
+- [x] exact REFACTOR commit confirmed
 - [x] mock test exists
 - [ ] final pytest result added
 - [ ] final Board screenshot added
