@@ -18,13 +18,15 @@ Iteration 2 originally planned the following user stories:
 | US07 | Submit Claim Request | 4 person-days | Partially completed |
 | **Total** |  | **14 person-days** |  |
 
-The accepted Iteration 2 actual velocity was:
+The accepted Iteration 2 velocity ratio was:
 
-**2 person-days**
+**0.31**
 
-Only fully completed user-story value was counted as completed velocity.
+This was calculated from 14 person-days of estimated user-story work and 45 person-days of available team capacity.
 
-The remaining incomplete value was:
+Only US03, estimated at 2 person-days, fully satisfied its end-to-end completion expectations during Iteration 2.
+
+The remaining originally estimated user-story work that did not fully satisfy the Iteration 2 completion expectations was:
 
 **12 person-days**
 
@@ -90,7 +92,7 @@ That assumption was not supported by the final Iteration 2 review.
 
 ## 6. Reason for Adjusting the Plan
 
-The original Iteration 3 plan was too large compared with the accepted Iteration 2 velocity of 2 person-days.
+The original Iteration 3 plan was too large compared with the Iteration 2 velocity ratio of `0.31` and the incomplete end-to-end delivery observed during Iteration 2.
 
 Starting several new claim-management features before completing the basic photo and claim-storage workflow would create additional incomplete work and technical dependencies.
 
@@ -202,12 +204,11 @@ Store a basic claim request with Pending status.
 | 7 | US10 | Update Item Status | Not re-estimated | Deferred | Deferred |
 | 8 | US11 | View My Submitted Reports | Not re-estimated | Deferred | Deferred |
 
-The selected implementation workload is:
+The selected carry-over implementation workload is:
 
 **2 person-days**
 
-This matches the accepted Iteration 2 velocity.
-
+This was intentionally kept small after reviewing the Iteration 2 velocity ratio of `0.31` and the incomplete carry-over work.
 Documentation, UI design, testing specifications, mock-object research, project-board management, and final evidence collection support the selected work but are tracked separately from completed user-story velocity.
 
 ## 10. Deferred User Stories
@@ -352,7 +353,7 @@ At the end of Iteration 3, the team aims to demonstrate:
 
 ## 17. Conclusion
 
-The Iteration 3 plan was reduced and adjusted because the accepted Iteration 2 velocity was only 2 person-days.
+The Iteration 3 plan was reduced and adjusted after reviewing the Iteration 2 velocity ratio of `0.31` and the incomplete end-to-end delivery from Iteration 2.
 
 Instead of starting all four original Iteration 3 user stories, the team will first complete two small carry-over tasks from US06 and US07.
 
