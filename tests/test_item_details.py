@@ -62,3 +62,35 @@ def test_missing_item_returns_404(client, fake_db):
     _, parameters = connection.cursor_instance.executed[0]
 
     assert parameters == (999,)
+
+# =========================================================
+# US06 – Display Uploaded Item Photo
+# =========================================================
+
+def test_item_details_displays_uploaded_photo(client, fake_db):
+    """US06: An uploaded item photo should be displayed on the item details page."""
+
+    item = sample_item()
+    item["image_path"] = "uploads/student-id-card.jpg"
+
+    fake_db(row=item)
+
+    response = client.get("/items/1")
+
+    assert response.status_code == 200
+    assert b"uploads/student-id-card.jpg" in response.data
+    assert b'Photo of Student ID Card' in response.data
+
+
+def test_item_details_without_photo_displays_placeholder(client, fake_db):
+    """US06: An item without a photo should still render with a fallback message."""
+
+    item = sample_item()
+    item["image_path"] = None
+
+    fake_db(row=item)
+
+    response = client.get("/items/1")
+
+    assert response.status_code == 200
+    assert b"No photo available for this item." in response.data
