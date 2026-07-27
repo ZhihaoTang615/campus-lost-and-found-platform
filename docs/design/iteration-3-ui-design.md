@@ -73,7 +73,7 @@ The Claim Request page allows a student to submit a request to claim a found ite
 
 1. Users can enter their name.
 2. Users can enter their contact information.
-3. Users can enter a claim message.
+3. Users can provide verification details for ownership verification.
 4. Users can submit the claim successfully.
 5. A success message is displayed after submission.
 6. Invalid or incomplete input is handled safely.
@@ -84,7 +84,9 @@ The Claim Request page allows a student to submit a request to claim a found ite
 |--------|------|----------|
 | Your Name | Text | Yes |
 | Contact Information | Text | Yes |
-| Claim Message | Text Area | Yes |
+| Verification Details | Text Area | Yes |
+
+Users can enter verification details to prove ownership of the found item.
 
 ## Buttons
 
