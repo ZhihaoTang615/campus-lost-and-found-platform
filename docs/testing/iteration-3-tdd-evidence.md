@@ -195,17 +195,20 @@ Related Issue:
 
 ## 8. GitHub Board Evidence
 
-The Iteration 3 Project Board currently records:
+The final Iteration 3 Project Board was reviewed against the actual repository state.
 
-- completed implementation and documentation tasks in Done;
-- Issue #61 in Testing while final regression testing is active;
-- Issue #63 in In Progress while final evidence is being collected.
+At the time the final evidence was collected:
+
+- Issue #61 – Run final Iteration 3 regression testing was completed and moved to Done.
+- Issue #63 – Collect Iteration 3 TDD and final evidence remained In Progress while this document was being finalised.
+- The Testing column contained no remaining tasks.
+- Completed implementation, testing, documentation, bug-fix, UI and GitHub Pages tasks were recorded in Done.
 
 Final Board screenshot:
 
-**Pending final Board screenshot after Issue #61 is completed.**
+`docs/testing/images/iteration-3-final-board.png`
 
-The final screenshot must show the Board status matching the actual repository state.
+The Board status matches the actual Iteration 3 work and supporting repository evidence.
 
 ---
 
@@ -338,7 +341,7 @@ Before Issue #63 can move to Done:
 - [ ] final Board screenshot added
 - [x] Issue references collected
 - [x] Pull Request references collected
-- [ ] final GitHub Pages URL verified
+- [x] final GitHub Pages URL verified
 - [x] team responsibility summary completed
 - [ ] final links checked
 - [x] Issue #61 moved to Done after final regression testing
