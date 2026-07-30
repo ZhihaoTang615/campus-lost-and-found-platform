@@ -34,6 +34,14 @@
     </header>
 
     <main class="page-main">
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
       <section class="page-heading">
         <p class="eyebrow">Item record</p>
 
@@ -51,18 +59,19 @@
 
         {% if item.image_path %}
         <div class="item-image-container">
-
           <img
             src="{{ url_for('static', filename=item.image_path) }}"
             alt="Photo of {{ item.item_name }}"
             class="item-image"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            onerror="
+              this.style.display = 'none';
+              this.nextElementSibling.style.display = 'flex';
+            "
           />
 
-          <div class="item-image-placeholder" style="display:none;">
+          <div class="item-image-placeholder" style="display: none">
             <p>No photo available for this item.</p>
           </div>
-
         </div>
 
         {% else %}
