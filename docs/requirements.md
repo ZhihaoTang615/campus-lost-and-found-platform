@@ -24,7 +24,7 @@ Iteration 1 contains the basic services needed for a runnable prototype. Later i
 | US08 | Track Claim Status | As a student, I want to track the status of my claim request so that I know whether it is pending, approved, or completed. | 4 | 2 person-days | 3 | Status tracking is important once the claim process has been introduced. |
 | US09 | Review Claim Requests | As an authorised reviewer, I want to review claim requests so that false or incorrect claims can be reduced. | 4 | 3 person-days | 3 | Review improves trust and supports a safer item-return process. |
 | US10 | Update Item Status | As an authorised user, I want to update an item status so that users can see whether an item is available, claimed, or returned. | 4 | 2 person-days | 3 | Accurate status information prevents users from following up on items that are no longer available. |
-| US11 | View My Submitted Reports | As a student, I want to view the reports that I submitted so that I can monitor and manage them. | 5 | 2 person-days | 3 | This improves user convenience after the core features and claim workflow are complete. |
+| US11 | View My Reports | As a student, I want to view the reports that I submitted so that I can monitor and manage them. | 5 | 2 person-days | 3 | This improves user convenience after the core features and claim workflow are complete. |
 
 ## Iteration Allocation Summary
 
@@ -33,3 +33,14 @@ Iteration 1 contains the basic services needed for a runnable prototype. Later i
 | Iteration 1 | Build a runnable prototype with the core reporting and details pages. | US01, US02, US05 | 8 person-days |
 | Iteration 2 | Improve usability and introduce the first claim workflow. | US03, US04, US06, US07 | 10 person-days |
 | Iteration 3 | Add tracking, review, and report-management features. | US08, US09, US10, US11 | 9 person-days |
+
+## Final Scope Status
+
+- **Delivered:** US01 Report Lost Item, US02 Report Found Item, US03 Search
+  Items, US04 Filter Items, US05 View Item Details, US06 Upload Item Photo, and
+  US07 Submit Claim Request.
+- **Deferred:** US08 Track Claim Status, US09 Review Claim Requests, US10 Update
+  Item Status, and US11 View My Reports.
+
+See [Requirements Traceability](requirements-traceability.md) for the final
+evidence mapping and any items requiring human confirmation.

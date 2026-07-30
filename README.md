@@ -19,7 +19,7 @@ The final verified system includes the following user stories:
 - **US03 – Search Items**
 - **US04 – Filter Items**
 - **US05 – View Item Details**
-- **US06 – Upload and Display Item Photo**
+- **US06 – Upload Item Photo**
 - **US07 – Submit Claim Request**
 
 These user stories are implemented and supported by repository, testing, and system-test evidence.
@@ -33,7 +33,7 @@ The following user stories were originally considered for Iteration 3 but were d
 - **US08 – Track Claim Status**
 - **US09 – Review Claim Requests**
 - **US10 – Update Item Status**
-- **US11 – View My Submitted Reports**
+- **US11 – View My Reports**
 
 These stories are not part of the completed final system.
 
@@ -118,6 +118,10 @@ New claims are stored in MySQL with the initial status:
 
 Server-side validation prevents empty or whitespace-only claim requests from being stored.
 
+After a valid claim is stored, the application redirects to the dedicated
+**Claim Request Submitted** page. The page displays **Pending** status and
+provides **View Item Details** and **Browse More Items** links.
+
 ---
 
 ## Technology Stack
@@ -179,3 +183,19 @@ static/
 tests/
 docs/
 ```
+
+## Final Verification
+
+The final regression command is:
+
+```bash
+.venv/bin/python -m pytest -v
+```
+
+The current result is **21 passed**. Automated database interactions use fake or
+mocked connections; manual Flask/MySQL evidence is documented separately.
+
+- [Final rubric audit](docs/final-rubric-audit.md)
+- [Requirements traceability](docs/requirements-traceability.md)
+- [Final testing evidence](docs/testing/final-testing-evidence.md)
+- [Development tools](docs/development-tools.md)
