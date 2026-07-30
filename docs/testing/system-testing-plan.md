@@ -54,3 +54,9 @@ Flask can be started using:
 
 ```bash
 flask --app app run --debug
+```
+
+This file records the system-test plan. It is not an execution record. See
+[Final Testing Evidence](final-testing-evidence.md) for the verified automated
+result and the distinction between mocked regression tests and manual MySQL
+system evidence.

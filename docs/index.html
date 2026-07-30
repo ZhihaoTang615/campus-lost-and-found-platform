@@ -187,7 +187,7 @@ Iteration 1
 
 <li>US02 - Report Found Item</li>
 
-<li>US05 - Browse Items</li>
+<li>US05 - View Item Details</li>
 
 </ul>
 
@@ -287,7 +287,7 @@ The final interface demonstrates the complete user workflow:
 
 <li>Claim Request Form</li>
 
-<li>Submission Success Feedback</li>
+<li>Dedicated Claim Request Submitted Page</li>
 
 </ul>
 
@@ -324,8 +324,11 @@ alt="Uploaded Photo Display">
 alt="Claim Request Form">
 
 
-<img src="evidence/final-claim-success.png"
-alt="Claim Request Success">
+<p>
+After a valid claim is stored, the application redirects to a dedicated
+Claim Request Submitted page showing Pending status, View Item Details, and
+Browse More Items.
+</p>
 
 
 </div>
@@ -373,13 +376,34 @@ alt="RED Test Evidence">
 alt="GREEN Test Evidence">
 
 
-<img src="evidence/iteration3-final-regression-19-passed.png"
-alt="Regression Test Evidence">
+<p>
+The current automated regression result is <strong>21 passed</strong>. Automated
+database interactions use fake or mocked connections; manual system evidence
+uses the running Flask application and MySQL where recorded.
+</p>
 
 
 <img src="evidence/claim-database-verification.png"
 alt="Database Persistence Verification">
 
+
+</div>
+
+<div class="section">
+
+<h2>Final Evidence</h2>
+
+<p>
+The delivered scope is US01-US07. US08 Track Claim Status, US09 Review Claim
+Requests, US10 Update Item Status, and US11 View My Reports are deferred.
+</p>
+
+<ul>
+<li><a href="final-rubric-audit.md">Final Rubric Audit</a></li>
+<li><a href="requirements-traceability.md">Requirements Traceability</a></li>
+<li><a href="testing/final-testing-evidence.md">Final Testing Evidence</a></li>
+<li><a href="development-tools.md">Development Tools</a></li>
+</ul>
 
 </div>
 
@@ -427,6 +451,11 @@ https://zhihaotang615.github.io/campus-lost-and-found-platform/
 
 </a>
 
+</p>
+
+<p>
+GitHub Pages hosts project documentation; it is not a public deployment of the
+Flask/MySQL application.
 </p>
 
 

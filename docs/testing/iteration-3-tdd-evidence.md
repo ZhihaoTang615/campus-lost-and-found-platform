@@ -159,16 +159,19 @@ These images provide evidence for:
 
 ---
 
-## 7. Final Pytest Result
+## 7. Current Final Pytest Result
 
-The final Iteration 3 regression test was completed on the latest integrated `main` branch.
+The current full regression was run with:
+
+```text
+.venv/bin/python -m pytest -v
+```
 
 Final result:
 
-- **19 tests collected**
-- **19 tests passed**
+- **21 tests collected**
+- **21 tests passed**
 - **0 failures**
-- **Runtime: 0.08 seconds**
 
 The final regression suite includes coverage for:
 
@@ -180,12 +183,18 @@ The final regression suite includes coverage for:
 - US06 – Upload/Display Item Photo
 - US07 – Submit Claim Request
 - Empty claim validation regression for Bug #72
+- Dedicated claim-success page content and privacy regression
+- Missing claim-item handling
 
-Final evidence image:
+Historical evidence image:
 
 `docs/testing/images/iteration-3-final-regression-19-passed.png`
 
-Related Issue:
+The image is a legitimate earlier 19-test checkpoint, not evidence of the
+current 21-test result. No current 21-pass screenshot is committed; the
+repeatable command and test files are the current automated evidence.
+
+Related historical Issue:
 
 - Issue #61 – Run final Iteration 3 regression testing
 
@@ -206,9 +215,9 @@ At the time the final evidence was collected:
 
 Final Board screenshot:
 
-`docs/testing/images/iteration-3-final-board.png`
-
-The Board status matches the actual Iteration 3 work and supporting repository evidence.
+The originally referenced
+`docs/testing/images/iteration-3-final-board.png` is not present. No replacement
+is asserted without human confirmation of the intended Board state.
 
 ---
 
@@ -337,7 +346,7 @@ Before Issue #63 can move to Done:
 - [x] GREEN evidence exists
 - [x] exact REFACTOR commit confirmed
 - [x] mock test exists
-- [x] final pytest result added
+- [x] current 21-test pytest result added
 - [ ] final Board screenshot added
 - [x] Issue references collected
 - [x] Pull Request references collected
