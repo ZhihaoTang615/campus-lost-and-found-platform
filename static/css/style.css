@@ -699,6 +699,52 @@ small {
   color: var(--color-text-muted);
 }
 
+/* Claim success */
+
+.claim-success-card {
+  max-width: 720px;
+  margin: var(--space-7) auto;
+  text-align: center;
+}
+
+.claim-success-icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto var(--space-5);
+  color: #142208;
+  background: var(--color-success);
+  border-radius: var(--radius-full);
+}
+
+.claim-success-icon svg {
+  width: 36px;
+  height: 36px;
+}
+
+.claim-success-message {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.claim-success-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-5) 0 0;
+}
+
+.claim-success-actions {
+  justify-content: center;
+}
+
+.claim-success-actions .btn {
+  margin-top: 0;
+}
+
 /* Tablet */
 
 @media (max-width: 1024px) {

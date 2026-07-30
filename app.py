@@ -357,6 +357,16 @@ def database_test():
             connection.close()
 
 
+@app.route("/claim-success/<int:item_id>")
+def claim_success(item_id):
+    """Display confirmation after a claim request is stored."""
+    return render_template(
+        "claim-success.html",
+        item_id=item_id,
+        claim_status=CLAIM_PENDING_STATUS,
+    )
+
+
 @app.route(
     "/claim-request/<int:item_id>",
     methods=["GET", "POST"],
@@ -404,11 +414,9 @@ def claim_request(item_id):
                 verification_details=verification_details,
             )
 
-            flash("Claim submitted successfully!")
-
             return redirect(
                 url_for(
-                    "item_detail",
+                    "claim_success",
                     item_id=item_id,
                 )
             )
