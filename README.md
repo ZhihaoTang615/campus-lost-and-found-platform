@@ -28,7 +28,7 @@ These user stories are implemented and supported by repository, testing, and sys
 
 ## Deferred Backlog
 
-The following user stories were originally considered for Iteration 3 but were deferred after reviewing Iteration 2 delivery performance:
+The following user stories are deferred and are not part of the delivered system:
 
 - **US08 – Track Claim Status**
 - **US09 – Review Claim Requests**
@@ -37,17 +37,9 @@ The following user stories were originally considered for Iteration 3 but were d
 
 These stories are not part of the completed final system.
 
-The team deliberately reduced the Iteration 3 scope so that completed functionality could receive stronger testing, TDD, regression testing, system testing, and final evidence.
-
-Iteration 2 planning figures:
-
-- Team capacity: **45 person-days**
-- Completed estimated story work: **14 person-days**
-- Velocity ratio: **0.31**
-
-See:
-
-`docs/iterations/iteration-3-deferred-backlog.md`
+Historical planning files contain conflicting capacity, completed-effort, and
+velocity values. Those records have been preserved and require team
+confirmation; they are not repeated here as settled final metrics.
 
 ---
 
@@ -84,6 +76,10 @@ Users can search records using keywords matched against:
 ### Filter Items
 
 Users can filter records by report type and category.
+
+The original US04 wording also mentions location, date, and status filters.
+Confirm whether US04 was formally refined to the implemented report-type and
+category scope before submission.
 
 ### View Item Details
 
@@ -184,6 +180,48 @@ tests/
 docs/
 ```
 
+## Local Setup
+
+The application is designed to run locally with Python, Flask, and MySQL.
+
+1. Create and activate a virtual environment:
+
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
+
+2. Install the pinned dependencies:
+
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
+
+3. Create a local `.env` file with values for `APP_SECRET_KEY`, `DB_HOST`,
+   `DB_USER`, `DB_PASSWORD`, and `DB_NAME`. Do not commit credentials.
+
+4. Create the local database and tables from the tracked schema:
+
+   ```bash
+   mysql -u <local-user> -p < database.sql
+   ```
+
+5. Start the application:
+
+   ```bash
+   flask --app app run --debug
+   ```
+
+6. Run the automated regression suite:
+
+   ```bash
+   python -m pytest -v
+   ```
+
+The repository does not evidence a public deployment of the Flask/MySQL
+application. The documentation page, if published, is separate from the local
+application.
+
 ## Final Verification
 
 The final regression command is:
@@ -193,9 +231,17 @@ The final regression command is:
 ```
 
 The current result is **21 passed**. Automated database interactions use fake or
-mocked connections; manual Flask/MySQL evidence is documented separately.
+mocked connections; repository-recorded manual system evidence uses the running
+Flask application and MySQL.
 
-- [Final rubric audit](docs/final-rubric-audit.md)
+- [Assessment entry point](docs/index.html)
+- [Requirements](docs/requirements.md)
 - [Requirements traceability](docs/requirements-traceability.md)
+- [Delivered solution](docs/delivered-solution.md)
 - [Final testing evidence](docs/testing/final-testing-evidence.md)
+- [TDD evidence](docs/testing/iteration-3-tdd-evidence.md)
+- [System testing plan](docs/testing/system-testing-plan.md)
 - [Development tools](docs/development-tools.md)
+- [Iteration 3 review](docs/iterations/iteration-3-review.md)
+- [Known limitations](docs/known-limitations.md)
+- [Definition of Done](docs/definition-of-done.md)

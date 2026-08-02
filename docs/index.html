@@ -105,7 +105,7 @@ Final Delivered Solution
 <div class="section">
 
 
-<h2>
+<h2 id="project-overview">
 Project Overview
 </h2>
 
@@ -135,30 +135,36 @@ user-friendly interface supported by a Flask backend and MySQL database.
 <div class="section">
 
 
-<h2>
+<h2 id="delivered-scope">
 Delivered Features
 </h2>
 
 
 <ul>
 
-<li>Report Lost Item</li>
+<li>US01 - Report Lost Item</li>
 
-<li>Report Found Item</li>
+<li>US02 - Report Found Item</li>
 
 <li>Browse Items</li>
 
-<li>Search Items</li>
+<li>US03 - Search Items</li>
 
-<li>Filter Items</li>
+<li>US04 - Filter Items (report type and category)</li>
 
-<li>Item Details</li>
+<li>US05 - View Item Details</li>
 
-<li>Uploaded Photo Display</li>
+<li>US06 - Upload Item Photo</li>
 
-<li>Submit Claim Request</li>
+<li>US07 - Submit Claim Request</li>
 
 </ul>
+
+<p>
+US08 Track Claim Status, US09 Review Claim Requests, US10 Update Item Status,
+and US11 View My Reports are deferred. Runtime uploads are excluded from new
+Git tracking by the repository ignore rules.
+</p>
 
 
 </div>
@@ -240,9 +246,9 @@ Regression Testing
 
 <p>
 
-Only completed and verified functionality is presented.
-
-US08-US11 were not implemented and therefore are not shown as completed.
+The delivered story list reflects current source and automated tests. Historical
+planning and manual-evidence limitations are documented separately. US08-US11
+were not implemented and therefore are not shown as completed.
 
 </p>
 
@@ -263,9 +269,10 @@ UI Demonstration
 
 
 <p>
-
-The final interface demonstrates the complete user workflow:
-
+The repository contains selected interface evidence for the delivered workflow.
+A current screenshot of the dedicated Claim Request Submitted page is still
+required; the implementation and automated response test provide the current
+evidence for that page.
 </p>
 
 
@@ -292,36 +299,25 @@ The final interface demonstrates the complete user workflow:
 </ul>
 
 
-<img src="evidence/final-home-page.png"
-alt="Final Home Page">
+<p>
+The tracked UI screenshots are not embedded on this public-facing entry page
+because they contain phone numbers, names, local paths, browser-profile context,
+or other unnecessary personal data. Replace or redact them before public
+submission; the files remain preserved as historical repository evidence.
+</p>
 
+<p>Tracked historical UI evidence (privacy review required before publication):</p>
 
-<img src="evidence/final-report-lost-item1.png"
-alt="Report Lost Item">
-
-
-<img src="evidence/final-report-lost-item2.png"
-alt="Report Lost Item">
-
-
-<img src="evidence/final-report-found-item1.png"
-alt="Report Found Item">
-
-
-<img src="evidence/final-report-found-item2.png"
-alt="Report Found Item">
-
-
-<img src="evidence/final-search-filter.png"
-alt="Search and Filter">
-
-
-<img src="evidence/final-uploaded-photo-display.png"
-alt="Uploaded Photo Display">
-
-
-<img src="evidence/final-claim-form.png"
-alt="Claim Request Form">
+<ul>
+<li><a href="evidence/final-home-page.png">Home page</a></li>
+<li><a href="evidence/final-report-lost-item1.png">Lost-item form, upper section</a></li>
+<li><a href="evidence/final-report-lost-item2.png">Lost-item form, lower section</a></li>
+<li><a href="evidence/final-report-found-item1.png">Found-item form, upper section</a></li>
+<li><a href="evidence/final-report-found-item2.png">Found-item form, lower section</a></li>
+<li><a href="evidence/final-search-filter.png">Implemented search and filters</a></li>
+<li><a href="evidence/final-uploaded-photo-display.png">Uploaded-photo display</a></li>
+<li><a href="evidence/final-claim-form.png">Claim-request form</a></li>
+</ul>
 
 
 <p>
@@ -361,19 +357,11 @@ Testing Evidence
 
 <p>
 
-Testing evidence verifies that the implemented functionality works correctly
-and remains stable after integration.
+Testing evidence records current automated behaviour and selected historical
+manual Flask/MySQL checks; its limits are stated in the linked testing report.
 
 </p>
 
-
-
-<img src="evidence/iteration3-red-test.png"
-alt="RED Test Evidence">
-
-
-<img src="evidence/iteration3-green-test.png"
-alt="GREEN Test Evidence">
 
 
 <p>
@@ -382,16 +370,26 @@ database interactions use fake or mocked connections; manual system evidence
 uses the running Flask application and MySQL where recorded.
 </p>
 
+<p>
+The tracked RED/GREEN terminal screenshots are also omitted here because they
+show local account, path, test-data, or development-tool context. Their evidence
+status and replacement needs are documented in the testing report.
+</p>
 
-<img src="evidence/claim-database-verification.png"
-alt="Database Persistence Verification">
+<p>Tracked historical testing evidence (privacy review required):</p>
+
+<ul>
+<li><a href="evidence/iteration3-red-test.png">RED test evidence</a></li>
+<li><a href="evidence/iteration3-green-test.png">GREEN focused-test evidence</a></li>
+<li><a href="evidence/claim-database-verification.png">Manual MySQL claim verification</a></li>
+</ul>
 
 
 </div>
 
 <div class="section">
 
-<h2>Final Evidence</h2>
+<h2 id="assessment-evidence">Assessment Evidence</h2>
 
 <p>
 The delivered scope is US01-US07. US08 Track Claim Status, US09 Review Claim
@@ -399,10 +397,20 @@ Requests, US10 Update Item Status, and US11 View My Reports are deferred.
 </p>
 
 <ul>
-<li><a href="final-rubric-audit.md">Final Rubric Audit</a></li>
+<li><a href="#project-overview">Project Overview</a></li>
+<li><a href="#delivered-scope">Delivered Scope</a></li>
+<li><a href="requirements.md">Requirements</a></li>
 <li><a href="requirements-traceability.md">Requirements Traceability</a></li>
+<li><a href="design/architecture.md">Design and Architecture</a></li>
+<li><a href="delivered-solution.md">Delivered Solution</a></li>
 <li><a href="testing/final-testing-evidence.md">Final Testing Evidence</a></li>
+<li><a href="testing/iteration-3-tdd-evidence.md">TDD and Defect Evidence</a></li>
+<li><a href="testing/system-testing-plan.md">System Testing Plan</a></li>
 <li><a href="development-tools.md">Development Tools</a></li>
+<li><a href="iterations/iteration-3-review.md">Iteration 3 Review</a></li>
+<li><a href="known-limitations.md">Known Limitations</a></li>
+<li><a href="definition-of-done.md">Definition of Done</a></li>
+<li><a href="requirements.md#final-scope-status">Deferred Scope</a></li>
 </ul>
 
 </div>
@@ -439,7 +447,8 @@ https://github.com/ZhihaoTang615/campus-lost-and-found-platform
 
 
 <p>
-GitHub Pages:
+Repository-recorded documentation URL (availability not independently
+verified):
 </p>
 
 
@@ -477,12 +486,12 @@ Delivered Solution Summary
 
 <p>
 
-The final delivered solution provides a complete workflow for reporting,
-browsing, searching, filtering, and claiming lost-and-found items.
+The final delivered baseline supports reporting, browsing, searching, filtering,
+viewing, photographing, and claiming lost-and-found items.
 
-The platform delivers a clean and responsive user interface supported by
-verified backend functionality, database persistence, and Iteration 3 testing
-evidence.
+Current source and automated tests support US01-US07. Selected historical manual
+evidence records MySQL persistence; deferred scope and unresolved evidence gaps
+remain explicit.
 
 </p>
 
