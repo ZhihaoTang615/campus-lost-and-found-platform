@@ -21,8 +21,8 @@
 | GitHub repository | Shared remote source | Team code/document collaboration | It centralises the project and exposes repository history. | Repository remote and links in project records |
 | GitHub Issues | Backlog/defect tracking | Story and bug references | Issue records can connect work to an owned task. | Planning/testing documents reference issues; several live states need confirmation |
 | GitHub Projects | Iteration board | Todo/In Progress/Done tracking | A board makes iteration work state visible. | Board screenshots and iteration documents |
-| GitHub Pull Requests | Integration and review workflow | Feature/fix branch merges | PRs provide an integration point and possible review record. | 25 PR-style merge commits and referenced PRs; substantive review evidence is limited |
-| GitHub Pages | Repository-recorded assessment-document hosting | `docs/` entry point and recorded Pages URL | It provides a simple static assessor navigation page from the repository. | [`index.html`](index.html) and the URL recorded there; live publication was not independently verified, and it is **not** Flask/MySQL deployment |
+| GitHub Pull Requests | Integration and review workflow | Feature/fix branch merges | PRs provide an integration point and possible review record. | 26 PR-style merge commits and referenced PRs; substantive review evidence is limited |
+| GitHub Pages | Intended static assessment-document hosting | `docs/` entry point and repository-recorded Pages URL | It can provide a simple static assessor navigation page. | [`index.html`](index.html) and its recorded URL; live publication is not verified here, and it is **not** Flask/MySQL deployment |
 | Figma | UI design/prototyping | UI design record and exported assets | It supports shareable UI mock-ups before template implementation. | [`ui-design.md`](design/ui-design.md) records the Figma URL and exports; the live file was not independently inspected |
 | VS Code | Local editing | Development workflow described in project records | It supports Python, HTML/CSS, Git, and repository editing in one environment. | Named in planning/reflection records; not independently verifiable from source |
 | GitHub Desktop | Local Git workflow | Commit/branch workflow described in project records | It provides a graphical Git workflow for the team. | Named in planning/reflection records; not independently verifiable from source |
@@ -36,13 +36,17 @@ The reproducible steps below are consolidated from the application,
 [`requirements.txt`](../requirements.txt), [`database.sql`](../database.sql),
 and environment-variable names read by [`app.py`](../app.py):
 
-1. Create and activate a Python virtual environment.
-2. Install `requirements.txt`.
-3. create a local `.env` containing the documented database variable names;
-4. create the schema using `database.sql`;
-5. ensure `static/uploads/` is writable;
-6. run `python app.py`;
-7. run `.venv/bin/python -m pytest -v` for the assessed regression suite.
+1. Create a virtual environment with `python -m venv .venv`.
+2. Activate it with `source .venv/bin/activate` on macOS/Linux, or the
+   platform-equivalent activation command.
+3. Install dependencies with `python -m pip install -r requirements.txt`.
+4. Create an untracked local `.env` containing values for `APP_SECRET_KEY`,
+   `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`.
+5. Create the database and tables from the tracked schema, for example with
+   `mysql -u <local-user> -p < database.sql`.
+6. Ensure `static/uploads/` exists and is writable.
+7. Run `flask --app app run --debug`.
+8. Run `python -m pytest -v` for the regression suite.
 
 No public Flask application deployment is evidenced. The GitHub Pages address
 serves documentation only.
@@ -59,7 +63,9 @@ serves documentation only.
   contents are intended to be excluded. Existing tracked files are unaffected by
   ignore rules.
 - `.venv` and the tracked `venv` report different Python generations, while the
-  project does not declare a supported Python version.
+  project does not declare a supported Python version. Current pinned package
+  metadata requires Python 3.10 or newer, and the verified local environment
+  uses Python 3.13.2.
 - The application assumes the upload directory already exists and is writable.
 - The ignore rule permits `static/uploads/.gitkeep`, but that placeholder is not
   present, so Git does not guarantee the empty directory in a clean clone.

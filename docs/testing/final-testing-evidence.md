@@ -14,8 +14,34 @@ explicit:
    reproducible browser-automation suite and were not independently witnessed
    during this audit.
 3. **Acceptance-test documents** record expected scenarios and claimed outcomes.
-   Conflicts between those records and later retrospectives are called out in the
-   [Final Rubric Audit](../final-rubric-audit.md).
+   Conflicts between those records and current evidence are not silently treated
+   as final acceptance; see
+   [Requirements Traceability](../requirements-traceability.md).
+
+## Black-box, Grey-box, and White-box Perspectives
+
+### Black-box
+
+User-visible checks cover forms loading and submitting, lost/found reports,
+keyword search and no-result handling, report-type/category filters, Item
+Details, uploaded-photo display and fallback, valid claim submission, empty
+claim rejection, and the dedicated Claim Request Submitted page.
+
+### Grey-box
+
+Repository-recorded manual evidence inspects selected MySQL item/claim rows and
+`image_path`/`pending` values while using the running Flask application. Source
+and test evidence verifies parameterised persistence, commits, and cursor and
+connection cleanup; `.gitignore` records the exclusion rule for new runtime
+uploads. These checks are not an automated live-MySQL integration suite.
+
+### White-box
+
+The pytest suite exercises Flask routes and internal branches using fake or
+mocked database connections. It covers valid and invalid paths, missing items,
+empty claim input, invalid file extensions, SQL parameters, redirect/response
+content, checks that submitted contact and verification details are absent from
+the confirmation page, commit behaviour, and resource cleanup.
 
 The reproducible automated command is:
 
@@ -61,11 +87,17 @@ Repository history and screenshots record a US07 TDD sequence:
 - Both repository-recorded screenshots were added with the TDD evidence in commit
   `3210869` and merged through PR #58. The later `docs/evidence/iteration3-*`
   images show a broader two-test state and are not used as the minimum GREEN.
-- Later refactoring/validation work is visible in commit `876f0be` and merged
-  claim-related PRs.
+- Commit `876f0be` extracts claim persistence into `save_claim_request()` while
+  preserving the earlier claim-storage behaviour.
 
 This supports a selected red/green/refactor example. It does not prove that every
 user story was developed test-first.
+
+Bug #72 is a separate defect-driven RED/GREEN example. System testing exposed an
+empty stored claim; a failing regression reproduced it; server-side validation
+and the regression test landed together in commit `050da84`; and PR #76 merged
+the correction. There is no separately committed RED test state for this bug,
+so that boundary is stated rather than reconstructed.
 
 ## Claim Request Defect Evidence
 
@@ -90,7 +122,10 @@ Evidence includes:
   [`claim-database-verification.png`](../evidence/claim-database-verification.png)
   (**privacy-sensitive:** it exposes local paths and personal-looking test data;
   redact or omit it before public submission);
-- merged PRs #76, #80, and #81 for validation and confirmation-flow work.
+- a fixed-state manual retest screenshot,
+  [`system-test-bug-empty-claim-fixed.png`](images/system-test-bug-empty-claim-fixed.png);
+- local merge commits for PRs #76, #80, and #81 covering validation and the
+  confirmation flow.
 
 The file
 [`final-claim-success.png`](../evidence/final-claim-success.png) shows the older
@@ -146,3 +181,53 @@ forms. This is a data-realism limitation, not a current regression failure.
 - Historical manual screenshots may contain names, email addresses, phone
   numbers, claim messages, database rows, or a local username. They require
   privacy review before public submission.
+
+## Privacy and Missing-Evidence Check
+
+The following tracked files visibly expose personal or browser-context data and
+should be replaced, redacted, or omitted from public submission:
+
+- `docs/evidence/final-home-page.png`, `final-report-lost-item1.png`,
+  `final-report-lost-item2.png`, `final-report-found-item1.png`, and
+  `final-report-found-item2.png` — browser profile/account and local-browser
+  context;
+- `docs/evidence/final-search-filter.png` — open tabs, bookmarks, browser
+  profile/avatar context, and unrelated account/service labels;
+- `docs/evidence/final-uploaded-photo-display.png` — phone number;
+- `docs/evidence/final-claim-form.png` — name, phone number, claim text, browser
+  tabs/bookmarks, and profile/avatar context;
+- `docs/evidence/claim-database-verification.png` — local username/path,
+  hostname, names, email, phone number, claim text, and database rows;
+- `docs/testing/images/us07-real-database-claim-saved.png` and
+  `system-test-us07-mysql-pending-pass.png` — local development context plus
+  names/contact or verification data;
+- `docs/testing/images/system-test-us07-claim-entry-pass.png`,
+  `system-test-bug-empty-claim-stored.png` — phone/contact or local terminal
+  context;
+- `docs/evidence/iteration3-red-test.png` and `iteration3-green-test.png` —
+  names or verification text, local username/hostname/path, and development-tool
+  context; and
+- `docs/evidence/iteration3-final-regression-19-passed.png` and the corresponding
+  tracked terminal/IDE regression screenshots under `docs/testing/images/` —
+  local username, hostname, path, or development-tool context.
+
+No database password is visible in the inspected screenshots.
+
+Expected final evidence that is not present under the requested filenames:
+
+- `iteration-3-final-regression-21-passed.png`;
+- a current dedicated-success-page replacement for the obsolete
+  `final-claim-success.png`;
+- `final-iteration-3-board.png`.
+
+The following requested evidence does exist, but the first and third items need
+privacy-safe replacements:
+
+- `final-search-filter.png`;
+- `final-uploaded-photo-display.png`;
+- `claim-database-verification.png`.
+
+The opaque file
+`docs/testing/images/463415eb7059b718a9d9d24d6d486044.png` is visibly an
+Iteration 3 Board screenshot, but it shows Issue #63 In Progress. It therefore
+does not prove the expected final Board state.
