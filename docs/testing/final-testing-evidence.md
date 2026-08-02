@@ -53,10 +53,11 @@ The reproducible automated command is:
 
 **Final result: 21 tests passed.**
 
-The final command output is retained in the audit hand-off response rather than
-represented by a fabricated screenshot. The repository contains older 15-, 16-,
-18-, and 19-test screenshots; those remain historical milestones and are not
-evidence of the current 21-test suite.
+The final regression screenshot,
+[`iteration-3-final-regression-21-passed.png`](images/iteration-3-final-regression-21-passed.png),
+records **21 collected, 21 passed, and 0 failed**. The older 15-, 16-, 18-, and
+19-pass screenshots remain historical milestones and are not evidence of the
+current 21-test suite.
 
 All automated database interactions are fakes or mocks. A green automated result
 therefore does **not** prove MySQL connectivity, schema installation, filesystem
@@ -127,11 +128,10 @@ Evidence includes:
 - local merge commits for PRs #76, #80, and #81 covering validation and the
   confirmation flow.
 
-The file
-[`final-claim-success.png`](../evidence/final-claim-success.png) shows the older
-in-page feedback implementation and must not be presented as the current
-dedicated confirmation page. A current confirmation-page screenshot remains
-missing.
+The current dedicated Claim Request Submitted page is recorded in
+[`final-claim-success.png`](../evidence/final-claim-success.png). The current
+final Iteration 3 Board is recorded in
+[`final-iteration-3-board.png`](../evidence/final-iteration-3-board.png).
 
 ## Test Data Coverage
 
@@ -182,7 +182,7 @@ forms. This is a data-realism limitation, not a current regression failure.
   numbers, claim messages, database rows, or a local username. They require
   privacy review before public submission.
 
-## Privacy and Missing-Evidence Check
+## Privacy and Evidence Check
 
 The following tracked files visibly expose personal or browser-context data and
 should be replaced, redacted, or omitted from public submission:
@@ -206,21 +206,23 @@ should be replaced, redacted, or omitted from public submission:
   context;
 - `docs/evidence/iteration3-red-test.png` and `iteration3-green-test.png` —
   names or verification text, local username/hostname/path, and development-tool
-  context; and
-- `docs/evidence/iteration3-final-regression-19-passed.png` and the corresponding
-  tracked terminal/IDE regression screenshots under `docs/testing/images/` —
-  local username, hostname, path, or development-tool context.
+  context;
+- `docs/evidence/iteration3-final-regression-19-passed.png` and the tracked
+  terminal/IDE regression screenshots under `docs/testing/images/`, including
+  `iteration-3-final-regression-21-passed.png` — local username, device/host name,
+  path, or development-tool context; and
+- `docs/evidence/final-iteration-3-board.png` — GitHub account name, profile
+  avatar, and contributor avatars.
 
 No database password is visible in the inspected screenshots.
 
-Expected final evidence that is not present under the requested filenames:
+Current final evidence is present at:
 
-- `iteration-3-final-regression-21-passed.png`;
-- a current dedicated-success-page replacement for the obsolete
-  `final-claim-success.png`;
-- `final-iteration-3-board.png`.
+- [`final-claim-success.png`](../evidence/final-claim-success.png);
+- [`final-iteration-3-board.png`](../evidence/final-iteration-3-board.png); and
+- [`iteration-3-final-regression-21-passed.png`](images/iteration-3-final-regression-21-passed.png).
 
-The following requested evidence does exist, but the first and third items need
+The following requested evidence also exists, but all three items need
 privacy-safe replacements:
 
 - `final-search-filter.png`;
@@ -229,5 +231,6 @@ privacy-safe replacements:
 
 The opaque file
 `docs/testing/images/463415eb7059b718a9d9d24d6d486044.png` is visibly an
-Iteration 3 Board screenshot, but it shows Issue #63 In Progress. It therefore
-does not prove the expected final Board state.
+Iteration 3 Board screenshot, but it shows Issue #63 In Progress. It remains a
+historical checkpoint and is not substituted for the final Board evidence linked
+above.
