@@ -81,16 +81,19 @@ confirmation.
 
 ## Demonstration Evidence
 
-The repository contains UI, database, TDD, defect, and historical Board
-screenshots. They support selected states, but:
+The repository contains current final evidence alongside historical UI,
+database, TDD, defect, and Board screenshots:
 
-- there is no current screenshot of the dedicated claim-success page;
-- there is no 21-passed regression screenshot;
-- the opaque Board image
-  `docs/testing/images/463415eb7059b718a9d9d24d6d486044.png` shows Issue #63
-  still In Progress and is not final completion evidence; and
-- `docs/client-feedback/iteration-3-feedback.md` is empty, so no Iteration 3
-  customer demonstration or feedback is claimed.
+- [dedicated Claim Request Submitted page](../evidence/final-claim-success.png);
+- [complete automated regression](../testing/images/iteration-3-final-regression-21-passed.png),
+  recording 21 collected, 21 passed, and 0 failed; and
+- [final Iteration 3 Board](../evidence/final-iteration-3-board.png).
+
+The Board and regression images contain account or development-environment
+context and require privacy review before public embedding.
+
+`docs/client-feedback/iteration-3-feedback.md` is empty, so no Iteration 3
+customer demonstration or feedback is claimed.
 
 ## Lessons Learned
 

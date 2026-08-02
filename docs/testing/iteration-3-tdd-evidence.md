@@ -21,7 +21,8 @@ that the route did not reject an empty claim submission correctly.
 
 Evidence:
 
-- Issue #72 is visible in the recorded Iteration 3 Board screenshot;
+- Issue #72 is visible in the recorded final Iteration 3 Board screenshot,
+  [`final-iteration-3-board.png`](../evidence/final-iteration-3-board.png);
 - [`system-test-bug-empty-claim-stored.png`](images/system-test-bug-empty-claim-stored.png)
   records the invalid stored row; and
 - `test_empty_claim_request_is_rejected` is the current regression test.
@@ -150,8 +151,10 @@ Final result:
 - **21 passed**
 - **0 failed**
 
-The tracked 15-, 16-, 18-, and 19-pass screenshots are historical milestones.
-There is no committed 21-pass screenshot, so none is claimed.
+The tracked 15-, 16-, 18-, and 19-pass screenshots remain historical milestones.
+The current final regression screenshot,
+[`iteration-3-final-regression-21-passed.png`](images/iteration-3-final-regression-21-passed.png),
+records 21 collected, 21 passed, and 0 failed.
 
 ## Manual Evidence Boundaries
 
@@ -161,6 +164,10 @@ automation, and several expose names, contact information, verification text,
 local paths, or development context. Complete the privacy review before public
 submission.
 
-There is no current screenshot of the dedicated Claim Request Submitted page.
-`docs/evidence/final-claim-success.png` shows the previous in-page feedback flow
-and must remain labelled historical.
+The current dedicated Claim Request Submitted page is recorded in
+[`final-claim-success.png`](../evidence/final-claim-success.png). The final
+Iteration 3 Board evidence is recorded in
+[`final-iteration-3-board.png`](../evidence/final-iteration-3-board.png). The
+Board screenshot exposes GitHub account/avatar context, and the final regression
+screenshot exposes local terminal identity/device context, so both require
+privacy review before public embedding.
