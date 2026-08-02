@@ -1,244 +1,170 @@
-# User Interface Design
+# Final Implemented UI Specification
 
-## Design Goal
+## 1. Design goals
 
-The Campus Lost and Found Platform should provide a simple, modern, and user-friendly interface that allows university students to quickly report and locate lost property.
+The delivered Campus Lost and Found Platform uses server-rendered Jinja pages, CSS, browser forms and limited JavaScript feedback. The interface is designed to make the delivered reporting, browsing and claiming tasks clear without requiring an account.
 
-The design priorities are:
+The implemented design priorities are:
 
-- Easy navigation
-- Clear information display
-- Fast form submission
-- Mobile-friendly experience
-- Consistent visual style
+- consistent page structure and navigation;
+- clear form labels, feedback and actions;
+- readable item information;
+- layouts that adapt to desktop, tablet and mobile widths;
+- visible keyboard focus and meaningful image alternatives.
 
----
+## 2. Shared navigation
 
-# Navigation
+The header on the delivered pages contains four primary links:
 
-The navigation bar will appear at the top of every page.
+| Link | Route | Purpose |
+|---|---|---|
+| Home | `/` | Open the landing page. |
+| Browse Items | `/items` | Browse, search and filter item records. |
+| Report Lost Item | `/report-lost-item` | Open the lost-item report form. |
+| Report Found Item | `/report-found-item` | Open the found-item report form. |
 
-Navigation links:
+The current section is visually identified where applicable. Search is part of **Browse Items**, rather than a separate navigation destination. **My Reports** is not part of the implemented navigation.
 
-- Home
-- Report Lost Item
-- Report Found Item
-- My Reports (Future)
-- Search Items (Future)
+## 3. Home page
 
-Users should be able to move between pages with minimal clicks.
+The home page presents the platform title, a short explanation and three prominent actions:
 
----
+- **Report a Lost Item**;
+- **Report a Found Item**;
+- **Browse Items**.
 
-# Homepage
+The implemented home page does not contain a recent-items feed.
 
-The homepage contains:
+## 4. Report Lost Item page
 
-- Website title
-- Navigation menu
-- Welcome message
-- Quick action buttons
-  - Report Lost Item
-  - Report Found Item
-- Recently reported items section
+The lost-item form contains:
 
-The homepage should immediately communicate the purpose of the platform.
+- Item Name;
+- one Category selection;
+- Location Lost;
+- Date Lost;
+- Description;
+- an optional Item Photo;
+- Contact Information.
 
----
+All fields except the photo use browser `required` attributes. **Submit Lost Item Report** sends a multipart `POST` request to `/report-lost-item`; **Cancel** returns to the home page. After processing, the Flask route flashes a success or error message and redirects back to the lost-item form.
 
-# Report Lost Item Page
+## 5. Report Found Item page
 
-The lost-item form includes:
+The found-item form mirrors the lost-item form and contains:
 
-- Item name
-- Category
-- Location lost
-- Date lost
-- Description
-- Contact information
+- Item Name;
+- one Category selection;
+- Location Found;
+- Date Found;
+- Description;
+- an optional Item Photo;
+- Contact Information.
 
-Required fields are clearly marked.
+All fields except the photo use browser `required` attributes. **Submit Found Item Report** sends a multipart `POST` request to `/report-found-item`; **Cancel** returns to the home page. The outcome is displayed as a flashed message after redirecting back to the form.
 
----
+## 6. Browse, Search and Filter page
 
-# Report Found Item Page
+The `/items` page combines browsing, keyword search and filtering in one `GET` form. It provides:
 
-The found-item form includes:
+- one keyword field named `q`, which searches item name, description and location;
+- one Report Type selector with All Types, Lost and Found choices;
+- one Category selector with All Categories, Student Card, Keys, Wallet, Electronics, Books and Other;
+- **Apply Filters** and **Clear Filters** actions.
 
-- Item name
-- Category
-- Location found
-- Date found
-- Description
-- Contact information
+When more than one input is supplied, keyword, report type and category conditions are combined with `AND`. The current values remain selected after the request.
 
-The layout should match the lost-item form for consistency.
+Results are shown as item cards containing item name, status, report type, category, location, date and a **View Details** action. When nothing matches, the page displays **No Items Found** and a **View All Items** action.
 
----
+The delivered page has no pagination, left-side desktop filter panel, collapsible mobile filter menu or multi-category selection.
 
-# Item Details Page
+## 7. Item Details page
 
-The item details page displays:
+`/items/<int:item_id>` displays the selected item with:
 
-- Item title
-- Category
-- Description
-- Date
-- Location
-- Contact information
+- the uploaded image or a no-photo placeholder;
+- item name;
+- report type;
+- category;
+- status;
+- location;
+- date;
+- description;
+- contact information.
 
-Information should be presented clearly and be easy to read.
+The page includes **Return to Browse Items**. The template displays **Submit Claim Request** only when `report_type` is `found`. This is a UI eligibility decision: a direct request to `/claim-request/<int:item_id>` is not independently rejected by the backend when the item is not a found report.
 
----
+The general `/item-details` route redirects to `/items` so that the user selects a specific record first. A missing item ID at `/items/<int:item_id>` returns a handled 404 response.
 
-# Search Results Page
+## 8. Photo upload and display
 
-The Search Results page allows users to search for lost and found items using keywords.
+Photo upload is optional on both report forms. The file input advertises `png`, `jpg`, `jpeg` and `gif`; the Flask helper checks the filename extension, applies `secure_filename()` and stores an accepted file under `static/uploads`. The related `image_path` is stored as `uploads/<filename>`.
 
-The page should display search results as item cards.
+There is no implemented client-side preview or remove-image action. Validation does not inspect MIME type, file size, filename collisions or malware.
 
-Each item card should contain:
+On Item Details, a stored `image_path` is rendered with the alternative text `Photo of <item name>`. When `image_path` is absent, the page shows **No photo available for this item.** An `onerror` handler hides an image that fails to load and reveals the same fallback. CSS keeps both the image and placeholder responsive.
 
-* Item image
-* Item name
-* Category
-* Location
-* Date reported
-* Report type (Lost or Found)
+## 9. Claim Request page
 
-Users can click an item card to view the full item details page.
+The Item Details action opens `/claim-request/<int:item_id>`. Flask first queries the selected item; an unknown ID returns 404. For an existing item, the page shows a short item summary and a claim form with:
 
-The page should support pagination when a large number of items are returned.
+- **Your Name** (`name`);
+- **Contact Information** (`contact`);
+- **Claim Message** (`message`), which is stored as the claim's verification details.
 
----
+The three controls use browser `required` attributes. On `POST`, Flask also strips all three values and rejects empty or whitespace-only input. Rejected input displays **All claim fields are required.**, remains on the form, and performs no claim insert or commit.
 
-# Filter Panel
+The page provides **Submit Claim** and **Return to Item Details** actions. A valid submission is stored with status `pending` and redirects to `/claim-success/<int:item_id>`.
 
-The filter panel helps users narrow down search results.
+## 10. Claim Request Submitted page
 
-Available filters include:
+The dedicated confirmation page displays:
 
-* Lost Items
-* Found Items
-* Electronics
-* Bags
-* Keys
-* Documents
-* Other Categories
+- **Claim Request Submitted**;
+- confirmation that the request was recorded;
+- **Current status: Pending**;
+- **View Item Details**;
+- **Browse More Items**.
 
-Users may apply multiple filters simultaneously.
+Submitted contact and verification values are not repeated on this page. The page confirms storage only; it does not claim that an administrator has reviewed or approved the request.
 
-On desktop devices, filters should appear on the left side of the page.
+## 11. Responsive and accessibility considerations
 
-On mobile devices, filters should be displayed in a collapsible menu.
+The delivered templates include a viewport declaration and semantic labels, headings, navigation and form controls. Primary navigation has an accessible label, current navigation links use `aria-current`, claim feedback uses a polite live region, and the success card has a labelled heading. Required controls are marked with HTML `required` attributes.
 
----
+CSS provides visible `focus-visible` outlines, responsive item-grid columns, stacked navigation and full-width actions on smaller screens. Item images scale within their container. A reduced-motion media query limits transitions and animation when the browser requests reduced motion. These implementation details support accessibility but are not a claim of formal accessibility certification.
 
-# Photo Upload Interface
+The JavaScript adds visual button feedback only; it does not implement the report or claim validation rules.
 
-Users reporting a lost or found item should be able to upload a photo.
+## 12. Deferred UI
 
-The upload interface should include:
+The following UI remains deferred:
 
-* Upload button
-* Image preview
-* Remove image option
+- US08 Track Claim Status;
+- US09 Review Claim Requests;
+- US10 Update Item Status;
+- US11 View My Reports.
 
-Supported file formats:
+There is no delivered authentication, user-account area, administrator dashboard, claim-approval interface, email notification flow, report-editing UI or claim-status tracking UI.
 
-* JPG
-* PNG
+## 13. Historical prototypes
 
-Images help students identify items more accurately and improve matching success.
+The following images are retained as planning artefacts. They may show proposed layouts or interactions that do not exactly match the final implementation; the implemented specification above is authoritative.
 
----
-
-# Claim Request Page
-
-Users who believe an item belongs to them may submit a claim request.
-
-The claim form should include:
-
-- Full name
-- Contact information
-- Description of ownership evidence
-- Additional comments
-
-After submission, users should receive a confirmation message.
-
-The claim will then be reviewed by an administrator.
-
----
-
-# My Reports Page (Future)
-
-Users can:
-
-- View submitted reports
-- Edit reports
-- Monitor report status
-
----
-
-# Admin Review Page (Future)
-
-Administrators can:
-
-- Review claim requests
-- Approve ownership claims
-- Update item status
-
----
-
-# Mobile-Friendly Design
-
-The website should support:
-
-- Responsive layouts
-- Mobile navigation
-- Touch-friendly buttons
-- Readable text sizes
-
-This is important because many students access websites using smartphones.
-
----
-
-## Search Results Prototype
+### Search Results Prototype
 
 ![Search Results Prototype](images/search-results-prototype.png)
 
----
-
-## Filter Panel Prototype
+### Filter Panel Prototype
 
 ![Filter Panel Prototype](images/filter-panel-prototype.png)
 
----
-
-## Photo Upload Prototype
+### Photo Upload Prototype
 
 ![Photo Upload Prototype](images/photo-upload-prototype.png)
 
----
-
-## Claim Request Prototype
+### Claim Request Prototype
 
 ![Claim Request Prototype](images/claim-request-prototype.png)
 
----
-
-## Design Tools
-
-The interface prototypes were created using Figma.
-
-Figma design files were used to plan page layouts, navigation structures, and user interactions before implementation.
-
-Figma Prototype Link: https://www.figma.com/design/uW6BKB70chZFDM6twSy4H9/Untitled?node-id=0-1&t=JADnl2OYpQjxtCNL-1
-
----
-
-# Conclusion
-
-The interface design focuses on simplicity, clarity, and usability to ensure that university students can efficiently report and recover lost items.
-
-Iteration 2 extends the design by introducing search functionality, filtering tools, photo uploads, and claim request workflows to improve the overall user experience.
+The prototypes were prepared with Figma to explore page layouts, navigation and interactions before implementation. The [historical Figma design](https://www.figma.com/design/uW6BKB70chZFDM6twSy4H9/Untitled?node-id=0-1&t=JADnl2OYpQjxtCNL-1) is not evidence that every proposed element was delivered.

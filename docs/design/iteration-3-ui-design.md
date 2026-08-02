@@ -1,124 +1,76 @@
-# Iteration 3 UI Design
+# Iteration 3 Final UI Design
 
 ## Overview
 
-This document describes the user interface design for the selected Iteration 3 user stories.
+Iteration 3 completed the delivered US06 uploaded-photo display and US07 claim-request workflow. It also added the Bug #72 empty-claim safeguard and the dedicated claim-confirmation page. This document describes the final implementation rather than a proposed interface.
 
-The Iteration 3 UI focuses on improving the uploaded photo display and claim request workflow while maintaining consistency with the existing Lost and Found Platform.
+## US06 uploaded-photo display
 
----
+The Item Details template reads the selected item's `image_path`.
 
-# Uploaded Photo Workflow
+| State | Delivered presentation |
+|---|---|
+| `image_path` is present and the file loads | Display the item image with `alt="Photo of <item name>"`. |
+| `image_path` is absent | Display **No photo available for this item.** |
+| The image fails to load | The `onerror` handler hides the failed image and reveals the no-photo placeholder. |
 
-## Related User Story
+CSS presents the image in a responsive container and allows it to scale to the available width on smaller screens. The same responsive layout is used for lost and found item records.
 
-US06 (Carry-over) – Display Uploaded Photo
+The reporting forms accept an optional photo. The allowed filename extensions are `png`, `jpg`, `jpeg` and `gif`; `secure_filename()` is applied before storage in `static/uploads`, and the item row stores `uploads/<filename>` in `image_path`. The delivered interface has no client-side image preview or remove-image action.
 
-## Page Purpose
+## US07 Claim Request page
 
-The Item Details page displays the uploaded photo of a lost or found item to help users identify the item more accurately before submitting a claim request.
+The Item Details template displays **Submit Claim Request** only for an item whose `report_type` is `found`. The link opens `/claim-request/<int:item_id>`.
 
-## Acceptance Criteria
+Flask queries the item before rendering the form. An unknown item ID returns **Item not found.** with HTTP 404. When the item exists, the page displays an item summary and these required inputs:
 
-1. An uploaded image is displayed on the Item Details page.
-2. The image uses the stored `image_path`.
-3. The image has useful alt text based on the item name.
-4. An item without an image displays a clear placeholder.
-5. The layout remains usable on mobile screens.
+| Visible purpose | HTML field | Stored claim field |
+|---|---|---|
+| Your Name | `name` | `claimant_name` |
+| Contact Information | `contact` | `claimant_contact` |
+| Claim Message | `message` | `verification_details` |
 
-### Image Position
+The actions are **Submit Claim** and **Return to Item Details**.
 
-The uploaded photo is displayed near the top of the Item Details page, above the item information such as category, report type, location, and description.
+## Bug #72: empty-claim validation
 
-### Image Size
+On `POST`, `claim_request()` strips `name`, `contact` and `message`. If any value is empty or whitespace-only, the route:
 
-- Maximum width: 400px
-- Responsive width: 100%
-- Height adjusts automatically to maintain the original aspect ratio.
-- Images use `object-fit: contain` to prevent distortion.
+- flashes **All claim fields are required.**;
+- re-renders the Claim Request form with status 200;
+- does not execute the claim `INSERT`;
+- does not commit a transaction.
 
-### Image Behaviour
+This is server-side validation and remains effective when a direct request bypasses the browser's `required` attributes.
 
-| Situation | Expected Behaviour |
-|------------|-------------------|
-| image_path exists | Display the uploaded item photo. |
-| image_path is empty | Display a placeholder with the message "No photo available for this item." |
-| Image fails to load | Display a broken-image placeholder and alternative text. |
+## Valid claim persistence
 
-### Accessibility
+For a valid submission, `save_claim_request()` performs a parameterised insert into `claims`, records status `pending`, and commits the transaction. The route then redirects to `/claim-success/<int:item_id>`.
 
-The image uses meaningful alternative text:
+## Dedicated Claim Request Submitted page
 
-`Photo of {{ item.item_name }}`
+The delivered workflow does not end with only a generic in-page success message. `/claim-success/<int:item_id>` is a separate page that displays:
 
-to improve accessibility for screen readers.
+- **Claim Request Submitted**;
+- confirmation that the request was successfully recorded;
+- **Current status: Pending**;
+- **View Item Details**;
+- **Browse More Items**.
 
-### Mobile Layout
+The submitted name, contact information and verification details are not repeated on the confirmation page.
 
-On smaller screens, the image scales automatically to fit the available width while maintaining the aspect ratio.
+## Responsive and accessibility behaviour
 
----
+The Item Details image and placeholder resize within the available layout. Navigation and actions stack on smaller screens, and buttons become full width. Images use meaningful alternative text, forms have associated labels, the claim error area uses a polite live region, and CSS supplies visible keyboard-focus styling and reduced-motion handling.
 
-# Claim Request Workflow
+## Current implementation limitations
 
-## Related User Story
+- There is no authentication or user-account UI.
+- There is no administrator review interface.
+- Claim approval is not implemented.
+- Claim-status tracking is not implemented.
+- The Item Details UI exposes the claim action only for found items, but the backend claim route does not independently enforce found-only eligibility.
+- The success route uses `item_id`, not a claim identifier; it confirms the pending state passed by the application rather than loading a particular claim record.
+- Contact information remains visible on Item Details and requires product-owner privacy confirmation.
 
-US07 – Submit Claim Request
-
-## Page Purpose
-
-The Claim Request page allows a student to submit a request to claim a found item. The page collects the required information and submits it to the existing backend without changing the current data structure.
-
-## Acceptance Criteria
-
-1. Users can enter their name.
-2. Users can enter their contact information.
-3. Users can provide verification details for ownership verification.
-4. Users can submit the claim successfully.
-5. A success message is displayed after submission.
-6. Invalid or incomplete input is handled safely.
-
-## Form Fields
-
-| Field | Type | Required |
-|--------|------|----------|
-| Your Name | Text | Yes |
-| Contact Information | Text | Yes |
-| Verification Details | Text Area | Yes |
-
-Users can enter verification details to prove ownership of the found item.
-
-## Buttons
-
-- Submit Claim
-- Back to Item Details
-
-## Status
-
-After a successful submission, the system displays a confirmation message to inform the user that the claim request has been received.
-
-## Normal State
-
-The page displays the selected item information together with the claim request form.
-
-## Empty State
-
-If the selected item cannot be found, a message is displayed indicating that the item is unavailable.
-
-## Error State
-
-If required fields are missing or invalid, validation messages are displayed and the form is not submitted.
-
-## Expected User Actions
-
-1. Open the Item Details page.
-2. Click **Submit Claim Request**.
-3. Enter the required information.
-4. Click **Submit Claim**.
-5. Receive a confirmation message.
-
----
-
-## Design Summary
-
-The Iteration 3 UI design improves the uploaded photo display and claim request workflow while remaining compatible with the existing backend implementation. The design also considers accessibility, responsive layouts, and clear feedback for normal, empty, and error states.
+US08 Track Claim Status, US09 Review Claim Requests, US10 Update Item Status and US11 View My Reports remain deferred. No customer acceptance or approval is asserted by this design record.
