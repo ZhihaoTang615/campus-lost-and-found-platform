@@ -10,12 +10,13 @@
 | HTML | Page structure and forms | Active templates and documentation entry point | Native browser markup supports the required forms and navigation without a frontend build step. | [`templates/`](../templates/), [`index.html`](index.html) |
 | CSS | Visual layout and responsive presentation | Active application stylesheet and documentation page | Standard CSS keeps the interface portable and build-tool free. | [`static/css/style.css`](../static/css/style.css), [`index.html`](index.html) |
 | JavaScript | Small client-side UI interactions | Button ripple/confirmation interaction | Lightweight browser scripts are sufficient for the limited client-side behaviour. | [`static/js/ui-feedback.js`](../static/js/ui-feedback.js); `static/script.js` is an empty legacy file, and this is not a Node.js application |
-| MySQL | Persistent `items` and `claims` model | Local application database and manual system evidence | A relational schema suits item-to-claim relationships and parameterised queries. | [`database.sql`](../database.sql), SQL in [`app.py`](../app.py), manual database screenshots |
+| MySQL | Persistent `users`, `items`, and `claims` model | Local application database and manual system evidence | A relational schema enforces account and item-to-claim relationships; nullable ownership preserves only pre-enhancement legacy rows, while every current application insert is owned. | [`database.sql`](../database.sql), [`001_add_user_admin_system.sql`](../migrations/001_add_user_admin_system.sql), SQL in [`app.py`](../app.py), manual database screenshots |
 | `mysql-connector-python` | Python/MySQL connection | Database connection and cursor operations | It provides a direct Python DB API for the selected MySQL database. | [`requirements.txt`](../requirements.txt), [`app.py`](../app.py) |
 | `python-dotenv` | Loads local database and secret settings | Application startup | It separates local configuration from tracked source for development. | [`requirements.txt`](../requirements.txt), [`app.py`](../app.py), ignored `.env` pattern |
-| Werkzeug `secure_filename` | Sanitises an uploaded filename | Shared item-report upload path | It reduces unsafe filename characters using the Flask stack's existing utility. | [`app.py`](../app.py); it does not validate MIME, size, or collisions |
-| pytest | Automated regression runner | All four test modules | Its fixtures and concise assertions suit Flask route regression tests. | [`tests/`](../tests/), [`requirements.txt`](../requirements.txt); 21 tests in the final run |
-| `unittest.mock`, `MagicMock`, `patch` | Isolates database dependencies | Claim persistence and success-flow tests | Mocks make SQL/commit behaviour deterministic without requiring live MySQL. | [`test_claim_request_mock.py`](../tests/test_claim_request_mock.py), [`mock-object-research.md`](testing/mock-object-research.md) |
+| Werkzeug security and upload utilities | Password hashing/checking and uploaded-filename sanitisation | Registration, login, administrator creation, and shared item-report upload path | Existing Flask-stack utilities avoid plaintext passwords and unsafe filename characters without another authentication framework. | [`app.py`](../app.py), [`create_admin.py`](../scripts/create_admin.py); upload checks still do not validate MIME, size, or collisions |
+| `getpass` | Hidden administrator password input | Interactive administrator-account creation | It prevents raw password echo and avoids hard-coded administrator credentials. | [`create_admin.py`](../scripts/create_admin.py) |
+| pytest | Automated regression runner | Five test modules | Its fixtures, parametrization, and Flask test-client support suit route, security, ownership, and regression checks. | [`tests/`](../tests/), [`requirements.txt`](../requirements.txt); 95 tests in the current final run |
+| `unittest.mock`, `MagicMock`, `patch` | Isolates database dependencies | Item, claim, authentication, ownership, and administrator tests | Fakes and mocks make SQL/commit behaviour deterministic without requiring live MySQL. | [`test_claim_request_mock.py`](../tests/test_claim_request_mock.py), [`test_user_admin_system.py`](../tests/test_user_admin_system.py), [`mock-object-research.md`](testing/mock-object-research.md) |
 | Python virtual environment | Dependency isolation | Local `.venv` test/run commands | It avoids relying on globally installed Python packages. | `.venv/` is used by the final command; `venv/pyvenv.cfg` is also tracked, creating a hygiene risk |
 | Git | Distributed version history | Branches, commits, and merges | It provides local traceability and supports team branching. | Local `.git` history |
 | GitHub repository | Shared remote source | Team code/document collaboration | It centralises the project and exposes repository history. | Repository remote and links in project records |
@@ -42,19 +43,29 @@ and environment-variable names read by [`app.py`](../app.py):
 3. Install dependencies with `python -m pip install -r requirements.txt`.
 4. Create an untracked local `.env` containing values for `APP_SECRET_KEY`,
    `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`.
-5. Create the database and tables from the tracked schema, for example with
+5. For a fresh installation, create the database and all three tables from the tracked schema, for example with
    `mysql -u <local-user> -p < database.sql`.
-6. Ensure `static/uploads/` exists and is writable.
-7. Run `flask --app app run --debug`.
-8. Run `python -m pytest -v` for the regression suite.
+   For an existing US01–US07 database, back it up and run
+   `migrations/001_add_user_admin_system.sql` once instead; it adds nullable
+   ownership fields without deleting existing records.
+6. Create an administrator when needed with `python scripts/create_admin.py`.
+   The script reads `.env`, hides password input, and stores a hash.
+7. Ensure `static/uploads/` exists and is writable.
+8. Run `flask --app app run --debug`.
+9. Run `python -m pytest -v` for the regression suite.
 
 No public Flask application deployment is evidenced. The GitHub Pages address
 serves documentation only.
 
+Registration and login are the public application entry points. Reporting,
+browsing, details, claims, My Reports, and diagnostics are authenticated routes;
+the current application does not create anonymous item or claim rows.
+
 ## Reproducibility and Hygiene Gaps
 
-- No `.env.example` is present. Variable names are documented, but a
-  copy-safe template would improve onboarding.
+- `.env.example` now provides placeholder variable names only. A real `.env`
+  and a strong `APP_SECRET_KEY` must still be created locally and remain
+  untracked; the application refuses requests without that secret.
 - No CI workflow reproduces the test command on a clean runner.
 - A large legacy `venv/` directory is tracked. Adding `venv/` to `.gitignore`
   prevents new files from being added but does not remove the existing tracked
@@ -69,13 +80,17 @@ serves documentation only.
 - The application assumes the upload directory already exists and is writable.
 - The ignore rule permits `static/uploads/.gitkeep`, but that placeholder is not
   present, so Git does not guarantee the empty directory in a clean clone.
-- `database.sql` makes database creation idempotent, but its two table statements
-  omit `IF NOT EXISTS`; it also contains no demonstration seed data.
+- `database.sql` creates the database if needed, but its three table statements
+  omit `IF NOT EXISTS`; it also contains no demonstration seed data. Existing
+  installations must use the documented one-time migration rather than rerun
+  the fresh schema over their tables.
 - No Docker, container, deployment manifest, or production WSGI configuration is
   present.
 - Root-level prototype HTML/JavaScript and the `.save` template backup can be
   confused with the active Flask implementation. The active system is
   `app.py`, `templates/`, and `static/`.
 
-These gaps do not invalidate the local 21-test run, but they should be disclosed
-instead of overstating clean-install or production readiness.
+These gaps do not invalidate the current local 95-test run. The earlier
+21-test result remains valid historical evidence for the completed US01–US07
+baseline, but it is no longer the current full-suite count. Neither result
+should be used to overstate clean-install or production readiness.

@@ -1,19 +1,25 @@
 # Implemented User Flows
 
-This document records the delivered navigation and request outcomes. The Mermaid flowcharts are authoritative for the current Flask implementation.
+This document records the delivered navigation and request outcomes. The Mermaid
+flowcharts are authoritative for the current Flask implementation. Sections
+1–4 retain the US01-US07 behavior behind the final login guard; Sections 5–7
+document the account and viewing refinement. Earlier evidence of unauthenticated
+baseline operation remains historical rather than describing current access.
 
 ## 1. Report Lost Item
 
 ```mermaid
 flowchart TD
-    H[Home] --> L[Report Lost Item]
+    H[Home] --> Auth{Logged in?}
+    Auth -->|No| Login[Redirect to Login]
+    Auth -->|Yes| L[Report Lost Item]
     L --> LF[Enter item details]
     LF --> LP{Attach optional photo?}
     LP -->|No| LS[Submit report]
     LP -->|Yes| LChoose[Select photo]
     LChoose --> LS
     LS --> LPhoto{Photo supplied?}
-    LPhoto -->|No| LInsert[Parameterised INSERT into items]
+    LPhoto -->|No| LInsert[INSERT item with session user ID]
     LPhoto -->|Yes| LE{Filename extension allowed?}
     LE -->|No| LErr[Flash upload and save errors]
     LErr --> LR[Redirect to lost-item form]
@@ -26,20 +32,25 @@ flowchart TD
     LFail --> LR
 ```
 
-The form sends a multipart `POST` to `/report-lost-item`. Item Name, Category, Location Lost, Date Lost, Description and Contact Information are browser-required; the photo is optional. The handled success, invalid-extension and database-error paths redirect back to the same form with feedback.
+`/report-lost-item` requires login. The form sends a multipart `POST`; the
+handled success, invalid-extension and database-error paths redirect back to the
+same form with feedback. Every successful item insert stores the required
+session user ID.
 
 ## 2. Report Found Item
 
 ```mermaid
 flowchart TD
-    H[Home] --> F[Report Found Item]
+    H[Home] --> Auth{Logged in?}
+    Auth -->|No| Login[Redirect to Login]
+    Auth -->|Yes| F[Report Found Item]
     F --> FF[Enter item details]
     FF --> FP{Attach optional photo?}
     FP -->|No| FS[Submit report]
     FP -->|Yes| FChoose[Select photo]
     FChoose --> FS
     FS --> FPhoto{Photo supplied?}
-    FPhoto -->|No| FInsert[Parameterised INSERT into items]
+    FPhoto -->|No| FInsert[INSERT item with session user ID]
     FPhoto -->|Yes| FE{Filename extension allowed?}
     FE -->|No| FErr[Flash upload and save errors]
     FErr --> FR[Redirect to found-item form]
@@ -52,13 +63,17 @@ flowchart TD
     FFail --> FR
 ```
 
-The form sends a multipart `POST` to `/report-found-item`. Its required fields mirror the lost-item form, and the optional photo follows the same extension-based upload path.
+`/report-found-item` requires login. Its required fields mirror the lost-item
+form, and the optional photo follows the same extension-based upload path. Every
+successful insert is owned by the authenticated account.
 
 ## 3. Browse, search, filter and view details
 
 ```mermaid
 flowchart TD
-    H[Home] --> B[Browse Items]
+    H[Home] --> Auth{Logged in?}
+    Auth -->|No| Login[Redirect to Login]
+    Auth -->|Yes| B[Browse Items]
     B --> Q[Enter optional keyword q]
     Q --> T[Select optional report type]
     T --> C[Select optional category]
@@ -80,17 +95,23 @@ flowchart TD
     RB --> B
 ```
 
-The keyword searches item name, description and location. Report type and category are single-choice selectors. The page has no pagination or multi-category filter.
+The Browse, search/filter, generic details entry, and selected Item Details
+routes require login. The keyword searches item name, description and location.
+Report type and category are single-choice selectors. The page has no
+pagination or multi-category filter.
 
 ## 4. Submit Claim Request
 
 ```mermaid
 flowchart TD
-    D[Item Details] --> RT{UI sees report_type found?}
+    Access[Claim route request] --> Auth{Logged in?}
+    Auth -->|No| Login[Redirect to Login]
+    Auth -->|Yes| D[Item Details]
+    D --> RT{UI sees report_type found?}
     RT -->|No| Hidden[Claim button not displayed]
     RT -->|Yes| Button[Submit Claim Request]
     Button --> GET[GET claim-request/item_id]
-    Direct[Direct claim-route request] -. bypasses UI decision .-> GET
+    Direct[Direct authenticated claim request] -. bypasses UI decision .-> GET
     GET --> Select[SELECT item by ID]
     Select --> Exists{Item exists?}
     Exists -->|No| NF[404 Item not found]
@@ -102,7 +123,7 @@ flowchart TD
     Valid -->|No| Error[Show required-fields message]
     Error --> NoWrite[No INSERT and no commit]
     NoWrite --> Form
-    Valid -->|Yes| Insert[INSERT pending claim and commit]
+    Valid -->|Yes| Insert[INSERT owned pending claim and commit]
     Insert --> Redirect[Redirect to claim-success/item_id]
     Redirect --> Success[Claim Request Submitted]
     Success --> Status[Display Pending]
@@ -111,9 +132,81 @@ flowchart TD
     Choice -->|Browse More Items| B[Browse Items]
 ```
 
-The Item Details template makes the found-only decision for the visible claim button. The backend `/claim-request/<int:item_id>` route verifies that the item exists but does not independently enforce `report_type = found`; a direct request can therefore bypass the UI eligibility boundary.
+Login is required for the claim request and claim-success routes. The Item
+Details template makes the found-only decision for the visible claim button.
+The backend verifies that the item exists but does not independently enforce
+`report_type = found`; an authenticated direct request can therefore bypass the
+UI eligibility boundary.
 
-The success screen is a separate `/claim-success/<int:item_id>` page. It shows Pending and links to the selected Item Details page or back to Browse Items, without displaying the submitted private form values.
+The success screen is a separate login-protected page. It shows Pending and
+links to Item Details or Browse Items without displaying submitted private
+values. Every new claim stores the authenticated session user ID.
+
+## 5. Register, log in, and log out
+
+```mermaid
+flowchart TD
+    Visitor[Logged-out visitor] --> Register[GET or POST Register]
+    Register --> RV{Registration values valid and email unique?}
+    RV -->|No| RE[Show user-friendly validation message]
+    RE --> Register
+    RV -->|Yes| Hash[Generate password hash and insert role user]
+    Hash --> Login[Redirect to Login]
+    Visitor --> Login
+    Login --> Credentials[Normalize email and check password hash]
+    Credentials --> Valid{Credentials valid?}
+    Valid -->|No| Generic[Show generic invalid-credentials message]
+    Generic --> Login
+    Valid -->|Yes| Rebuild[Clear old session and store user ID, name, and role]
+    Rebuild --> Safe{Allowed local next supplied?}
+    Safe -->|Yes| Destination[Local destination permitted for role]
+    Safe -->|No| Role{Administrator role?}
+    Role -->|No| My[My Reports]
+    Role -->|Yes| Admin[Admin Dashboard]
+    Destination --> MyOrAdmin[Requested authenticated page]
+    My --> Logout[POST Logout]
+    Admin --> Logout
+    MyOrAdmin --> Logout
+    Logout --> Clear[Clear session and return Home]
+```
+
+The safe-return check accepts local absolute paths only and rejects external or scheme-relative destinations. A normal user cannot use `next` to enter `/admin`. Public registration cannot create an administrator; the interactive `scripts/create_admin.py` script is the separate administrator-account path.
+
+## 6. View My Reports
+
+```mermaid
+flowchart TD
+    Request[GET My Reports] --> Auth{Session user ID present?}
+    Auth -->|No| Login[Redirect to Login with local next]
+    Auth -->|Yes| Query[SELECT items WHERE user_id equals session user ID]
+    Query --> Order[Order newest first]
+    Order --> Results{Owned reports exist?}
+    Results -->|No| Empty[Show No Reports Yet and reporting actions]
+    Results -->|Yes| Cards[Show owned report cards]
+    Cards --> Details[Open authenticated Item Details]
+```
+
+The filter uses only the authenticated session user ID. It never accepts another user's ID from a URL or form. An administrator may use My Reports, but receives the same own-account filter.
+
+## 7. View administrator records
+
+```mermaid
+flowchart TD
+    Request[GET Admin] --> SignedIn{Authenticated?}
+    SignedIn -->|No| Login[Redirect to Login]
+    SignedIn -->|Yes| Role{Session role is admin?}
+    Role -->|No| Forbidden[Return 403 Administrator access required]
+    Role -->|Yes| Counts[SELECT item and claim summary counts]
+    Counts --> Items[SELECT all items LEFT JOIN users]
+    Items --> Claims[SELECT all claims LEFT JOIN items and users]
+    Claims --> Dashboard[Render read-only Admin Dashboard]
+    Dashboard --> Legacy[Show pre-enhancement NULL owners with legacy fallback]
+```
+
+The dashboard exposes viewing only. It has no POST route and no delete, ban,
+approval, rejection, or status-update action. `LEFT JOIN` keeps all
+pre-enhancement records with `NULL` ownership visible; current application
+submissions are always owned.
 
 ## Historical design artifact
 

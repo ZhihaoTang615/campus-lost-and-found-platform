@@ -114,7 +114,9 @@ Project Overview
 
 The Campus Lost and Found Platform is a web application designed to help students
 report lost items, report found items, browse available records, search and filter
-items, and submit ownership claims for found property.
+items, and submit ownership claims for found property. Its final scope also
+includes user accounts, private account-owned report lists, and an administrator
+system for viewing lost-and-found records.
 
 </p>
 
@@ -158,12 +160,39 @@ Delivered Features
 
 <li>US07 - Submit Claim Request</li>
 
+<li>User Registration and Login</li>
+
+<li>POST-only Logout</li>
+
+<li>Login-protected reporting, browsing, details, and claims</li>
+
+<li>My Reports - signed-in account records only</li>
+
+<li>Read-only Admin Dashboard</li>
+
 </ul>
 
 <p>
-US08 Track Claim Status, US09 Review Claim Requests, US10 Update Item Status,
-and US11 View My Reports are deferred. Runtime uploads are excluded from new
-Git tracking by the repository ignore rules.
+<strong>Lecturer-requested final scope refinement:</strong>
+"The final version should include a user system and an administrator system
+that can be used to view lost-and-found records."
+</p>
+
+<p>
+The implemented refinement provides registration, login, POST-only logout,
+required ownership for every new item and claim, My Reports, and a read-only
+Admin Dashboard. All operational lost-and-found routes require login. The
+Iteration 3 record that deferred US08-US11 is retained as historical evidence;
+the later refinement now delivers the view-only US11 slice. US08 and US10 remain
+deferred. US09 also remains deferred because the administrator can view claims
+but cannot approve, reject, delete, or update them.
+</p>
+
+<p>
+Pre-enhancement item and claim rows remain valid with a null account owner. The
+administrator view uses left joins so those legacy rows remain visible. The
+current application does not create new unowned rows. Runtime uploads are
+excluded from new Git tracking by the repository ignore rules.
 </p>
 
 
@@ -244,11 +273,31 @@ Regression Testing
 </ul>
 
 
+<h3>
+Lecturer-Requested Final Refinement
+</h3>
+
+<ul>
+
+<li class="completed">User registration, login, and POST-only logout</li>
+
+<li class="completed">Login-protected operations and account-owned new item and claim rows</li>
+
+<li class="completed">Protected My Reports viewing page</li>
+
+<li class="completed">Protected read-only Admin Dashboard</li>
+
+<li class="completed">One-time database migration and secure administrator creation script</li>
+
+</ul>
+
+
 <p>
 
 The delivered story list reflects current source and automated tests. Historical
-planning and manual-evidence limitations are documented separately. US08-US11
-were not implemented and therefore are not shown as completed.
+planning and manual-evidence limitations are documented separately. The original
+Iteration 3 deferral remains part of that record; the later final refinement is
+listed separately so the two stages are not conflated.
 
 </p>
 
@@ -378,16 +427,18 @@ manual Flask/MySQL checks; its limits are stated in the linked testing report.
 
 
 <p>
-The
-<a href="testing/images/iteration-3-final-regression-21-passed.png">current complete automated regression screenshot</a>
-records <strong>21 collected, 21 passed, and 0 failed</strong>. Automated database
-interactions use fake or mocked connections; manual system evidence uses the
-running Flask application and MySQL where recorded.
+The current automated command records <strong>95 passed</strong>: the unchanged
+21-test US01-US07 baseline plus 74 collected final-refinement cases. Automated
+database interactions use fake or mocked connections; manual system evidence
+uses the running Flask application and MySQL where recorded.
 </p>
 
 <p>
-The final regression screenshot is linked rather than embedded because it shows
-local terminal identity and device context.
+The
+<a href="testing/images/iteration-3-final-regression-21-passed.png">21-pass regression screenshot</a>
+is retained as historical baseline evidence rather than presented as the current
+complete suite. It is linked rather than embedded because it shows local terminal
+identity and device context.
 </p>
 
 <p>
@@ -412,8 +463,11 @@ status and replacement needs are documented in the testing report.
 <h2 id="assessment-evidence">Assessment Evidence</h2>
 
 <p>
-The delivered scope is US01-US07. US08 Track Claim Status, US09 Review Claim
-Requests, US10 Update Item Status, and US11 View My Reports are deferred.
+The delivered scope is the US01-US07 baseline plus the lecturer-requested user
+and read-only administrator viewing refinement. US08 Track Claim Status and US10
+Update Item Status remain deferred. The Admin Dashboard is not US09 approval or
+rejection. Historical US11 deferral evidence remains preserved, while its
+view-only slice is now delivered through My Reports.
 </p>
 
 <ul>
@@ -506,12 +560,15 @@ Delivered Solution Summary
 
 <p>
 
-The final delivered baseline supports reporting, browsing, searching, filtering,
-viewing, photographing, and claiming lost-and-found items.
+The final delivered system supports reporting, browsing, searching, filtering,
+viewing, photographing, and claiming lost-and-found items. It also supports
+registration and login, account-owned report viewing, and a read-only
+administrator overview of all item and claim records.
 
-Current source and automated tests support US01-US07. Selected historical manual
-evidence records MySQL persistence; deferred scope and unresolved evidence gaps
-remain explicit.
+Current source and the 95-pass automated suite support the unchanged US01-US07
+baseline and the final refinement. Selected historical manual evidence records
+MySQL persistence; deferred workflow scope and unresolved evidence gaps remain
+explicit.
 
 </p>
 

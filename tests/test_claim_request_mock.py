@@ -19,7 +19,9 @@ def sample_found_item():
     }
 
 
-def test_claim_request_stores_pending_claim_with_mock_database(client):
+def test_claim_request_stores_pending_claim_with_mock_database(
+    authenticated_client,
+):
     """
     Verify that a submitted claim is stored using a mocked database.
 
@@ -43,7 +45,7 @@ def test_claim_request_stores_pending_claim_with_mock_database(client):
         "get_database_connection",
         return_value=mock_connection,
     ):
-        response = client.post(
+        response = authenticated_client.post(
             "/claim-request/1",
             data={
                 "name": "Zhihao Tang",
@@ -56,7 +58,7 @@ def test_claim_request_stores_pending_claim_with_mock_database(client):
     assert response.status_code == 302
     assert response.headers["Location"].endswith("/claim-success/1")
 
-    success_response = client.get(response.headers["Location"])
+    success_response = authenticated_client.get(response.headers["Location"])
 
     assert success_response.status_code == 200
     assert b"zhihao@example.com" not in success_response.data
@@ -80,6 +82,7 @@ def test_claim_request_stores_pending_claim_with_mock_database(client):
         "zhihao@example.com",
         "The card contains my student number.",
         "pending",
+        42,
     )
 
     mock_connection.commit.assert_called_once()
@@ -87,9 +90,9 @@ def test_claim_request_stores_pending_claim_with_mock_database(client):
     mock_connection.close.assert_called_once()
 
 
-def test_claim_success_page_loads_with_confirmation(client):
+def test_claim_success_page_loads_with_confirmation(authenticated_client):
     """Display a dedicated confirmation without private claim details."""
-    response = client.get("/claim-success/1")
+    response = authenticated_client.get("/claim-success/1")
 
     assert response.status_code == 200
     assert b"Claim Request Submitted" in response.data
@@ -102,7 +105,7 @@ def test_claim_success_page_loads_with_confirmation(client):
     assert b'href="/items"' in response.data
 
 
-def test_empty_claim_request_is_rejected(client):
+def test_empty_claim_request_is_rejected(authenticated_client):
     """US07 bug regression: empty claim fields must not be stored."""
 
     mock_cursor = MagicMock()
@@ -117,7 +120,7 @@ def test_empty_claim_request_is_rejected(client):
         "get_database_connection",
         return_value=mock_connection,
     ):
-        response = client.post(
+        response = authenticated_client.post(
             "/claim-request/1",
             data={
                 "name": "",
@@ -136,11 +139,14 @@ def test_empty_claim_request_is_rejected(client):
     mock_connection.commit.assert_not_called()
 
 
-def test_claim_request_for_missing_item_returns_404(client, fake_db):
+def test_claim_request_for_missing_item_returns_404(
+    authenticated_client,
+    fake_db,
+):
     """Reject a claim request when its item ID does not exist."""
     connection = fake_db(row=None)
 
-    response = client.get("/claim-request/999")
+    response = authenticated_client.get("/claim-request/999")
 
     assert response.status_code == 404
     assert b"Item not found." in response.data

@@ -4,13 +4,17 @@
 
 The Campus Lost and Found Platform is a web-based application developed for CP3407 Advanced Software Engineering.
 
-The system helps university students report lost items, report found items, browse item records, search and filter listings, view item details, upload item photos, and submit claim requests for found property.
+The system helps university students report lost items, report found items,
+browse item records, search and filter listings, view item details, upload item
+photos, and submit claim requests for found property. The final version also
+supports user accounts, account-owned report lists, and a read-only
+administrator view of lost-and-found records.
 
 The project was developed using an iterative Agile process with GitHub Issues, GitHub Projects, branches, Pull Requests, automated testing, Test-Driven Development, mock objects, regression testing, and system testing.
 
 ---
 
-## Final Delivered Scope
+## Delivered Baseline
 
 The final verified system includes the following user stories:
 
@@ -24,18 +28,48 @@ The final verified system includes the following user stories:
 
 These user stories are implemented and supported by repository, testing, and system-test evidence.
 
+## Lecturer-Requested Final Scope Refinement
+
+After the US01-US07 baseline was completed and tested, the lecturer confirmed:
+
+> "The final version should include a user system and an administrator system
+> that can be used to view lost-and-found records."
+
+The final implementation therefore also includes:
+
+- public user registration with password hashing;
+- user and administrator login;
+- POST-only logout;
+- authenticated-only access to reporting, browsing, item details, and claiming;
+- required ownership links from every new item report and claim to the signed-in
+  account;
+- a protected **My Reports** page showing only the signed-in account's item
+  reports; and
+- a protected, read-only **Admin Dashboard** showing summary counts, all item
+  reports, and all claim requests.
+
+The final application requires login before any lost-and-found functionality is
+used. Every new item report and claim is owned by the authenticated account.
+The database ownership columns remain nullable only so records created before
+the enhancement are preserved as legacy rows and remain visible to
+administrators.
+
 ---
 
-## Deferred Backlog
+## Historical Deferral and Remaining Backlog
 
-The following user stories are deferred and are not part of the delivered system:
+The Iteration 3 records correctly preserve the earlier decision to defer
+US08-US11 at that point in the project. The later lecturer-requested refinement
+does not rewrite that history.
 
 - **US08 – Track Claim Status**
 - **US09 – Review Claim Requests**
 - **US10 – Update Item Status**
-- **US11 – View My Reports**
 
-These stories are not part of the completed final system.
+US08 and US10 remain deferred. US09 also remains deferred: the Admin Dashboard
+can view claims but cannot approve, reject, delete, or update them. The
+view-only portion of US11 is now delivered as **My Reports** through the later
+scope refinement; report editing and management are not included.
 
 Historical planning files contain conflicting capacity, completed-effort, and
 velocity values. Those records have been preserved and require team
@@ -44,6 +78,11 @@ confirmation; they are not repeated here as settled final metrics.
 ---
 
 ## Main Features
+
+Registration and login are public entry points. The final operational routes
+for reporting, browsing/searching/filtering, item details, photo workflows,
+claims, and My Reports require authentication; database diagnostics and the
+Admin Dashboard additionally require the administrator role.
 
 ### Report Lost Items
 
@@ -118,6 +157,28 @@ After a valid claim is stored, the application redirects to the dedicated
 **Claim Request Submitted** page. The page displays **Pending** status and
 provides **View Item Details** and **Browse More Items** links.
 
+### Registration, Login, and Logout
+
+Public registration creates only normal user accounts. Names and email
+addresses are validated, emails are normalized to lowercase, and passwords are
+stored only as Werkzeug password hashes. Login uses a generic invalid-
+credentials message and accepts only safe local return destinations. Logout is
+available only through `POST /logout`.
+
+### My Reports
+
+`GET /my-reports` requires login and queries `items.user_id` using the signed-in
+session's `user_id`. It lists only that account's reports, newest first, with
+links to the authenticated item-details, reporting, and browsing pages.
+
+### Read-Only Admin Dashboard
+
+`GET /admin` requires an authenticated session whose stored role is `admin`.
+It displays total item, lost-report, found-report, claim, and pending-claim
+counts, followed by all item and claim records. `LEFT JOIN` queries keep
+pre-enhancement rows with a nullable `user_id` visible under the legacy fallback
+labels. The dashboard has no state-changing controls.
+
 ---
 
 ## Technology Stack
@@ -165,8 +226,9 @@ Main responsibilities include:
 
 - Flask routes handle HTTP requests and responses.
 - Jinja templates render the user interface.
-- MySQL stores item and claim data.
+- MySQL stores users, item reports, and claim requests.
 - Helper functions manage database persistence and image validation.
+- Flask session helpers enforce login and administrator authorization.
 - pytest provides automated testing.
 - mock objects isolate database behaviour in selected tests.
 
@@ -174,6 +236,9 @@ Important implementation files include:
 
 ```text
 app.py
+database.sql
+migrations/
+scripts/create_admin.py
 templates/
 static/
 tests/
@@ -197,22 +262,48 @@ The application is designed to run locally with Python, Flask, and MySQL.
    python -m pip install -r requirements.txt
    ```
 
-3. Create a local `.env` file with values for `APP_SECRET_KEY`, `DB_HOST`,
-   `DB_USER`, `DB_PASSWORD`, and `DB_NAME`. Do not commit credentials.
+3. Copy `.env.example` to `.env` and replace every placeholder with local
+   values for `APP_SECRET_KEY`, `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and
+   `DB_NAME`. Do not commit credentials. `APP_SECRET_KEY` is required before
+   the application will serve requests.
 
-4. Create the local database and tables from the tracked schema:
+4. For a fresh installation, create the local database and all three tables
+   from the tracked schema:
 
    ```bash
    mysql -u <local-user> -p < database.sql
    ```
 
-5. Start the application:
+   For a database that already contains the original `items` and `claims`
+   tables, do not re-import the fresh schema. Back up the database and run the
+   one-time additive migration instead:
+
+   ```bash
+   mysql -u <local-user> -p <database-name> \
+     < migrations/001_add_user_admin_system.sql
+   ```
+
+   The migration creates `users`, adds nullable `user_id` columns, and adds the
+   ownership foreign keys without removing existing rows.
+
+5. After the schema or migration is installed, create an administrator account
+   through the secure interactive script:
+
+   ```bash
+   python scripts/create_admin.py
+   ```
+
+   The script loads the same database environment variables, hides both
+   password prompts with `getpass`, hashes the password, and inserts
+   `role='admin'`. No administrator credentials are hard-coded.
+
+6. Start the application:
 
    ```bash
    flask --app app run --debug
    ```
 
-6. Run the automated regression suite:
+7. Run the automated regression suite:
 
    ```bash
    python -m pytest -v
@@ -230,9 +321,32 @@ The final regression command is:
 .venv/bin/python -m pytest -v
 ```
 
-The current result is **21 passed**. Automated database interactions use fake or
-mocked connections; repository-recorded manual system evidence uses the running
-Flask application and MySQL.
+The current result is **95 passed**. The original 21 tests remain green, and the
+added account, authorization, ownership, and administrator tests also use fake
+or mocked database connections rather than a live MySQL service.
+
+## Security Decisions
+
+- Passwords are hashed and are never stored in session or printed by the admin
+  creation script.
+- Session authentication state is limited to `user_id`, `user_name`, and
+  `user_role`.
+- Public registration always stores `role='user'`; administrators are created
+  only through the local script.
+- Reporting, browsing, item-details, claim, and personal-report routes require
+  login; every new item and claim insert uses the authenticated `user_id`.
+- Logged-out static access is limited to the stylesheet and UI-feedback script
+  used by the Home, Login, and Register pages; uploaded item photos require
+  authentication.
+- Nullable ownership exists only for records that predate the account
+  enhancement; the current application does not create anonymous records.
+- SQL values use parameter placeholders.
+- The administrator decorator trusts only the signed session role, never a
+  form or URL role value.
+- Login return destinations must be local paths, preventing external open
+  redirects.
+- Jinja automatic escaping remains enabled.
+- Application and database secrets remain environment-based and untracked.
 
 - [Assessment entry point](docs/index.html)
 - [Requirements](docs/requirements.md)

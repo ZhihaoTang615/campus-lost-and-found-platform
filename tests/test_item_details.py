@@ -20,10 +20,10 @@ def sample_item():
 # US05 – View Item Details
 # =========================================================
 
-def test_item_details_entry_route_redirects_to_items(client):
+def test_item_details_entry_route_redirects_to_items(authenticated_client):
     """TC13: The general details route should redirect to Browse Items."""
 
-    response = client.get(
+    response = authenticated_client.get(
         "/item-details",
         follow_redirects=False,
     )
@@ -32,12 +32,12 @@ def test_item_details_entry_route_redirects_to_items(client):
     assert response.headers["Location"].endswith("/items")
 
 
-def test_existing_item_details_are_displayed(client, fake_db):
+def test_existing_item_details_are_displayed(authenticated_client, fake_db):
     """TC14: An existing item ID should display its information."""
 
     connection = fake_db(row=sample_item())
 
-    response = client.get("/items/1")
+    response = authenticated_client.get("/items/1")
 
     assert response.status_code == 200
     assert b"Student ID Card" in response.data
@@ -49,12 +49,12 @@ def test_existing_item_details_are_displayed(client, fake_db):
     assert parameters == (1,)
 
 
-def test_missing_item_returns_404(client, fake_db):
+def test_missing_item_returns_404(authenticated_client, fake_db):
     """TC15: An unknown item ID should return a handled 404 response."""
 
     connection = fake_db(row=None)
 
-    response = client.get("/items/999")
+    response = authenticated_client.get("/items/999")
 
     assert response.status_code == 404
     assert b"Item not found" in response.data
@@ -67,7 +67,7 @@ def test_missing_item_returns_404(client, fake_db):
 # US06 – Display Uploaded Item Photo
 # =========================================================
 
-def test_item_details_displays_uploaded_photo(client, fake_db):
+def test_item_details_displays_uploaded_photo(authenticated_client, fake_db):
     """US06: An uploaded item photo should be displayed on the item details page."""
 
     item = sample_item()
@@ -75,14 +75,17 @@ def test_item_details_displays_uploaded_photo(client, fake_db):
 
     fake_db(row=item)
 
-    response = client.get("/items/1")
+    response = authenticated_client.get("/items/1")
 
     assert response.status_code == 200
     assert b"uploads/student-id-card.jpg" in response.data
     assert b'Photo of Student ID Card' in response.data
 
 
-def test_item_details_without_photo_displays_placeholder(client, fake_db):
+def test_item_details_without_photo_displays_placeholder(
+    authenticated_client,
+    fake_db,
+):
     """US06: An item without a photo should still render with a fallback message."""
 
     item = sample_item()
@@ -90,7 +93,7 @@ def test_item_details_without_photo_displays_placeholder(client, fake_db):
 
     fake_db(row=item)
 
-    response = client.get("/items/1")
+    response = authenticated_client.get("/items/1")
 
     assert response.status_code == 200
     assert b"No photo available for this item." in response.data

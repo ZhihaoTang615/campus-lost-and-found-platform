@@ -30,21 +30,21 @@ def found_item_data():
 # US01 – Report Lost Item
 # =========================================================
 
-def test_report_lost_item_page_loads(client):
+def test_report_lost_item_page_loads(authenticated_client):
     """TC01: The lost-item report page should load successfully."""
 
-    response = client.get("/report-lost-item")
+    response = authenticated_client.get("/report-lost-item")
 
     assert response.status_code == 200
     assert b"<form" in response.data.lower()
 
 
-def test_valid_lost_item_report_is_saved(client, fake_db):
+def test_valid_lost_item_report_is_saved(authenticated_client, fake_db):
     """TC02: A valid lost-item report should be stored."""
 
     connection = fake_db()
 
-    response = client.post(
+    response = authenticated_client.post(
         "/report-lost-item",
         data=lost_item_data(),
         follow_redirects=False,
@@ -63,9 +63,10 @@ def test_valid_lost_item_report_is_saved(client, fake_db):
     assert parameters[3] == "Computer Lab"
     assert parameters[4] == "2026-07-13"
     assert parameters[7] is None
+    assert parameters[8] == 42
 
 
-def test_lost_item_rejects_invalid_photo_type(client):
+def test_lost_item_rejects_invalid_photo_type(authenticated_client):
     """TC03: A non-image upload should be rejected."""
 
     form_data = lost_item_data()
@@ -74,7 +75,7 @@ def test_lost_item_rejects_invalid_photo_type(client):
         "malicious-file.exe",
     )
 
-    response = client.post(
+    response = authenticated_client.post(
         "/report-lost-item",
         data=form_data,
         content_type="multipart/form-data",
@@ -90,21 +91,21 @@ def test_lost_item_rejects_invalid_photo_type(client):
 # US02 – Report Found Item
 # =========================================================
 
-def test_report_found_item_page_loads(client):
+def test_report_found_item_page_loads(authenticated_client):
     """TC04: The found-item report page should load successfully."""
 
-    response = client.get("/report-found-item")
+    response = authenticated_client.get("/report-found-item")
 
     assert response.status_code == 200
     assert b"<form" in response.data.lower()
 
 
-def test_valid_found_item_report_is_saved(client, fake_db):
+def test_valid_found_item_report_is_saved(authenticated_client, fake_db):
     """TC05: A valid found-item report should be stored."""
 
     connection = fake_db()
 
-    response = client.post(
+    response = authenticated_client.post(
         "/report-found-item",
         data=found_item_data(),
         follow_redirects=False,
@@ -122,9 +123,10 @@ def test_valid_found_item_report_is_saved(client, fake_db):
     assert parameters[2] == "found"
     assert parameters[3] == "Library Entrance"
     assert parameters[4] == "2026-07-13"
+    assert parameters[8] == 42
 
 
-def test_found_item_report_saves_valid_photo(client, fake_db):
+def test_found_item_report_saves_valid_photo(authenticated_client, fake_db):
     """TC06: A valid image should be saved with the found-item report."""
 
     connection = fake_db()
@@ -135,7 +137,7 @@ def test_found_item_report_saves_valid_photo(client, fake_db):
         "test photo.jpg",
     )
 
-    response = client.post(
+    response = authenticated_client.post(
         "/report-found-item",
         data=form_data,
         content_type="multipart/form-data",
@@ -156,3 +158,4 @@ def test_found_item_report_saves_valid_photo(client, fake_db):
 
     assert parameters[2] == "found"
     assert parameters[7] == "uploads/test_photo.jpg"
+    assert parameters[8] == 42

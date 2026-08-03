@@ -10,10 +10,18 @@ execution result.
 
 Included: US01 Report Lost Item, US02 Report Found Item, US03 Search Items, US04
 Filter Items, US05 View Item Details, US06 Upload Item Photo, and US07 Submit
-Claim Request.
+Claim Request. The completed 21-test US01–US07 baseline is preserved.
 
-Deferred and excluded: US08 Track Claim Status, US09 Review Claim Requests, US10
-Update Item Status, and US11 View My Reports.
+Also included is the later refinement for the confirmed lecturer request that
+the final version include a user system and an administrator system for viewing
+lost-and-found records: registration, login, POST logout, authenticated-only
+operational routes, required ownership for every new report/claim, My Reports
+isolation, nullable pre-enhancement legacy compatibility, and the read-only
+Admin Dashboard.
+
+Deferred and excluded: US08 Track Claim Status, US09 approval/rejection and
+other state-changing claim review, and US10 Update Item Status. My Reports now
+covers the viewing intent of US11; report editing is not included.
 
 For US04, test only the implemented report-type and category filters. Formal
 confirmation of the difference from historical location/date/status criteria is
@@ -36,30 +44,45 @@ require or claim one exclusive browser/operating-system configuration.
 2. Install `requirements.txt`.
 3. Configure untracked local values for `APP_SECRET_KEY`, `DB_HOST`, `DB_USER`,
    `DB_PASSWORD`, and `DB_NAME`.
-4. Import `database.sql` and confirm `items` and `claims` exist.
-5. Confirm `static/uploads/` exists and is writable.
-6. Start Flask with `flask --app app run --debug`.
-7. Use synthetic test data that contains no real personal information.
+4. For a fresh database, import `database.sql` and confirm `users`, `items`, and
+   `claims` exist. For an existing baseline database, back it up and run
+   `migrations/001_add_user_admin_system.sql` once.
+5. Create a test administrator with `python scripts/create_admin.py`; do not use
+   real or hard-coded credentials.
+6. Confirm `static/uploads/` exists and is writable.
+7. Start Flask with `flask --app app run --debug`.
+8. Register a synthetic normal-user account for functional checks.
+9. Use synthetic test data that contains no real personal information.
 
 ## Testing Perspectives
 
 ### Black-box
 
-Observe page loading, form behaviour, search/filter results, item details,
-photo display, validation feedback, redirects, and the claim-success page.
+Observe page loading, form behaviour, shared session-aware navigation,
+registration/login/logout feedback, search/filter results, item details, photo
+display, My Reports isolation, administrator authorization and records, redirects,
+and the claim-success page.
 
 ### Grey-box
 
-After relevant user actions, inspect the MySQL row, relationship, `image_path`,
-status, and absence of an invalid claim row. Check that new runtime uploads are
-ignored by Git.
+After relevant authenticated user actions, inspect password hashes, normalized
+emails, required ownership links, item/claim relationships, `image_path`,
+status, and absence of an invalid claim row. Confirm only seeded
+pre-enhancement legacy rows have `NULL` ownership, that those rows remain
+visible to the administrator, and that new runtime uploads are ignored by Git.
 
 ### White-box
 
-Run pytest to exercise route branches, fake/mock SQL calls, missing items,
-invalid extensions, empty inputs, redirects, commits, and cleanup.
+Run pytest to exercise route branches, fake/mock SQL calls, password hashing and
+checking, safe redirects, logged-out operational-route guards, session state,
+authorization, required insert ownership, ownership filters, legacy `LEFT JOIN`
+output, missing items, invalid extensions, empty inputs, redirects, commits,
+and cleanup.
 
 ## Manual/System Test Cases
+
+Unless a case explicitly tests logged-out behavior, run it after signing in as
+the appropriate synthetic normal user or administrator.
 
 | ID | Story | User Action / Input | Expected Black-box Result | Grey-box Check | Final Recorded Result |
 |---|---|---|---|---|---|
@@ -72,7 +95,11 @@ invalid extensions, empty inputs, redirects, commits, and cleanup.
 | ST07 | US07 | Submit all claim fields for an existing found item | Redirect to Claim Request Submitted; Pending, View Item Details, and Browse More Items are visible | Exactly one linked `claims` row exists with status `pending` | Repository evidence exists; repeat for final sign-off |
 | ST08 | US07/Bug #72 | Send an empty/whitespace claim POST, including a direct request that bypasses browser `required` attributes | Validation message appears and no success redirect occurs | No claim INSERT or commit; no new claim row | Repository before/fixed evidence exists; repeat for final sign-off |
 | ST09 | US05/US07 | Request a missing item ID | HTTP 404 with Item not found | No insert or commit | Not recorded in this plan |
-| ST10 | US01–US07 | Run `python -m pytest -v` | All tests pass | Tests use fake/mock databases and temporary uploads, not live MySQL | Current automated result: 21 passed |
+| ST10 | US01–US07 plus final user/admin refinement | Run `python -m pytest -v` | All tests pass | Tests use fake/mock databases and temporary uploads, not live MySQL | Current automated result: 95 passed; the older 21-pass screenshot is baseline evidence |
+| ST11 | User registration | Register with mixed-case email and a valid password; repeat with duplicate, invalid, short, mismatched, missing, and whitespace-only values | Valid account redirects to Login with success feedback; invalid cases remain safe and public registration never creates admin | Stored email is lowercase, password value is a hash rather than raw text, and role is `user` | Automated coverage passes; repeat with live MySQL for final manual sign-off |
+| ST12 | Login/logout and authorization | Log in as a user and administrator; try invalid credentials, an external `next`, GET logout, each report/browse/details/claim/My Reports route while logged out, and Admin as a normal user | Generic invalid message; safe role-based redirects; session-aware navigation; all operational routes redirect to Login; POST logout clears session; normal-user Admin returns 403 | Session contains only user ID, name, and role; no password/hash; no unsafe external redirect | Automated coverage passes; repeat in browser for final manual sign-off |
+| ST13 | Ownership and My Reports | Submit reports and claims from two authenticated accounts; attempt helper calls without session state; compare both My Reports lists | Every accepted submission is owned, missing-session persistence is rejected, and each account sees only its own item reports newest first | Every new `user_id` matches the session; ownership query is parameterised by the logged-in ID; no new `NULL` owner is inserted | Automated coverage passes; repeat with live MySQL for final manual sign-off |
+| ST14 | Read-only administrator view | Seed pre-enhancement `NULL`-owner rows, then open Admin as administrator alongside current owned rows | Summary, all items, all claims, account labels, and legacy fallbacks display; no mutation controls exist | Queries use `LEFT JOIN`; only seeded legacy rows are unowned; POST Admin is rejected; no commit or state-changing SQL occurs | Automated coverage passes; repeat in browser/live MySQL for final manual sign-off |
 
 ## Defect Workflow
 
@@ -98,10 +125,10 @@ System testing is complete only when:
 - every applicable row has an observed result and evidence reference;
 - database effects are verified for persistence workflows;
 - fixed defects have focused and full regression results;
-- the complete suite passes all 21 tests;
+- the complete suite passes all 95 tests;
 - no known critical defect remains;
 - privacy-sensitive test data is removed from submission evidence;
-- US08–US11 remain explicitly deferred; and
+- US08, state-changing US09, and US10 remain explicitly deferred; and
 - the final Board and demonstration/feedback evidence are manually confirmed.
 
 See [Final Testing Evidence](final-testing-evidence.md) for the current automated

@@ -19,22 +19,15 @@
 
         <p>Report and search for lost or found items on campus.</p>
 
-        <nav class="main-nav" aria-label="Primary navigation">
-          <a href="{{ url_for('home') }}" class="active" aria-current="page">
-            Home
-          </a>
-
-          <a href="{{ url_for('items') }}"> Browse Items </a>
-
-          <a href="{{ url_for('report_lost_item') }}"> Report Lost Item </a>
-
-          <a href="{{ url_for('report_found_item') }}"> Report Found Item </a>
-        </nav>
+        {% include "_navigation.html" %}
       </div>
     </header>
 
     <main class="home-main">
+      {% include "_flash_messages.html" %}
+
       <section class="home-card">
+        {% if is_authenticated %}
         <p class="eyebrow">Campus item recovery system</p>
 
         <h2>Welcome</h2>
@@ -46,8 +39,15 @@
 
         <div class="home-actions">
           <a
-            href="{{ url_for('report_lost_item') }}"
+            href="{{ url_for('items') }}"
             class="btn home-btn primary-action"
+          >
+            Browse Items
+          </a>
+
+          <a
+            href="{{ url_for('report_lost_item') }}"
+            class="btn home-btn neutral-action"
           >
             Report a Lost Item
           </a>
@@ -60,12 +60,47 @@
           </a>
 
           <a
-            href="{{ url_for('items') }}"
+            href="{{ url_for('my_reports') }}"
             class="btn home-btn secondary-action"
           >
-            Browse Items
+            My Reports
+          </a>
+
+          {% if session.get("user_role") == "admin" %}
+          <a
+            href="{{ url_for('admin_dashboard') }}"
+            class="btn home-btn secondary-action"
+          >
+            Admin Dashboard
+          </a>
+          {% endif %}
+        </div>
+        {% else %}
+        <p class="eyebrow">Secure campus access</p>
+
+        <h2>Account Required</h2>
+
+        <p class="home-description">
+          Please log in or register for an account before browsing, reporting,
+          or claiming lost and found items.
+        </p>
+
+        <div class="home-actions">
+          <a
+            href="{{ url_for('login') }}"
+            class="btn home-btn primary-action"
+          >
+            Login
+          </a>
+
+          <a
+            href="{{ url_for('register') }}"
+            class="btn home-btn neutral-action"
+          >
+            Register
           </a>
         </div>
+        {% endif %}
       </section>
     </main>
 

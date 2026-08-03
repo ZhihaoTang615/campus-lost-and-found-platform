@@ -74,6 +74,44 @@ def client(monkeypatch, tmp_path):
 
 
 @pytest.fixture
+def authenticated_session(client):
+    """Return a helper that installs trusted authentication session values."""
+
+    def authenticate(
+        user_id=42,
+        user_name="Test User",
+        user_role="user",
+    ):
+        with client.session_transaction() as flask_session:
+            flask_session.clear()
+            flask_session["user_id"] = user_id
+            flask_session["user_name"] = user_name
+            flask_session["user_role"] = user_role
+
+        return client
+
+    return authenticate
+
+
+@pytest.fixture
+def authenticated_client(authenticated_session):
+    """Provide a normal signed-in user for the original US01-US07 tests."""
+
+    return authenticated_session()
+
+
+@pytest.fixture
+def administrator_client(authenticated_session):
+    """Provide a signed-in administrator for access-control tests."""
+
+    return authenticated_session(
+        user_id=1,
+        user_name="Site Admin",
+        user_role="admin",
+    )
+
+
+@pytest.fixture
 def fake_db(monkeypatch):
     """Replace the real database connection with a fake connection."""
 

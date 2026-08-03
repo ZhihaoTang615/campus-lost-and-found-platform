@@ -182,11 +182,10 @@ This verifies application behaviour without modifying a real claims table.
 
 ## 8. Mock Current-User Example
 
-The current Campus Lost and Found Platform does not currently implement a logged-in user system.
-
-Therefore, current-user mocking is not required by the implemented US01-US07 functionality.
-
-However, if authentication were introduced later, a user dependency could be replaced during testing.
+At the time of the original US01-US07 baseline, the Campus Lost and Found
+Platform did not implement a logged-in user system. Current-user mocking was
+therefore not required by that baseline. The following example is retained as
+historical research from that stage:
 
 For example:
 from unittest.mock import MagicMock
@@ -198,7 +197,16 @@ mock_user.name = "Test Student"
 mock_user.is_authenticated = True
 A route or authentication helper could then receive the mock user instead of relying on a real login session.
 
-This example demonstrates the testing technique only. It does not indicate that current-user authentication is currently implemented in this project.
+The later lecturer-requested final refinement now implements registration and
+login with Flask session state. Its automated coverage sets controlled
+`user_id`, `user_name`, and `user_role` values through the Flask test client and
+uses sequenced fake database objects in
+`tests/test_user_admin_system.py`. It does not require a separate runtime user
+object such as the conceptual `mock_user` above. Current tests also verify that
+logged-out visitors are redirected from operational lost-and-found routes and
+that every new item and claim insert receives the authenticated session ID.
+Fake rows with `NULL` ownership represent only pre-enhancement legacy data in
+the administrator view.
 
 ## 9. Relationship to Existing Test Doubles
 

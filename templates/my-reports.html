@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My Reports</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body class="my-reports-page">
+    <header class="site-header">
+      <div class="header-content">
+        <h1>Campus Lost and Found Platform</h1>
+
+        <p>Report and search for lost or found items on campus.</p>
+
+        {% include "_navigation.html" %}
+      </div>
+    </header>
+
+    <main class="page-main">
+      {% include "_flash_messages.html" %}
+
+      <section class="page-heading">
+        <p class="eyebrow">Your item records</p>
+
+        <h2>My Reports</h2>
+
+        <p>View the lost and found reports linked to your account.</p>
+
+        <div class="action-links page-heading-actions">
+          <a href="{{ url_for('report_lost_item') }}" class="btn">
+            Report a Lost Item
+          </a>
+
+          <a href="{{ url_for('report_found_item') }}" class="btn neutral-action">
+            Report a Found Item
+          </a>
+
+          <a href="{{ url_for('items') }}" class="btn secondary-action">
+            Browse All Item Records
+          </a>
+        </div>
+      </section>
+
+      <section class="items-section" aria-labelledby="my-report-list-title">
+        <h2 id="my-report-list-title" class="section-title">Submitted Reports</h2>
+
+        {% if items %}
+        <div class="items-grid my-reports-grid">
+          {% for item in items %}
+          <article class="item-card">
+            <div class="item-card-header">
+              <h3>{{ item.item_name }}</h3>
+
+              <span class="status status-badge">{{ item.status }}</span>
+            </div>
+
+            <div class="item-information">
+              <p>
+                <strong>Report Type:</strong>
+                {{ item.report_type | title }}
+              </p>
+
+              <p>
+                <strong>Category:</strong>
+                {{ item.category | replace("-", " ") | title }}
+              </p>
+
+              <p><strong>Location:</strong> {{ item.location }}</p>
+
+              <p><strong>Report Date:</strong> {{ item.report_date }}</p>
+
+              <p><strong>Status:</strong> {{ item.status }}</p>
+            </div>
+
+            <div class="item-card-actions">
+              <a
+                href="{{ url_for('item_detail', item_id=item.id) }}"
+                class="btn"
+              >
+                View Item Details
+              </a>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <h3>No Reports Yet</h3>
+
+          <p>
+            Reports submitted while you are signed in will appear here.
+            Historical legacy reports created before account ownership was
+            introduced are not linked automatically.
+          </p>
+
+          <div class="action-links empty-state-actions">
+            <a href="{{ url_for('report_lost_item') }}" class="btn">
+              Report a Lost Item
+            </a>
+
+            <a href="{{ url_for('report_found_item') }}" class="btn neutral-action">
+              Report a Found Item
+            </a>
+          </div>
+        </div>
+        {% endif %}
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Campus Lost and Found Platform</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/ui-feedback.js') }}"></script>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+{% set current_endpoint = request.endpoint %}
+<nav class="main-nav" aria-label="Primary navigation">
+  {% if is_authenticated %}
+  <a
+    href="{{ url_for('home') }}"
+    {% if current_endpoint == "home" %}class="active" aria-current="page"{% endif %}
+  >
+    Home
+  </a>
+
+  <a
+    href="{{ url_for('items') }}"
+    {% if current_endpoint in ["items", "item_details", "item_detail", "claim_request", "claim_success"] %}class="active" aria-current="page"{% endif %}
+  >
+    Browse Items
+  </a>
+
+  <a
+    href="{{ url_for('report_lost_item') }}"
+    {% if current_endpoint == "report_lost_item" %}class="active" aria-current="page"{% endif %}
+  >
+    Report Lost Item
+  </a>
+
+  <a
+    href="{{ url_for('report_found_item') }}"
+    {% if current_endpoint == "report_found_item" %}class="active" aria-current="page"{% endif %}
+  >
+    Report Found Item
+  </a>
+
+  <a
+    href="{{ url_for('my_reports') }}"
+    {% if current_endpoint == "my_reports" %}class="active" aria-current="page"{% endif %}
+  >
+    My Reports
+  </a>
+
+  {% if session.get("user_role") == "admin" %}
+  <a
+    href="{{ url_for('admin_dashboard') }}"
+    {% if current_endpoint == "admin_dashboard" %}class="active" aria-current="page"{% endif %}
+  >
+    Admin Dashboard
+  </a>
+  {% endif %}
+
+  <span class="nav-user-name">
+    Signed in as {{ session.get("user_name") }}
+  </span>
+
+  <form
+    action="{{ url_for('logout') }}"
+    method="post"
+    class="nav-logout-form"
+  >
+    <button type="submit" class="nav-logout-button">Logout</button>
+  </form>
+  {% else %}
+  <a
+    href="{{ url_for('login') }}"
+    {% if current_endpoint == "login" %}class="active" aria-current="page"{% endif %}
+  >
+    Login
+  </a>
+
+  <a
+    href="{{ url_for('register') }}"
+    {% if current_endpoint == "register" %}class="active" aria-current="page"{% endif %}
+  >
+    Register
+  </a>
+  {% endif %}
+</nav>
