@@ -2,26 +2,15 @@
 
 ## 1. Purpose
 
-This document calculates the Iteration 2 velocity for the Campus Lost and Found Platform.
+This document reconciles the Iteration 2 user-story estimates, completed effort, actual completed-work velocity, and planned capacity utilisation for the Campus Lost and Found Platform.
 
-The calculation follows the method confirmed by the tutor:
-
-```text
-Velocity =
-Estimated user-story person-days / Total available team person-days
-```
-
-The velocity must be represented as a value between 0 and 1.
-
-This result will be used to review the Iteration 2 workload and support the planning of Iteration 3.
+Actual completed-work velocity uses only user stories completed end-to-end by the Iteration 2 deadline. Planned capacity utilisation uses all user-story effort selected for the iteration. These are different measurements and are reported separately below.
 
 ---
 
 ## 2. Iteration Duration
 
-Iteration 2 was planned to run for three weeks.
-
-The team works five working days per week.
+Iteration 2 ran from Week 5 to the end of Week 7, giving a confirmed length of three weeks. The iteration used five working days per week.
 
 ```text
 3 weeks × 5 working days per week
@@ -56,7 +45,7 @@ The total team capacity is calculated as:
 Therefore:
 
 ```text
-Total available Iteration 2 capacity = 45 person-days
+Theoretical Iteration 2 team capacity = 45 person-days
 ```
 
 ---
@@ -65,15 +54,15 @@ Total available Iteration 2 capacity = 45 person-days
 
 Iteration 2 included the following user stories:
 
-| User Story | Description | Estimate |
-|---|---|---:|
-| US03 - Search Items | Search lost and found items using a keyword | 2 person-days |
-| US04 - Filter Items | Filter items by category, location, and date | 3 person-days |
-| US06 - Upload Item Photo | Upload a photo to help users identify an item | 5 person-days |
-| US07 - Submit Claim Request | Submit a claim request for a found item | 4 person-days |
-| **Total Estimated Work** |  | **14 person-days** |
+| User Story | Description | Original estimate | Iteration 2 deadline outcome |
+|---|---|---:|---|
+| US03 - Search Items | Search lost and found items using a keyword | 2 person-days | Completed end-to-end |
+| US04 - Filter Items | Filter items | 3 person-days | Carry-over |
+| US06 - Upload Item Photo | Upload a photo to help identify an item | 5 person-days | Carry-over |
+| US07 - Submit Claim Request | Submit a claim request for a found item | 4 person-days | Carry-over |
+| **Total planned user-story effort** |  | **14 person-days** | **2 completed; 12 remaining** |
 
-The total estimated user-story work is:
+The total planned user-story effort is:
 
 ```text
 2 + 3 + 5 + 4 = 14 person-days
@@ -82,116 +71,91 @@ The total estimated user-story work is:
 Therefore:
 
 ```text
-Total estimated Iteration 2 user-story work = 14 person-days
+Total planned Iteration 2 user-story effort = 14 person-days
 ```
+
+At the Iteration 2 deadline, only US03 met the end-to-end completion criterion. US04, US06, and US07 continued as carry-over work.
 
 ---
 
-## 5. Velocity Formula
+## 5. Completed and Remaining Effort
 
-The tutor confirmed that the Iteration 2 velocity should be calculated as:
+Only US03 Search Items was completed end-to-end by the Iteration 2 deadline, so completed user-story effort was:
 
 ```text
-Velocity =
-Total estimated user-story person-days
-÷
-Total available team person-days
+Completed user-story effort = 2 person-days
 ```
 
-Substituting the Iteration 2 values:
+The remaining planned effort was:
 
 ```text
-Velocity = 14 / 45
+14 planned person-days - 2 completed person-days
+= 12 person-days remaining
 ```
 
+The 12 remaining person-days comprise US04, US06, and US07. Work completed on those stories after the deadline is not counted as Iteration 2 completed effort.
+
+---
+
+## 6. Actual Completed-Work Velocity
+
+Actual completed-work velocity compares end-to-end completed user-story effort with theoretical team capacity:
+
 ```text
-Velocity = 0.3111
+Actual completed-work velocity
+= 2 completed person-days ÷ 45 person-days of theoretical capacity
+= 0.0444
 ```
 
 Rounded to two decimal places:
 
 ```text
-Iteration 2 Velocity = 0.31
-```
-
----
-
-## 6. Final Velocity Result
-
-| Calculation Item | Result |
-|---|---:|
-| Iteration length | 3 weeks |
-| Working days per week | 5 days |
-| Total working days | 15 days |
-| Number of team members | 3 members |
-| Total available team capacity | 45 person-days |
-| Estimated user-story work | 14 person-days |
-| **Iteration 2 velocity** | **0.31** |
-
-The final Iteration 2 velocity is:
-
-```text
-Iteration 2 Velocity = 0.31
+Actual completed-work velocity = 0.04
 ```
 
 As a percentage:
 
 ```text
-0.3111 × 100 = 31.11%
-```
-
-Therefore:
-
-```text
-Iteration 2 estimated capacity utilisation
-= approximately 31.1%
+Actual completed-work velocity = 4.44%
 ```
 
 ---
 
-## 7. Interpretation
+## 7. Planned Capacity Utilisation
 
-The velocity value of `0.31` means that the estimated Iteration 2 user-story work used approximately 31.1% of the team's total available capacity.
-
-The team had a theoretical capacity of:
+Planned capacity utilisation compares all selected user-story effort with theoretical team capacity:
 
 ```text
-45 person-days
+Planned capacity utilisation
+= 14 planned person-days ÷ 45 person-days of theoretical capacity
+= 0.3111
 ```
 
-The selected user stories represented:
+Rounded to two decimal places:
 
 ```text
-14 person-days
+Planned capacity utilisation = 0.31
 ```
 
-The unused theoretical capacity was:
+As a percentage:
 
 ```text
-45 - 14 = 31 person-days
+Planned capacity utilisation = 31.11%
 ```
-
-This does not automatically mean that the team was inactive during the remaining capacity.
-
-The team also spent time on supporting work such as:
-
-- UI design
-- Database design
-- Automated testing
-- Manual testing
-- Bug fixing
-- Code refactoring
-- GitHub task management
-- Documentation
-- Client feedback
-- Pull Request review
-- Integration work
-
-The velocity calculation in this document is based on the estimated person-days assigned to the selected Iteration 2 user stories.
 
 ---
 
-## 8. Difference Between Working Days and Person-Days
+## 8. Difference Between Velocity and Planned Utilisation
+
+Actual completed-work velocity measures completed end-to-end user-story value relative to theoretical capacity. Planned capacity utilisation measures the user-story effort selected at planning relative to the same capacity.
+
+Therefore, `0.04` is the rounded actual completed-work velocity, while `0.31` is the rounded planned capacity utilisation. The `0.31` value must not be interpreted as actual velocity.
+
+The difference does not imply that unallocated theoretical capacity was inactive time. Iteration activity may also include task-level design, testing, integration, documentation, review, and project-management work that is outside the selected user-story estimates.
+
+---
+
+## 9. Difference Between Working Days and Person-Days
 
 A working day represents one day in the iteration timeline.
 
@@ -219,174 +183,36 @@ The difference is important because the team can theoretically complete three pe
 
 ---
 
-## 9. Relationship to the Burn-down Graph
+## 10. Relationship to the Historical Burn-down
 
-The Iteration 2 burn-down graph should use the same team-capacity calculation.
+The historical burn-down may include broader task-level work such as planning, interface design, implementation, testing, documentation, review, and project management. Its workload measure therefore does not have to equal either theoretical team capacity or the selected user-story estimates used here.
 
-The graph should use:
+In particular, a historical starting value of `36.5 person-days` is not used as the velocity numerator. This document uses one consistent user-story basis:
 
-```text
-X-axis:
-Working Day 0 to Working Day 15
-```
+- 14 person-days of planned user-story effort;
+- 2 person-days of end-to-end completed user-story effort; and
+- 12 person-days of remaining planned user-story effort.
 
-```text
-Y-axis:
-Remaining person-days from 45 to 0
-```
-
-The ideal daily burn rate is:
-
-```text
-45 person-days / 15 working days
-= 3 person-days per working day
-```
-
-The ideal remaining-work values are:
-
-| Working Day | Ideal Remaining Work |
-|---:|---:|
-| Day 0 | 45 person-days |
-| Day 1 | 42 person-days |
-| Day 2 | 39 person-days |
-| Day 3 | 36 person-days |
-| Day 4 | 33 person-days |
-| Day 5 | 30 person-days |
-| Day 6 | 27 person-days |
-| Day 7 | 24 person-days |
-| Day 8 | 21 person-days |
-| Day 9 | 18 person-days |
-| Day 10 | 15 person-days |
-| Day 11 | 12 person-days |
-| Day 12 | 9 person-days |
-| Day 13 | 6 person-days |
-| Day 14 | 3 person-days |
-| Day 15 | 0 person-days |
-
-The actual burn-down line should be based on the team's real completion records, including:
-
-- GitHub Issues
-- Commit history
-- Pull Requests
-- Project Board updates
-- Testing evidence
-- Completed user stories
-- Documentation completion
+Theoretical capacity remains 45 person-days. Raw capacity, task-level burn-down work, and user-story estimates are separate measures and must not be substituted for one another.
 
 ---
 
-## 10. Use of Velocity for Iteration 3 Planning
+## 11. Final Summary
 
-The Iteration 2 velocity will be used to adjust the Iteration 3 backlog.
+| Measure | Confirmed result |
+|---|---:|
+| Iteration period | Week 5 to the end of Week 7 |
+| Iteration length | 3 weeks |
+| Working days per week | 5 days |
+| Total iteration duration | 15 working days |
+| Team members | 3 |
+| Theoretical team capacity | 45 person-days |
+| Planned user-story effort | 14 person-days |
+| Completed end-to-end story | US03 Search Items |
+| Completed user-story effort | 2 person-days |
+| Carry-over stories | US04, US06, and US07 |
+| Remaining planned effort | 12 person-days |
+| Actual completed-work velocity | 0.0444; **0.04 rounded; 4.44%** |
+| Planned capacity utilisation | 0.3111; **0.31 rounded; 31.11%** |
 
-The calculated velocity is:
-
-```text
-0.31
-```
-
-Iteration 3 also has:
-
-```text
-3 weeks × 5 working days × 3 members
-= 45 person-days
-```
-
-Using the same velocity:
-
-```text
-45 × 0.31 = 13.95 person-days
-```
-
-Rounded to a practical planning value:
-
-```text
-Recommended Iteration 3 user-story workload
-= approximately 14 person-days
-```
-
-Therefore, the team should plan approximately 14 person-days of user-story work for Iteration 3.
-
-The Iteration 3 backlog should prioritise:
-
-1. Unfinished Iteration 2 work.
-2. High-value user stories.
-3. Small and independently testable tasks.
-4. Test-Driven Development activities.
-5. Mock-object testing.
-6. Final regression testing.
-7. Documentation and evidence.
-
----
-
-## 11. Iteration 3 Planning Decision
-
-Based on the Iteration 2 velocity, the team should avoid planning more work than can reasonably be completed.
-
-The planned Iteration 3 workload should remain close to:
-
-```text
-14 person-days
-```
-
-The team should also reserve time for:
-
-- UI design
-- Writing test specifications
-- RED failing tests
-- GREEN implementation
-- REFACTOR work
-- Mock-object research
-- Regression testing
-- GitHub Pages updates
-- TDD evidence collection
-
-Tasks should be divided among the three team members and monitored using:
-
-```text
-todo
-in-progress
-testing
-done
-```
-
----
-
-## 12. Conclusion
-
-Iteration 2 lasted three weeks.
-
-The team worked five working days per week and had three members.
-
-Therefore:
-
-```text
-3 weeks × 5 working days × 3 team members
-= 45 person-days
-```
-
-The selected Iteration 2 user stories had a combined estimate of:
-
-```text
-14 person-days
-```
-
-The final velocity calculation is:
-
-```text
-Velocity = 14 / 45
-```
-
-```text
-Velocity = 0.3111
-```
-
-Rounded to two decimal places:
-
-```text
-Iteration 2 Velocity = 0.31
-```
-
-This means that the selected user-story work represented approximately 31.1% of the team's total available Iteration 2 capacity.
-
-The team will use this velocity to plan approximately 14 person-days of user-story work for Iteration 3.
+Iteration 2 actual completed-work velocity is `0.04` when rounded to two decimal places. The separate `0.31` figure is planned capacity utilisation, not actual velocity.
