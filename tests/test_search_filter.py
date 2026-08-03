@@ -34,12 +34,12 @@ def normalize_query(query):
 # US03 – Search Items
 # =========================================================
 
-def test_browse_items_page_loads(client, fake_db):
+def test_browse_items_page_loads(authenticated_client, fake_db):
     """TC07: The Browse Items page should load successfully."""
 
     fake_db(rows=sample_items())
 
-    response = client.get("/items")
+    response = authenticated_client.get("/items")
 
     assert response.status_code == 200
     assert b"Blue Water Bottle" in response.data
@@ -47,14 +47,14 @@ def test_browse_items_page_loads(client, fake_db):
 
 
 def test_search_uses_keyword_for_name_description_and_location(
-    client,
+    authenticated_client,
     fake_db,
 ):
     """TC08: A search keyword should check three item fields."""
 
     connection = fake_db(rows=[sample_items()[0]])
 
-    response = client.get("/items?q=bottle")
+    response = authenticated_client.get("/items?q=bottle")
 
     assert response.status_code == 200
 
@@ -72,12 +72,12 @@ def test_search_uses_keyword_for_name_description_and_location(
     )
 
 
-def test_search_with_no_matching_result_is_handled(client, fake_db):
+def test_search_with_no_matching_result_is_handled(authenticated_client, fake_db):
     """TC09: A search with no match should not crash the system."""
 
     connection = fake_db(rows=[])
 
-    response = client.get("/items?q=no-such-item-xyz")
+    response = authenticated_client.get("/items?q=no-such-item-xyz")
 
     assert response.status_code == 200
 
@@ -94,12 +94,12 @@ def test_search_with_no_matching_result_is_handled(client, fake_db):
 # US04 – Filter Items
 # =========================================================
 
-def test_filter_items_by_report_type(client, fake_db):
+def test_filter_items_by_report_type(authenticated_client, fake_db):
     """TC10: Users should be able to filter found items."""
 
     connection = fake_db(rows=[sample_items()[0]])
 
-    response = client.get("/items?report_type=found")
+    response = authenticated_client.get("/items?report_type=found")
 
     assert response.status_code == 200
 
@@ -110,12 +110,12 @@ def test_filter_items_by_report_type(client, fake_db):
     assert parameters == ("found",)
 
 
-def test_filter_items_by_category(client, fake_db):
+def test_filter_items_by_category(authenticated_client, fake_db):
     """TC11: Users should be able to filter by category."""
 
     connection = fake_db(rows=[sample_items()[1]])
 
-    response = client.get("/items?category=Bag")
+    response = authenticated_client.get("/items?category=Bag")
 
     assert response.status_code == 200
 
@@ -126,12 +126,12 @@ def test_filter_items_by_category(client, fake_db):
     assert parameters == ("Bag",)
 
 
-def test_combined_search_and_filters(client, fake_db):
+def test_combined_search_and_filters(authenticated_client, fake_db):
     """TC12: Search, report type, and category should work together."""
 
     connection = fake_db(rows=[sample_items()[0]])
 
-    response = client.get(
+    response = authenticated_client.get(
         "/items?q=water"
         "&report_type=found"
         "&category=Bottle"

@@ -19,28 +19,12 @@
 
         <p>Report and search for lost or found items on campus.</p>
 
-        <nav class="main-nav" aria-label="Primary navigation">
-          <a href="{{ url_for('home') }}"> Home </a>
-
-          <a href="{{ url_for('items') }}" class="active" aria-current="page">
-            Browse Items
-          </a>
-
-          <a href="{{ url_for('report_lost_item') }}"> Report Lost Item </a>
-
-          <a href="{{ url_for('report_found_item') }}"> Report Found Item </a>
-        </nav>
+        {% include "_navigation.html" %}
       </div>
     </header>
 
     <main class="page-main">
-      {% with messages = get_flashed_messages() %} {% if messages %}
-      <div class="flash-messages">
-        {% for message in messages %}
-        <p>{{ message }}</p>
-        {% endfor %}
-      </div>
-      {% endif %} {% endwith %}
+      {% include "_flash_messages.html" %}
 
       <section class="page-heading">
         <p class="eyebrow">Item record</p>

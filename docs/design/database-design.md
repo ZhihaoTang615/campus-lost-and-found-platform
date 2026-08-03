@@ -2,20 +2,38 @@
 
 ## 1. Database purpose
 
-The Campus Lost and Found Platform uses MySQL to persist item reports and the claim requests made for those items. This document mirrors the implemented schema in `database.sql`; the Mermaid ER diagram and column tables below are authoritative for the current database.
+The Campus Lost and Found Platform uses MySQL to persist user accounts, lost-
+and-found item reports, and claim requests. This document mirrors the fresh-
+installation schema in [`database.sql`](../../database.sql). Existing
+installations use the additive migration described below.
 
-The schema supports the delivered reporting, browsing, search, filtering, item-detail, photo-path, and claim-submission features. It does not contain a user table or a delivered workflow for reviewing, approving, tracking, or updating claims and items.
+The `users` relationships were added by the lecturer-requested final scope
+refinement. Both ownership columns are nullable only so every row created before
+authentication remains valid. The final application requires login for
+lost-and-found functionality and gives every new item and claim an owner.
 
-## 2. Implemented tables
+## 2. Implemented tables and relationships
 
-The database contains two tables:
+The database contains three tables, created in dependency order:
 
-- `items` stores both lost and found item reports. The `report_type` column distinguishes them.
-- `claims` stores claim requests and associates each request with an existing item through `item_id`.
+1. `users` stores registered user and administrator accounts;
+2. `items` stores lost and found item reports; and
+3. `claims` stores claim requests associated with an item.
 
 ```mermaid
 erDiagram
+    USERS o|--o{ ITEMS : submits
+    USERS o|--o{ CLAIMS : submits
     ITEMS ||--o{ CLAIMS : receives
+
+    USERS {
+        INT id PK
+        VARCHAR_100 full_name
+        VARCHAR_150 email UK
+        VARCHAR_255 password_hash
+        VARCHAR_20 role
+        TIMESTAMP created_at
+    }
 
     ITEMS {
         INT id PK
@@ -29,6 +47,7 @@ erDiagram
         VARCHAR_20 status
         VARCHAR_255 image_path "nullable"
         TIMESTAMP created_at
+        INT user_id FK "nullable"
     }
 
     CLAIMS {
@@ -39,83 +58,125 @@ erDiagram
         TEXT verification_details
         VARCHAR_20 status
         TIMESTAMP created_at
+        INT user_id FK "nullable"
     }
 ```
 
-The type labels in the diagram use underscores because Mermaid attribute types cannot contain parentheses. The Markdown tables below preserve the exact SQL declarations.
+The type labels use underscores because Mermaid attribute types cannot contain
+parentheses. The tables below preserve the exact SQL declarations.
 
-## 3. Items table
-
-| Column | Exact SQL type/declaration | Nullability and default | Purpose |
-|---|---|---|---|
-| `id` | `INT AUTO_INCREMENT PRIMARY KEY` | Primary key; not null; generated automatically | Identifies one item report. |
-| `item_name` | `VARCHAR(100) NOT NULL` | Not null; no explicit default | Stores the reported item name. |
-| `category` | `VARCHAR(50) NOT NULL` | Not null; no explicit default | Stores the single category selected on the report form. |
-| `report_type` | `VARCHAR(10) NOT NULL` | Not null; no explicit default | Distinguishes `lost` and `found` reports. |
-| `location` | `VARCHAR(150) NOT NULL` | Not null; no explicit default | Stores where the item was lost or found and participates in keyword search. |
-| `report_date` | `DATE NOT NULL` | Not null; no explicit default | Stores the date supplied on the lost-item or found-item form. |
-| `description` | `TEXT NOT NULL` | Not null; no explicit default | Stores the item description and participates in keyword search. |
-| `contact_information` | `VARCHAR(150) NOT NULL` | Not null; no explicit default | Stores the reporter's contact information. |
-| `status` | `VARCHAR(20) NOT NULL DEFAULT 'active'` | Not null; defaults to `active` | Stores the current item status shown in item lists and details. |
-| `image_path` | `VARCHAR(255)` | Nullable; no explicit default | Stores a relative path such as `uploads/<filename>` for an optional uploaded photo. |
-| `created_at` | `TIMESTAMP DEFAULT CURRENT_TIMESTAMP` | Nullability is not explicitly declared; defaults to the current timestamp | Records insertion time and supports newest-first ordering. |
-
-## 4. Claims table
+## 3. Users table
 
 | Column | Exact SQL type/declaration | Nullability and default | Purpose |
 |---|---|---|---|
-| `id` | `INT AUTO_INCREMENT PRIMARY KEY` | Primary key; not null; generated automatically | Identifies one claim request. |
-| `item_id` | `INT NOT NULL` | Not null; no explicit default | References the item being claimed. |
-| `claimant_name` | `VARCHAR(100) NOT NULL` | Not null; no explicit default | Stores the stripped value from the claim form's `name` field. |
-| `claimant_contact` | `VARCHAR(150) NOT NULL` | Not null; no explicit default | Stores the stripped value from the claim form's `contact` field. |
-| `verification_details` | `TEXT NOT NULL` | Not null; no explicit default | Stores the stripped value from the claim form's `message` field. |
-| `status` | `VARCHAR(20) NOT NULL DEFAULT 'pending'` | Not null; defaults to `pending` | Stores the initial status assigned to every valid claim request. |
-| `created_at` | `TIMESTAMP DEFAULT CURRENT_TIMESTAMP` | Nullability is not explicitly declared; defaults to the current timestamp | Records when the claim row was inserted. |
-| Foreign key | `FOREIGN KEY (item_id) REFERENCES items(id)` | `item_id` must reference an existing `items.id` | Enforces the implemented item-to-claim relationship. |
+| `id` | `INT AUTO_INCREMENT PRIMARY KEY` | Primary key; generated automatically | Identifies one account. |
+| `full_name` | `VARCHAR(100) NOT NULL` | Not null | Stores the stripped registration or administrator name. |
+| `email` | `VARCHAR(150) NOT NULL UNIQUE` | Not null; unique | Stores the normalized lowercase login email. |
+| `password_hash` | `VARCHAR(255) NOT NULL` | Not null | Stores a Werkzeug password hash, never the raw password. |
+| `role` | `VARCHAR(20) NOT NULL DEFAULT 'user'` | Not null; defaults to `user` | Distinguishes normal users from administrators. Public registration always supplies `user`; the local script supplies `admin`. |
+| `created_at` | `TIMESTAMP DEFAULT CURRENT_TIMESTAMP` | Defaults to the current timestamp | Records account creation time. |
 
-## 5. Relationship and cardinality
+## 4. Items table
 
-`ITEMS ||--o{ CLAIMS : receives` means:
+| Column | Exact SQL type/declaration | Nullability and default | Purpose |
+|---|---|---|---|
+| `id` | `INT AUTO_INCREMENT PRIMARY KEY` | Primary key; generated automatically | Identifies one item report. |
+| `item_name` | `VARCHAR(100) NOT NULL` | Not null | Stores the reported item name. |
+| `category` | `VARCHAR(50) NOT NULL` | Not null | Stores the selected category. |
+| `report_type` | `VARCHAR(10) NOT NULL` | Not null | Distinguishes `lost` and `found` reports. |
+| `location` | `VARCHAR(150) NOT NULL` | Not null | Stores where the item was lost or found and participates in keyword search. |
+| `report_date` | `DATE NOT NULL` | Not null | Stores the date supplied on the report form. |
+| `description` | `TEXT NOT NULL` | Not null | Stores the item description and participates in keyword search. |
+| `contact_information` | `VARCHAR(150) NOT NULL` | Not null | Stores the reporter's supplied contact information. |
+| `status` | `VARCHAR(20) NOT NULL DEFAULT 'active'` | Not null; defaults to `active` | Stores the displayed item status. |
+| `image_path` | `VARCHAR(255)` | Nullable | Stores a relative path for an optional uploaded image. |
+| `created_at` | `TIMESTAMP DEFAULT CURRENT_TIMESTAMP` | Defaults to the current timestamp | Supports newest-first ordering. |
+| `user_id` | `INT NULL` | Nullable for migration compatibility | References the authenticated account that submitted the report. Current application inserts always provide this value; only pre-enhancement rows may remain `NULL`. |
+| Foreign key | `FOREIGN KEY (user_id) REFERENCES users(id)` | Optional relationship | Enforces a valid owner when `user_id` is present. |
 
-- each `claims` row references exactly one `items` row through `claims.item_id`; and
-- one item may have zero, one, or many associated claim rows.
+## 5. Claims table
 
-The schema does not specify cascading update or delete behaviour for this foreign key.
+| Column | Exact SQL type/declaration | Nullability and default | Purpose |
+|---|---|---|---|
+| `id` | `INT AUTO_INCREMENT PRIMARY KEY` | Primary key; generated automatically | Identifies one claim request. |
+| `item_id` | `INT NOT NULL` | Not null | References the item being claimed. |
+| `claimant_name` | `VARCHAR(100) NOT NULL` | Not null | Stores the stripped claim-form name. |
+| `claimant_contact` | `VARCHAR(150) NOT NULL` | Not null | Stores the stripped claim-form contact value. |
+| `verification_details` | `TEXT NOT NULL` | Not null | Stores the stripped ownership-verification message. |
+| `status` | `VARCHAR(20) NOT NULL DEFAULT 'pending'` | Not null; defaults to `pending` | Stores the initial status assigned to a valid claim. |
+| `created_at` | `TIMESTAMP DEFAULT CURRENT_TIMESTAMP` | Defaults to the current timestamp | Records when the claim was inserted. |
+| `user_id` | `INT NULL` | Nullable for migration compatibility | References the authenticated account that submitted the claim. Current application inserts always provide this value; only pre-enhancement rows may remain `NULL`. |
+| Foreign key | `FOREIGN KEY (item_id) REFERENCES items(id)` | Required relationship | Requires an existing item. |
+| Foreign key | `FOREIGN KEY (user_id) REFERENCES users(id)` | Optional relationship | Enforces a valid account when `user_id` is present. |
 
-## 6. Field-to-feature mapping
+## 6. Cardinality and legacy compatibility
+
+- One user may own zero, one, or many item reports. Every report created by the
+  final application has exactly one owner; only a pre-enhancement report may
+  have no owner because the migrated column is nullable.
+- One user may submit zero, one, or many claims. Every claim created by the
+  final application has exactly one account; only a pre-enhancement claim may
+  have no owner because the migrated column is nullable.
+- Every claim references exactly one item through `claims.item_id`; an item may
+  receive zero, one, or many claims.
+- No cascade behavior is declared by the schema.
+- **My Reports** filters strictly by the signed-in account's `user_id`; it does
+  not guess ownership of legacy rows from names or contact details.
+- The Admin Dashboard uses `LEFT JOIN`, so historical rows whose `user_id` is
+  `NULL` remain visible under the legacy fallback labels.
+
+## 7. Installation and one-time migration
+
+For a fresh database, import [`database.sql`](../../database.sql). It creates
+`users` before the two tables that reference it.
+
+For an existing database that already contains `items` and `claims`, first take
+a backup and then run the migration once against that database:
+
+```bash
+mysql -u <local-user> -p <database-name> \
+  < migrations/001_add_user_admin_system.sql
+```
+
+[`001_add_user_admin_system.sql`](../../migrations/001_add_user_admin_system.sql)
+creates `users`, adds both nullable ownership columns, and adds their foreign
+keys. It does not remove or replace existing rows. It is a one-time migration,
+not an application startup action, and Flask does not execute it automatically.
+
+## 8. Field-to-feature mapping
 
 | Delivered feature | Database fields used | Application mapping |
 |---|---|---|
-| US01 Report Lost Item / US02 Report Found Item | `items.item_name`, `category`, `report_type`, `location`, `report_date`, `description`, `contact_information` | `save_item_report()` inserts the report with `report_type` set by the selected Flask route. |
-| Browse Items | `items.id`, `item_name`, `category`, `report_type`, `location`, `report_date`, `status`, `created_at` | `/items` returns item summaries ordered by `created_at DESC, id DESC`. |
-| US03 Search Items | `items.item_name`, `description`, `location` | The `q` value is applied to all three columns with parameterised `LIKE` conditions. |
-| US04 Filter Items | `items.report_type`, `category` | Optional exact-match filters are combined with any keyword condition using `AND`. |
-| US05 View Item Details | All displayed `items` fields, including `contact_information` and `status` | `/items/<int:item_id>` selects a row by `items.id`. |
-| US06 Upload and display item photo | `items.image_path` | `save_item_report()` stores `uploads/<filename>`; the details template uses that path for the image. |
-| US07 Submit Claim Request | `claims.item_id`, `claimant_name`, `claimant_contact`, `verification_details`, `status`, `created_at` | `save_claim_request()` inserts a related row with status `pending`. |
+| Registration and login | `users.full_name`, `email`, `password_hash`, `role` | Registration inserts only `user`; login selects the account by normalized email and verifies the stored hash. |
+| US01/US02 item reporting | Existing `items` fields plus `user_id` | Login is required and `save_item_report()` always stores the authenticated session account ID. |
+| Browse/search/filter/details/photo | Existing `items` fields | The original US01-US07 behavior is unchanged. |
+| US07 claim submission | Existing `claims` fields plus `user_id` | Login is required and `save_claim_request()` always stores the authenticated session account ID with `pending` status. |
+| My Reports | `items.user_id` | `/my-reports` uses `WHERE user_id = %s` with the signed-in session ID. |
+| Read-only Admin Dashboard | All three tables | `/admin` reads counts and uses `LEFT JOIN` queries to show registered and legacy item and claim records. |
 
-## 7. Current limitations
+The complete automated suite reports **95 passed** using fake or mocked
+database connections; it does not require or prove a live MySQL installation.
 
-- `report_type`, item `status`, and claim `status` are text columns without database `CHECK` constraints limiting their values.
-- `image_path` references local file storage; the database does not contain the photo itself or enforce that the referenced file exists.
-- The application checks upload filename extensions only; the schema provides no MIME, size, collision, or malware controls.
-- The claim route selects an item before insertion, but it does not independently enforce that `items.report_type` is `found`.
-- The schema stores one initial claim status but provides no delivered status-history or review workflow.
-- Item reporter contact information remains stored in `items.contact_information` and displayed on Item Details; the repository does not document a product-owner privacy decision for that exposure.
+## 9. Security and remaining schema limitations
 
-## 8. Deferred tables and features
-
-The following stories are deferred; the current schema must not be read as evidence that their workflows are delivered:
-
-- US08 Track Claim Status;
-- US09 Review Claim Requests;
-- US10 Update Item Status; and
-- US11 View My Reports.
-
-A possible future Users table remains a conceptual extension only. No Users table, user identifier, or user-account data is present in `database.sql`. No concrete future columns or relationships are asserted here.
+- Password hashes fit within `VARCHAR(255)`; raw passwords are not database
+  fields.
+- Email uniqueness is enforced by MySQL in addition to the application's
+  duplicate check.
+- `role`, `report_type`, and status fields do not have database `CHECK`
+  constraints.
+- The read-only Admin Dashboard is not a US09 approval or rejection workflow.
+- There is no status-history table, account verification token, password-reset
+  token, or audit log.
+- `image_path` references local file storage and does not prove that a safe file
+  exists.
+- Reporter contact information remains stored on item rows and displayed on the
+  login-protected Item Details page.
 
 ## Historical Design Artifact
 
 ![Historical database ER diagram](images/database-er-diagram.png)
 
-This original image is retained as a planning artefact. It uses obsolete identifiers and claim fields, including `item_id` as the item primary key and a separate claim identifier, and it does not exactly match `database.sql`. It must not be treated as the current schema; the Mermaid ER diagram and exact tables above are authoritative.
+This original image is retained as planning evidence. It predates the final
+schema and uses obsolete identifiers and claim fields. The Mermaid diagram and
+exact tables above are authoritative for the implemented database.

@@ -2,6 +2,15 @@ CREATE DATABASE IF NOT EXISTS campus_lost_and_found;
 
 USE campus_lost_and_found;
 
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     item_name VARCHAR(100) NOT NULL,
@@ -13,7 +22,9 @@ CREATE TABLE items (
     contact_information VARCHAR(150) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'active',
     image_path VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE claims (
@@ -24,5 +35,7 @@ CREATE TABLE claims (
     verification_details TEXT NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (item_id) REFERENCES items(id)
+    user_id INT NULL,
+    FOREIGN KEY (item_id) REFERENCES items(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );

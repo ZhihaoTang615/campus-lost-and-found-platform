@@ -39,19 +39,53 @@ deferred; the final scope is stated separately below.
 | Iteration 2 | Improve usability and introduce the first claim workflow. | US03, US04, US06, US07 | 14 person-days |
 | Iteration 3 | Add tracking, review, and report-management features. | US08, US09, US10, US11 | 9 person-days |
 
+## Lecturer-Requested Final Scope Refinement
+
+The tables above preserve the original story and iteration records. After the
+tested US01-US07 baseline, the lecturer confirmed:
+
+> "The final version should include a user system and an administrator system
+> that can be used to view lost-and-found records."
+
+This later refinement adds the following requirements without rewriting the
+historical Iteration 3 decision:
+
+| Refinement | Acceptance requirement | Delivered behavior |
+|---|---|---|
+| User registration | Validate name, normalized email, an eight-character minimum password, confirmation, and duplicate email; never permit public admin registration | `GET/POST /register` creates only `role='user'` and stores a Werkzeug password hash. |
+| Login and logout | Use generic invalid credentials, trusted session state, safe local return paths, and a state-changing logout method | `GET/POST /login` stores only `user_id`, `user_name`, and `user_role`; `POST /logout` clears the session. |
+| Authenticated operations and ownership | Require login for reporting, browsing, details, claims, and personal records; every new report and claim must have an account owner | Protected routes redirect logged-out visitors to Login. Every application insert stores the authenticated session ID. Nullable schema fields preserve only pre-enhancement legacy rows. |
+| My Reports | Require login and prevent one account from seeing another account's private report list | `GET /my-reports` filters `items` by the signed-in `user_id` and orders newest first. |
+| Administrator viewing | Require the administrator role and retain legacy records | `GET /admin` is a read-only dashboard with five summary counts and all item/claim records loaded through `LEFT JOIN`. |
+| Administrator creation | Avoid hard-coded credentials and public role selection | `python scripts/create_admin.py` securely prompts with `getpass`, hashes the password, and inserts `role='admin'`. |
+| Existing database upgrade | Preserve all existing item and claim rows | The one-time migration creates `users` and adds nullable ownership foreign keys without removing records. |
+
 ## Final Scope Status
 
-- **Delivered:** US01 Report Lost Item, US02 Report Found Item, US03 Search
+- **Delivered baseline:** US01 Report Lost Item, US02 Report Found Item, US03 Search
   Items, US04 Filter Items, US05 View Item Details, US06 Upload Item Photo, and
   US07 Submit Claim Request.
-- **Deferred:** US08 Track Claim Status, US09 Review Claim Requests, US10 Update
-  Item Status, and US11 View My Reports.
+- **Delivered final refinement:** registration, login, POST-only logout,
+  authenticated-only lost-and-found operations, required ownership for all new
+  item/claim rows, the protected view-only My Reports page, and the protected
+  read-only Admin Dashboard. Nullable database ownership remains only for
+  pre-enhancement legacy compatibility.
+- **Still deferred:** US08 Track Claim Status and US10 Update Item Status.
+- **US09 boundary:** viewing claims in the Admin Dashboard is delivered, but
+  reviewing, approving, rejecting, or changing claims is not. US09 remains
+  deferred.
+- **US11 history and refinement:** US11 was deferred during the recorded
+  Iteration 3. Its view-only report-list slice was subsequently delivered by
+  the lecturer-requested refinement; editing or managing reports is not
+  included.
 - **Implemented US04 behaviour:** report-type and category filters, including
   combination with keyword search.
 - **Human confirmation required:** confirm whether US04 was formally refined
   from the planning baseline of category/location/date/status filtering to the
   implemented report-type/category filtering. This document does not silently
   rewrite the historical acceptance wording.
+- **Automated verification:** 95 tests pass using fake or mocked database
+  connections. The 21-test result remains the historical US01-US07 baseline.
 
 See [Requirements Traceability](requirements-traceability.md) for the final
 evidence mapping and any items requiring human confirmation.

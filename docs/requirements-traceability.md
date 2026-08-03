@@ -28,6 +28,28 @@ the 10/20/30 scale: 10 is highest, 20 is medium, and 30 is lower.
 | US06 Upload Item Photo | Attach a photo to an item report and display it for identification. | 30 (lower) | Original GitHub Issue: 5 person-days; Week 6 revised estimate: 2 person-days; Iteration 3 remaining-task estimate: 1 person-day | Began in 2; carried over and verified in 3 | Supported filename extensions are accepted and saved; unsupported extensions are rejected; stored photos display on details; missing photos use a placeholder. | Upload helpers and report routes in [`app.py`](../app.py); [`item-details.html`](../templates/item-details.html); runtime directory [`static/uploads/`](../static/uploads/) | [`test_lost_item_rejects_invalid_photo_type`, `test_found_item_report_saves_valid_photo`](../tests/test_report_items.py); [`test_item_details_displays_uploaded_photo`, `test_item_details_without_photo_displays_placeholder`](../tests/test_item_details.py) | [`final-uploaded-photo-display.png`](evidence/final-uploaded-photo-display.png) and Iteration 3 US06 screenshots prove a representative path. The final-named image displays a phone number and should be replaced or redacted before publication. | Git history contains merged PRs [#15](https://github.com/ZhihaoTang615/campus-lost-and-found-platform/pull/15), [#34](https://github.com/ZhihaoTang615/campus-lost-and-found-platform/pull/34), [#65](https://github.com/ZhihaoTang615/campus-lost-and-found-platform/pull/65), and [#68](https://github.com/ZhihaoTang615/campus-lost-and-found-platform/pull/68). Planning records reference Issue 53; final issue closure/acceptance requires confirmation. | **Delivered**, with upload-hardening limitations recorded in the final testing evidence |
 | US07 Submit Claim Request | Submit an ownership claim for an existing item. | 10 (highest) | Original GitHub Issue: 4 person-days; Week 6 revised estimate: 2 person-days; Iteration 3 remaining-task estimate: 1 person-day | Began in 2; carried over and verified in 3 | Required fields are validated; the target item must exist; one claim is inserted with `pending`; the user is redirected to a dedicated confirmation page showing `Pending`, **View Item Details**, and **Browse More Items**. | [`claim_request()`, `save_claim_request()`, and `claim_success()`](../app.py); [`claim-request.html`](../templates/claim-request.html); [`claim-success.html`](../templates/claim-success.html); [`claims` schema](../database.sql) | [`test_claim_request_stores_pending_claim_with_mock_database`, `test_claim_success_page_loads_with_confirmation`, `test_empty_claim_request_is_rejected`, `test_claim_request_for_missing_item_returns_404`](../tests/test_claim_request_mock.py) | Claim form and database screenshots in [`evidence/`](evidence/). The only success-named screenshot is obsolete and shows the earlier in-page feedback flow; there is **no current dedicated-success-page screenshot**. | Git history contains merged PRs [#52](https://github.com/ZhihaoTang615/campus-lost-and-found-platform/pull/52), [#76](https://github.com/ZhihaoTang615/campus-lost-and-found-platform/pull/76), [#80](https://github.com/ZhihaoTang615/campus-lost-and-found-platform/pull/80), and [#81](https://github.com/ZhihaoTang615/campus-lost-and-found-platform/pull/81). Planning records reference Issue 54 and Bug 72; final issue metadata/acceptance requires confirmation. | **Delivered; report-type eligibility is not enforced by the backend.** |
 
+## Lecturer-Requested Final Refinement Traceability
+
+The following work was added after the completed US01-US07 baseline in response
+to the confirmed request for user and administrator systems that can view
+lost-and-found records. No priority, estimate, iteration assignment, customer
+acceptance, or additional lecturer comment is invented for this refinement.
+
+| Refinement | Acceptance criteria | Implementation evidence | Automated evidence | Status and boundary |
+|---|---|---|---|---|
+| Registration | Page loads; normalize and validate input; reject duplicates; hash passwords; public users cannot select `admin` | [`register()`](../app.py); [`register.html`](../templates/register.html); [`users`](../database.sql) | Registration cases in [`test_user_admin_system.py`](../tests/test_user_admin_system.py) cover loading, normalization, hashing, forced user role, duplicate/missing/blank/invalid/short/mismatch paths | **Delivered** |
+| Login and logout | Verify hashes with a generic failure message; replace prior session state; accept only safe local return paths; logout is POST-only | [`login()`, `is_safe_next_url()`, and `logout()`](../app.py); [`login.html`](../templates/login.html) | Normal/admin login, invalid credentials, unsafe `next`, session clearing, and GET-logout rejection tests | **Delivered** |
+| Authentication and authorization | Protect all operational lost-and-found routes; deny normal users access to administrator data; trust no form or URL role | [`login_required` and `admin_required`](../app.py) | Logged-out reporting/browse/details/claim/My Reports/Admin redirect tests and normal-user Admin denial tests | **Delivered**; normal-user `/admin` returns 403 |
+| Required report and claim ownership | Every current application insert stores the authenticated session account ID; nullable ownership preserves only rows created before the enhancement | [`save_item_report()` and `save_claim_request()`](../app.py); [one-time migration](../migrations/001_add_user_admin_system.sql) | Owned item/claim insertion tests, missing-session helper safeguards, protected-route tests, and original persistence regressions under authenticated fixtures | **Delivered**; historical `NULL` rows remain admin-visible |
+| My Reports viewing slice | Require login; query only `items.user_id` for the current account; order newest first; show required fields and navigation | [`my_reports()`](../app.py); [`my-reports.html`](../templates/my-reports.html) | Ownership-query, required-content, admin-own-list, and cross-user isolation tests | **Delivered**; no edit/manage actions |
+| Read-only Admin Dashboard | Require administrator; show five counts, all items, all claims, and legacy rows through `LEFT JOIN`; expose no write operation | [`admin_dashboard()`](../app.py); [`admin-dashboard.html`](../templates/admin-dashboard.html) | Summary, registered/legacy item and claim visibility, read-only control, and POST-rejection tests | **Delivered viewing only**; not US09 approval/rejection |
+| Schema and administrator bootstrap | Create `users`; add nullable ownership FKs without deleting records; create admins without hard-coded credentials | [`database.sql`](../database.sql); [`001_add_user_admin_system.sql`](../migrations/001_add_user_admin_system.sql); [`create_admin.py`](../scripts/create_admin.py); [`.env.example`](../.env.example) | Source inspection plus mocked application database tests; no live migration automation is claimed | **Delivered** |
+
+The complete regression reports **95 passed**. The original 21 tests remain the
+historical US01-US07 baseline; the additional tests cover the final refinement.
+All automated database interactions use fakes or mocks and do not require live
+MySQL.
+
 ## Iteration 2 Metrics
 
 Iteration 2 selected 14 person-days of story effort. Retrospective records
@@ -46,17 +68,18 @@ and US07 claim-persistence completion work occurred later in Iteration 3.
 | 15 working days | 3 × 15 = 45 person-days | 2 / 45 = 0.0444 (4.44%) | 14 / 45 = 0.3111 (31.11%) |
 | 20 working days | 3 × 20 = 60 person-days | 2 / 60 = 0.0333 (3.33%) | 14 / 60 = 0.2333 (23.33%) |
 
-## Deferred Scope
+## Historical Deferral and Remaining Scope
 
-The following stories are explicitly outside the delivered system and must not be
-presented as implemented:
+The Iteration 3 files are retained as historical evidence that US08-US11 were
+deferred at that time. The later lecturer-requested refinement changes only the
+current delivered viewing scope described here.
 
-| User Story | Final Status | Repository Evidence |
+| User Story | Current status | Repository Evidence and boundary |
 |---|---|---|
-| US08 Track Claim Status | Deferred, not delivered | Final title/status: [`requirements.md`](requirements.md); deferral record: [`iteration-3-deferred-backlog.md`](iterations/iteration-3-deferred-backlog.md) |
-| US09 Review Claim Requests | Deferred, not delivered | Final title/status: [`requirements.md`](requirements.md); deferral record: [`iteration-3-deferred-backlog.md`](iterations/iteration-3-deferred-backlog.md) |
-| US10 Update Item Status | Deferred, not delivered | Final title/status: [`requirements.md`](requirements.md); deferral record: [`iteration-3-deferred-backlog.md`](iterations/iteration-3-deferred-backlog.md) |
-| US11 View My Reports | Deferred, not delivered | Final title/status: [`requirements.md`](requirements.md); deferral record: [`iteration-3-deferred-backlog.md`](iterations/iteration-3-deferred-backlog.md) |
+| US08 Track Claim Status | Deferred, not delivered | Historical deferral: [`iteration-3-deferred-backlog.md`](iterations/iteration-3-deferred-backlog.md). The claim-success page shows only the initial Pending state. |
+| US09 Review Claim Requests | Deferred, not delivered | The administrator can view claims, but cannot approve, reject, update, or otherwise review them as a workflow. Historical deferral remains recorded. |
+| US10 Update Item Status | Deferred, not delivered | Neither users nor administrators receive a status-update action. Historical deferral remains recorded. |
+| US11 View My Reports | Historical deferral retained; view-only slice now delivered | `/my-reports` supplies the later lecturer-requested viewing slice. Editing and management remain outside scope. |
 
 ## Traceability Conclusions
 
@@ -70,3 +93,8 @@ presented as implemented:
    original values.
 5. Manual evidence is useful demonstration support, but it is not a substitute
    for live-database or browser automation and may contain personal data.
+6. The lecturer-requested refinement is verified by the current 95-test suite,
+   but no new priority, effort estimate, iteration assignment, or approval is
+   inferred.
+7. The read-only administrator record view must not be reported as delivery of
+   US09 claim approval or rejection.
