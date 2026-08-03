@@ -2,115 +2,298 @@
 
 ## Iteration Purpose
 
-Iteration 3 concentrated on completing and verifying the photo-display and
-claim-submission workflow, then strengthening regression, system-test, defect,
-and final documentation evidence. This review does not restate disputed
-capacity or velocity figures.
+Iteration 3 focused on completing and verifying the remaining photo-display and
+claim-submission work carried forward from Iteration 2.
+
+The original Iteration 3 work included:
+
+- completing uploaded-photo display for US06;
+- completing claim-request persistence for US07;
+- applying Test-Driven Development to selected functionality;
+- using mock objects to isolate database behaviour;
+- conducting regression and system testing;
+- correcting defects discovered during testing; and
+- collecting final implementation and testing evidence.
+
+The original Iteration 3 plan recorded US08–US11 as deferred. A later
+lecturer-requested refinement was completed after the in-class demonstration and
+is recorded separately in this review so that the historical plan is not
+rewritten.
 
 ## Planned Work
 
 The tracked Iteration 3 plan selected:
 
-- US06: display an uploaded photo on Item Details and handle a missing photo;
-- US07: store a claim for an existing item with initial `pending` status;
-- focused TDD and mock-object testing;
-- regression and system-test preparation; and
+- **US06 – Upload Item Photo:** display an uploaded photo on Item Details and
+  provide a safe no-photo fallback;
+- **US07 – Submit Claim Request:** store a valid claim for an existing item with
+  initial status `pending`;
+- focused RED–GREEN–REFACTOR evidence;
+- mock-object testing;
+- regression testing;
+- system testing;
+- defect correction; and
 - final evidence documentation.
 
-The plan also recorded US08–US11 as deferred. Its wider planning and
-responsibility assertions remain historical records and are not re-certified by
-this review.
+The following broader user stories were deferred during the original Iteration 3
+planning:
 
-## Delivered Work
+- **US08 – Track Claim Status**
+- **US09 – Review Claim Requests**
+- **US10 – Update Item Status**
+- **US11 – View My Reports**
 
-Current source, tests, and Git history support:
+## Original Iteration 3 Delivery
 
-- uploaded-photo display and a no-photo placeholder for US06;
-- a persisted US07 claim linked by `item_id` with status `pending`;
+Current source code, tests, Git history, and repository evidence support the
+following original Iteration 3 outcomes:
+
+- uploaded-photo display on the Item Details page;
+- a responsive no-photo fallback;
+- claim-request persistence linked to an existing item;
+- initial claim status `pending`;
 - server-side rejection of empty or whitespace-only claim fields;
-- a dedicated Claim Request Submitted page with Pending status, View Item
-  Details, and Browse More Items actions;
-- fake/mock database regression tests; and
-- repository-recorded manual Flask/MySQL evidence for selected workflows.
+- a dedicated **Claim Request Submitted** page;
+- visible **Pending** status after a successful submission;
+- **View Item Details** and **Browse More Items** actions;
+- mock-object database testing;
+- regression testing; and
+- selected manual Flask/MySQL workflow verification.
 
-## Unplanned Work
+The completed US01–US07 baseline reached a historical regression result of:
 
-The repository does not establish that Bug #72 was formally classified as
-unplanned work. It is therefore recorded as defect work discovered during
-system testing, without assigning an estimate, severity, owner, or Board state
-beyond the evidence that exists.
+```text
+21 passed
+```
+
+This 21-test result remains valid historical evidence for the system before the
+later user and administrator refinement.
+
+## Test-Driven Development Evidence
+
+US07 claim persistence provides the main preserved RED–GREEN–REFACTOR example.
+
+The evidenced sequence was:
+
+1. a failing mock-object test showed that the application did not store a claim;
+2. the minimum claim-storage behaviour was implemented;
+3. the focused test passed;
+4. the complete regression suite remained green; and
+5. claim persistence was refactored into `save_claim_request()`.
+
+The repository records the related implementation, screenshots, commits, and
+Pull Request #52.
+
+This evidence demonstrates selected TDD practice. It does not claim that every
+project feature was developed test-first.
 
 ## Bug #72 – Empty Claim Request Validation
 
-Bug #72 affected US07 because an empty claim could be stored. The evidenced
-chain is:
+System testing found that an empty claim request could be accepted and stored.
 
-1. system testing exposed the empty-claim behaviour;
+The evidenced defect workflow was:
+
+1. system testing exposed the invalid behaviour;
 2. the defect was recorded as Issue #72;
-3. a failing regression test reproduced the missing validation;
-4. server-side required-field validation was added;
-5. the focused test passed;
-6. PR #76 was merged;
-7. a repository screenshot records the manual fixed-state retest; and
-8. the current complete regression suite passes 21 tests.
+3. a regression test reproduced the problem;
+4. server-side validation was added;
+5. empty and whitespace-only fields were rejected;
+6. invalid requests no longer produced an insert or commit;
+7. the focused regression passed;
+8. the manual workflow was retested; and
+9. Pull Request #76 merged the correction.
 
-Commit `050da84` contains the validation and regression test in the same commit,
-so the repository does not preserve a separate commit for the Bug #72 RED
-state. The before/fixed screenshots remain supporting historical evidence.
+Commit `050da84` contains both the validation change and its regression test.
+Therefore, the Git history does not preserve this bug as a separate committed
+RED state. The before-and-after system-test evidence is retained without
+overstating the commit history.
 
-## Testing Outcome
+## Iteration Demonstration and Lecturer Feedback
 
-The current automated result is **21 passed**. The suite covers US01–US07,
-including claim validation, pending persistence, confirmation-page content and
-navigation, checks that submitted contact and verification details are absent
-from that page, missing-item behaviour, redirects, commits, and resource
-cleanup.
+The completed US01–US07 system was demonstrated in class on **3 August 2026**.
 
-Automated database behaviour uses fake or mocked connections. It does not
-replace manual testing of the running Flask application with MySQL.
+After the demonstration, Dr Dasheng Liu provided the following oral feedback:
 
-## Deferred Scope
+> The final version should include a user system and an administrator system
+> that can be used to view lost-and-found records.
 
-US08 Track Claim Status, US09 Review Claim Requests, US10 Update Item Status,
-and US11 View My Reports remain deferred.
+The complete feedback record is available in:
 
-US04 is delivered with report-type and category filters. The repository does not
-prove formal approval of the change from the broader historical
-location/date/status wording, so that scope decision still requires human
-confirmation.
+- [Iteration 3 Demonstration and Lecturer Feedback](../client-feedback/iteration-3-feedback.md)
 
-## Demonstration Evidence
+This feedback was treated as a focused final scope refinement rather than being
+retroactively added to the original Iteration 3 plan.
 
-The repository contains current final evidence alongside historical UI,
-database, TDD, defect, and Board screenshots:
+## Lecturer-Requested Final Refinement
 
-- [dedicated Claim Request Submitted page](../evidence/final-claim-success.png);
-- [complete automated regression](../testing/images/iteration-3-final-regression-21-passed.png),
-  recording 21 collected, 21 passed, and 0 failed; and
-- [final Iteration 3 Board](../evidence/final-iteration-3-board.png).
+Following the demonstration, the completed US01–US07 baseline was retained and
+the final system was extended with:
 
-The Board and regression images contain account or development-environment
-context and require privacy review before public embedding.
+- public user registration;
+- password hashing;
+- user and administrator login;
+- POST-only logout;
+- authenticated-only lost-and-found operations;
+- role-based authorization;
+- authenticated ownership for every new item report;
+- authenticated ownership for every new claim request;
+- a protected **My Reports** page;
+- a protected, read-only **Admin Dashboard**;
+- a non-destructive database migration;
+- secure local administrator creation;
+- legacy-record preservation; and
+- improved button and keyboard-focus accessibility.
 
-`docs/client-feedback/iteration-3-feedback.md` is empty, so no Iteration 3
-customer demonstration or feedback is claimed.
+Zhihao Tang independently implemented this final refinement after the lecturer
+demonstration.
+
+The work was developed on:
+
+```text
+feature/final-user-admin-system
+```
+
+and merged through:
+
+- **Pull Request #87 – Add final user and administrator systems**
+
+## Final Testing Outcome
+
+The final automated regression result after the user and administrator
+refinement is:
+
+```text
+95 passed
+```
+
+The final suite includes the unchanged 21-test US01–US07 baseline plus additional
+tests covering:
+
+- registration validation;
+- password hashing;
+- normalized and duplicate emails;
+- user and administrator login;
+- generic login-failure messages;
+- safe local redirects;
+- POST-only logout;
+- session clearing;
+- protected operational routes;
+- item and claim ownership;
+- My Reports account isolation;
+- normal-user denial from administrator routes;
+- administrator summary counts;
+- registered and legacy item records;
+- registered and legacy claim records; and
+- read-only administrator behaviour.
+
+Automated database behaviour uses fake or mocked connections. Manual testing was
+also performed using the running Flask application and local MySQL database.
+These forms of testing provide different evidence and are not presented as
+interchangeable.
+
+## Database Preservation
+
+The final database refinement added:
+
+- a `users` table;
+- nullable `items.user_id`;
+- nullable `claims.user_id`; and
+- ownership foreign keys.
+
+The migration preserved all existing item and claim rows. Nullable ownership is
+retained only for records created before authentication was added.
+
+Every new item and claim created through the final application uses the
+authenticated session account ID.
+
+The Admin Dashboard uses `LEFT JOIN` queries so that legacy records remain
+visible rather than being removed or incorrectly assigned to a new user.
+
+## Final Scope Status
+
+The final delivered baseline includes:
+
+- **US01 – Report Lost Item**
+- **US02 – Report Found Item**
+- **US03 – Search Items**
+- **US04 – Filter Items**
+- **US05 – View Item Details**
+- **US06 – Upload Item Photo**
+- **US07 – Submit Claim Request**
+
+The lecturer-requested final refinement additionally delivers:
+
+- user registration and authentication;
+- administrator authentication;
+- protected operations;
+- account ownership;
+- a view-only **My Reports** feature; and
+- a read-only **Admin Dashboard**.
+
+The remaining deferred scope is:
+
+- **US08 – Track Claim Status**
+- **US10 – Update Item Status**
+
+**US09 – Review Claim Requests** remains deferred because the administrator can
+view claims but cannot approve, reject, delete, or update them.
+
+The view-only portion of **US11 – View My Reports** was delivered through the
+later lecturer-requested refinement. Editing and managing reports remain
+outside the final scope.
+
+US04 is implemented using report-type and category filters combined with keyword
+search. The original planning wording also included location, date, and status
+filters. Final treatment of that scope difference remains subject to lecturer
+confirmation and is not silently rewritten in this review.
+
+## Final Evidence
+
+Current final evidence includes:
+
+- [Iteration 3 lecturer feedback](../client-feedback/iteration-3-feedback.md)
+- [Final 95-test regression result](../testing/images/final-regression-95-passed.png)
+- [Login page](../evidence/final-login-page.png)
+- [Registration page](../evidence/final-register-page.png)
+- [My Reports page](../evidence/final-my-reports-page.png)
+- [Admin Dashboard](../evidence/final-admin-dashboard.png)
+- [Claim Request Submitted page](../evidence/final-claim-success.png)
+- [Final Iteration 3 Board](../evidence/final-iteration-3-board.png)
+
+The older 21-test screenshot remains historical baseline evidence and must not
+be presented as the final complete regression result.
 
 ## Lessons Learned
 
-- HTML required fields are not a substitute for server-side validation.
-- A regression must verify both the visible response and the absence of an
-  invalid database insert or commit.
-- Automated fake/mock tests and manual MySQL evidence answer different testing
-  questions and must be labelled separately.
-- Historical screenshots must not be relabelled as the current final state.
+- HTML `required` attributes are not a substitute for server-side validation.
+- Tests should verify both visible outcomes and the absence of invalid database
+  operations.
+- Mock testing and live system testing answer different questions.
+- Historical planning records should not be rewritten after an unplanned final
+  refinement.
+- Functional user stories alone do not provide user identity, data ownership, or
+  administrator accountability.
+- Demonstration feedback can reveal important system-level requirements that are
+  not obvious from isolated feature testing.
+- Evidence must clearly distinguish historical milestones from the current final
+  state.
 
 ## Process Improvements
 
-Verified improvements include:
+Verified project improvements include:
 
 - server-side claim validation;
-- a focused Bug #72 regression test;
-- a complete 21-test regression run;
+- a focused defect regression;
+- preserved US07 TDD evidence;
 - a dedicated claim-success page;
-- runtime upload patterns excluded from new Git tracking; and
-- clearer final traceability, limitations, system-test, and delivery evidence.
+- user and administrator authentication;
+- role-based access control;
+- account-owned reports and claims;
+- My Reports isolation;
+- read-only administrator visibility;
+- non-destructive legacy-data migration;
+- expanded automated testing from 21 to 95 passing tests;
+- clearer accessibility states;
+- documented lecturer feedback; and
+- clearer separation between original iteration delivery and later scope
+  refinement.
