@@ -80,12 +80,12 @@ historical Iteration 3 decision:
   included.
 - **Implemented US04 behaviour:** report-type and category filters, including
   combination with keyword search.
-- **Human confirmation required:** confirm whether US04 was formally refined
-  from the planning baseline of category/location/date/status filtering to the
-  implemented report-type/category filtering. This document does not silently
-  rewrite the historical acceptance wording.
+- **Confirmed US04 team decision:** retain the delivered report-type/category
+  filters combined with keyword search. Location, date, and status filters from
+  the historical planning wording are deferred to avoid late-stage scope
+  expansion and regression risk; they are not claimed as implemented.
 - **Automated verification:** 95 tests pass using fake or mocked database
   connections. The 21-test result remains the historical US01-US07 baseline.
 
 See [Requirements Traceability](requirements-traceability.md) for the final
-evidence mapping and any items requiring human confirmation.
+evidence mapping and remaining evidence boundaries.

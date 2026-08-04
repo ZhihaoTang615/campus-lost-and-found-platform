@@ -6,7 +6,14 @@ This document separates verified RED, GREEN, REFACTOR, defect, and regression
 evidence for US07. It does not infer Issue states, Board states, customer
 acceptance, estimates, or team responsibilities.
 
-The final delivered stories are US01–US07. US08–US11 remain deferred.
+At the recorded pre-user/admin Iteration 3 milestone, the delivered stories were
+US01–US07 and US08–US11 were deferred. A later lecturer-requested refinement
+added registration, login, protected operations, ownership, My Reports, and a
+read-only Admin Dashboard. In the current final scope, US08 and US10 remain
+deferred; US09 remains deferred because claims cannot be approved or rejected;
+and the view-only portion of US11 is delivered through My Reports. See the
+[Iteration 3 Review](../iterations/iteration-3-review.md) and
+[Delivered Solution](../delivered-solution.md) for current final status.
 
 ## Bug #72 – Empty Claim Submission
 
@@ -100,7 +107,8 @@ checkpoints rather than the current final result:
 - [`iteration-3-final-regression-19-passed.png`](images/iteration-3-final-regression-19-passed.png).
 
 These links preserve authentic historical evidence without treating the older
-test counts as the current 21-test regression.
+test counts as the current final regression. The 21-test result below is the
+pre-user/admin baseline.
 
 ## Verified Defect Chain
 
@@ -112,7 +120,7 @@ System testing
 → the focused regression passes
 → PR #76 merges
 → repository screenshot records the manual fixed-state retest
-→ the complete suite passes 21 tests
+→ the pre-user/admin baseline suite passes 21 tests
 ```
 
 Local evidence supports the merge, but live Issue/Board state was not queried in
@@ -137,7 +145,7 @@ the submitted contact and verification details are not rendered on that page.
 These tests use fake or mocked database connections. They do not connect to live
 MySQL.
 
-## Final Regression
+## Historical Pre-Refinement Regression
 
 The reproducible command is:
 
@@ -145,16 +153,25 @@ The reproducible command is:
 .venv/bin/python -m pytest -v
 ```
 
-Final result:
+Pre-user/admin baseline result:
 
 - **21 collected**
 - **21 passed**
 - **0 failed**
 
 The tracked 15-, 16-, 18-, and 19-pass screenshots remain historical milestones.
-The current final regression screenshot,
+The historical 21-pass baseline screenshot,
 [`iteration-3-final-regression-21-passed.png`](images/iteration-3-final-regression-21-passed.png),
 records 21 collected, 21 passed, and 0 failed.
+
+## Current Final Regression
+
+After the later user/admin refinement, the complete automated result is
+**95 passed**. The current screenshot is
+[`final-regression-95-passed.png`](images/final-regression-95-passed.png). See
+[Final Testing Evidence](final-testing-evidence.md) for the current suite scope
+and the boundary between automated fake/mock database tests and manual MySQL
+evidence.
 
 ## Manual Evidence Boundaries
 

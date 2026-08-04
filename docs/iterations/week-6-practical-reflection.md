@@ -141,7 +141,7 @@ Based on the Iteration 1 velocity, our team decided to focus on the four main It
 
 The team monitors Iteration 2 work using GitHub Issues and the GitHub Project Board.
 
-![Week 6 Board Status](images/week-6-board-status.png)
+![Week 6 Board Status](images/week-6-board-status%281%29.png)
 
 The board uses the following status columns:
 

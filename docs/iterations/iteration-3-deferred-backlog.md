@@ -2,7 +2,10 @@
 
 ## 1. Purpose
 
-This document records the user stories that were originally considered for Iteration 3 but were deferred after reviewing the team's Iteration 2 delivery performance.
+This document is a historical record of the user stories that were originally
+considered for Iteration 3 but were deferred after reviewing the team's
+Iteration 2 delivery performance. Its deferral statements describe the
+pre-user/admin milestone, not the current final scope.
 
 The purpose of this adjustment was to keep Iteration 3 achievable and to prioritise completion quality, testing, TDD, regression testing, and final evidence.
 
@@ -35,7 +38,9 @@ US09
 US10
 US11
 
-These stories are not part of the completed final system scope and must not be described as implemented or completed in the Week 10 submission.
+At this pre-refinement milestone, these stories were not part of the completed
+system scope. A later lecturer-requested refinement changed the current status
+of the view-only portion of US11 without rewriting this historical decision.
 
 ## 4. Reason for Deferral
 
@@ -56,9 +61,9 @@ preparing the Week 10 system test and demonstration.
 
 This decision reduced the risk of starting additional user stories that could not be fully implemented, tested, reviewed, and evidenced before final submission.
 
-## 5. Final Iteration 3 Scope
+## 5. Recorded Original Iteration 3 Scope
 
-The implemented and verified final scope focuses on:
+The implemented and verified scope at this pre-refinement milestone focused on:
 
 US01 – Report Lost Item
 US02 – Report Found Item
@@ -68,7 +73,7 @@ US05 – View Item Details
 US06 – Upload/Display Item Photo
 US07 – Submit Claim Request
 
-US08-US11 remain deferred backlog items.
+At this milestone, US08-US11 remained deferred backlog items.
 
 ## 6. Quality-Focused Iteration 3 Work
 
@@ -90,8 +95,8 @@ final documentation review.
 
 This approach ensured that completed functionality could be demonstrated with implementation, automated tests, Pull Requests, and repository evidence.
 
-## 7. Deferred Story Status
-User Story	Iteration 3 Status	Final Submission Status
+## 7. Recorded Deferred Story Status
+User Story	Iteration 3 Status	Status at this pre-refinement milestone
 US08	Deferred	Not completed
 US09	Deferred	Not completed
 US10	Deferred	Not completed
@@ -103,7 +108,9 @@ They must not be moved into the completed scope unless implementation, testing, 
 
 ## 8. Documentation Consistency Rule
 
-Final project documents must use the following values consistently:
+The confirmed final capacity basis is 15 working days for each of three members,
+giving 45 person-days. The original iteration record used the following
+planning values:
 
 Capacity: 45 person-days
 Completed story work: 14 person-days
@@ -111,19 +118,38 @@ Velocity: 0.31
 
 Old or inconsistent velocity values should not be used in the final Week 10 documentation.
 
-Similarly:
+At this historical milestone, the documentation rule also stated:
 
-US08-US11 must remain marked as deferred;
-they must not appear in the list of completed user stories;
-final evidence should focus only on work that can be verified in the repository.
+US08-US11 were marked as deferred;
+they did not appear in the milestone's completed user-story list;
+evidence focused only on work verified at that time.
 
-## 9. Conclusion
+This historical rule is superseded for the current final system by the later
+lecturer-requested refinement.
+
+## 9. Current Final Status
+
+| User Story | Current final status |
+|---|---|
+| US08 Track Claim Status | Deferred. |
+| US09 Review Claim Requests | Deferred; the administrator can view claims but cannot approve or reject them. |
+| US10 Update Item Status | Deferred. |
+| US11 View My Reports | Historical deferral retained; the view-only portion is delivered through My Reports. Editing and management remain outside scope. |
+
+The current final system also includes registration, login, protected
+operations, ownership, and a read-only Admin Dashboard. See the
+[Iteration 3 Review](iteration-3-review.md),
+[Requirements Traceability](../requirements-traceability.md), and
+[Delivered Solution](../delivered-solution.md).
+
+## 10. Historical Conclusion
 
 The Iteration 3 backlog was deliberately reduced after the Iteration 2 review.
 
 The team prioritised completion quality over adding more partially completed features.
 
-This allowed the project to focus on US06, US07, TDD, mock-object testing, regression testing, system testing, and final evidence while keeping US08-US11 clearly documented as deferred work.
-
+This allowed the pre-refinement milestone to focus on US06, US07, TDD,
+mock-object testing, regression testing, system testing, and evidence while
+keeping US08-US11 documented as deferred at that time.
 
 

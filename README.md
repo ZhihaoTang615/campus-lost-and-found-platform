@@ -71,9 +71,9 @@ can view claims but cannot approve, reject, delete, or update them. The
 view-only portion of US11 is now delivered as **My Reports** through the later
 scope refinement; report editing and management are not included.
 
-Historical planning files contain conflicting capacity, completed-effort, and
-velocity values. Those records have been preserved and require team
-confirmation; they are not repeated here as settled final metrics.
+The final confirmed iteration capacity basis is **15 working days × 3 team
+members = 45 person-days**. Historical planning drafts that use 20 working days
+or a 0.7 factor are superseded and are not used in the final report.
 
 ---
 
@@ -116,9 +116,10 @@ Users can search records using keywords matched against:
 
 Users can filter records by report type and category.
 
-The original US04 wording also mentions location, date, and status filters.
-Confirm whether US04 was formally refined to the implemented report-type and
-category scope before submission.
+The team confirmed the delivered US04 scope as report-type and category
+filtering combined with keyword search. The original location, date, and status
+filters remain historical planning scope and are deferred to avoid late-stage
+scope expansion and regression risk.
 
 ### View Item Details
 

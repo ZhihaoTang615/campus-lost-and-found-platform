@@ -130,11 +130,22 @@ The user-story workload is estimated at **14 person-days**. The internal technic
 
 ## Iteration 2 Capacity
 
-The team has three members. Assuming 20 working days and an initial velocity of 0.7, the estimated team capacity is:
+The final confirmed capacity basis is 15 working days for each of three team
+members:
+
+```text
+3 team members × 15 working days = 45 person-days
+```
+
+The original planning draft used the following superseded calculation:
 
 ```text
 3 team members × 20 working days × 0.7 velocity = 42 person-days
 ```
+
+The 20-working-day duration and 0.7 factor are retained only as historical
+planning evidence. They are not used in the final report or final capacity
+calculation.
 
 The planned workload is within the estimated team capacity. A small buffer has been retained for debugging, testing, and unexpected issues.
 
