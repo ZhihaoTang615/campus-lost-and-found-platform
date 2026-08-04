@@ -96,7 +96,7 @@ The incomplete work must be split into smaller tasks and re-estimated before it 
 
 ## Burn-down Chart
 
-![Iteration 2 Burn-down](../testing/images/iteration-2-burndown.png)
+![Iteration 2 Burn-down](images/iteration-2-burndown.png)
 
 The chart must finish at 12 person-days rather than zero because 12 person-days of planned user-story value remained incomplete.
 

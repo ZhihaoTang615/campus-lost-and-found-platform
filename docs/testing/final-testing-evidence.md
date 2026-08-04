@@ -64,14 +64,18 @@ The reproducible automated command is:
 
 **Current final result: 95 tests passed.**
 
-The regression screenshot,
+The current regression screenshot,
+[`final-regression-95-passed.png`](images/final-regression-95-passed.png), records
+**95 passed** after the user/administrator refinement.
+
+The historical regression screenshot,
 [`iteration-3-final-regression-21-passed.png`](images/iteration-3-final-regression-21-passed.png),
 records **21 collected, 21 passed, and 0 failed** for the completed US01–US07
 baseline. It remains valid historical evidence but is not evidence of the
 expanded 95-test suite. The current command result comprises the unchanged
 21-test baseline plus 74 collected cases for the later user/administrator
-refinement. No replacement screenshot is claimed here. The older 15-, 16-,
-18-, and 19-pass screenshots also remain historical milestones.
+refinement. The older 15-, 16-, 18-, and 19-pass screenshots also remain
+historical milestones.
 
 All automated database interactions are fakes or mocks. A green automated result
 therefore does **not** prove MySQL connectivity, schema installation, filesystem
@@ -243,22 +247,24 @@ should be replaced, redacted, or omitted from public submission:
   context;
 - `docs/evidence/iteration3-final-regression-19-passed.png` and the tracked
   terminal/IDE regression screenshots under `docs/testing/images/`, including
-  `iteration-3-final-regression-21-passed.png` — local username, device/host name,
-  path, or development-tool context; and
+  `iteration-3-final-regression-21-passed.png` and
+  `final-regression-95-passed.png` — local username, device/host name, path, or
+  development-tool context; and
 - `docs/evidence/final-iteration-3-board.png` — GitHub account name, profile
   avatar, and contributor avatars.
 
 No database password is visible in the inspected screenshots.
 
-Historical baseline/final-iteration evidence is present at:
+Historical baseline/final-iteration and current regression evidence is present
+at:
 
 - [`final-claim-success.png`](../evidence/final-claim-success.png);
 - [`final-iteration-3-board.png`](../evidence/final-iteration-3-board.png); and
-- [`iteration-3-final-regression-21-passed.png`](images/iteration-3-final-regression-21-passed.png).
+- [`iteration-3-final-regression-21-passed.png`](images/iteration-3-final-regression-21-passed.png); and
+- [`final-regression-95-passed.png`](images/final-regression-95-passed.png).
 
-The 21-pass image is explicitly the pre-refinement baseline. The current
-95-pass result is the command result recorded above; this document does not
-claim that an image of that expanded run exists.
+The 21-pass image is explicitly the pre-refinement baseline. The 95-pass image
+records the current expanded run.
 
 The following requested evidence also exists, but all three items need
 privacy-safe replacements:

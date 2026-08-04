@@ -1,8 +1,12 @@
-# Iteration 3 Final UI Design
+# Iteration 3 US06–US07 UI Design — Historical Pre-Refinement Record
 
 ## Overview
 
-Iteration 3 completed the delivered US06 uploaded-photo display and US07 claim-request workflow. It also added the Bug #72 empty-claim safeguard and the dedicated claim-confirmation page. This document describes the final implementation rather than a proposed interface.
+At the recorded pre-user/admin Iteration 3 milestone, the project completed the
+US06 uploaded-photo display and US07 claim-request workflow. It also added the
+Bug #72 empty-claim safeguard and the dedicated claim-confirmation page. This
+document describes that implemented historical milestone rather than a proposed
+interface; it is not the current final UI specification.
 
 ## US06 uploaded-photo display
 
@@ -63,7 +67,7 @@ The submitted name, contact information and verification details are not repeate
 
 The Item Details image and placeholder resize within the available layout. Navigation and actions stack on smaller screens, and buttons become full width. Images use meaningful alternative text, forms have associated labels, the claim error area uses a polite live region, and CSS supplies visible keyboard-focus styling and reduced-motion handling.
 
-## Current implementation limitations
+## Pre-refinement implementation limitations
 
 - There is no authentication or user-account UI.
 - There is no administrator review interface.
@@ -73,4 +77,18 @@ The Item Details image and placeholder resize within the available layout. Navig
 - The success route uses `item_id`, not a claim identifier; it confirms the pending state passed by the application rather than loading a particular claim record.
 - Contact information remains visible on Item Details and requires product-owner privacy confirmation.
 
-US08 Track Claim Status, US09 Review Claim Requests, US10 Update Item Status and US11 View My Reports remain deferred. No customer acceptance or approval is asserted by this design record.
+At this pre-refinement milestone, US08 Track Claim Status, US09 Review Claim
+Requests, US10 Update Item Status, and US11 View My Reports were deferred. No
+customer acceptance or approval is asserted by this historical design record.
+
+## Current final status
+
+The later lecturer-requested refinement added registration, login, protected
+operations, ownership, My Reports, and a read-only Admin Dashboard. US08 and
+US10 remain deferred. US09 remains deferred because the administrator cannot
+approve or reject claims. The view-only portion of US11 is delivered through My
+Reports; report editing and management remain outside scope.
+
+See the authoritative [Final Implemented UI Specification](ui-design.md),
+[Implemented System Architecture](architecture.md), and
+[Delivered Solution](../delivered-solution.md).

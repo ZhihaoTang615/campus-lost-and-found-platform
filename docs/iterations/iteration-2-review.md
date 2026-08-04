@@ -87,11 +87,14 @@ The Iteration 2 Project Board was used to track user stories, technical tasks, d
 
 ### Iteration 2 Board Start
 
-![Iteration 2 Board Start](images/iteration-2-board-start.png)
+![Iteration 2 Board Start](images/iteration-2-board.png)
 
-### Iteration 2 Board Final
+### Later Week 6 Board Status
 
-![Iteration 2 Board Final](images/iteration-2-board-final.png)
+The separately named `iteration-2-board-final.png` artifact is not present in
+the current repository. The closest tracked later Iteration 2 Board snapshot is:
+
+![Later Week 6 Board Status](images/week-6-board-status%281%29.png)
 
 ## Prototype and Work-in-Progress Evidence
 
@@ -101,25 +104,25 @@ The following screenshots are retained as historical prototype and work-in-progr
 
 US03 Search Items was completed end-to-end and allowed keyword searches for matching lost or found item reports.
 
-![Iteration 2 Search Results](images/iteration-2-search-results.png)
+![Iteration 2 Search Results](images/iteration-2-search-items-phone.png)
 
 ### Filter Items
 
 This screenshot records Iteration 2 filter work. US04 was not completed end-to-end by the deadline and continued as carry-over work.
 
-![Iteration 2 Filter Results](images/iteration-2-filter-results.png)
+![Iteration 2 Filter Results](images/iteration-2-combined-search-filter.png)
 
 ### Upload Item Photo
 
 This screenshot records Iteration 2 photo-upload work. US06 was not completed end-to-end by the deadline and continued as carry-over work.
 
-![Iteration 2 Photo Upload](images/iteration-2-photo-upload.png)
+![Iteration 2 Photo Upload](images/iteration-2-photo-upload-form.png.png)
 
 ### Submit Claim Request
 
 This screenshot records Iteration 2 claim-request work. US07 was not completed end-to-end by the deadline and continued as carry-over work.
 
-![Iteration 2 Claim Request](images/iteration-2-claim-request.png)
+![Iteration 2 Claim Request](../screenshots/week-6-claim-request-form.png)
 
 ## Client Feedback Summary
 
@@ -158,7 +161,7 @@ The historical record reports **10 tests**, **10 passed**, and **0 failed**. The
 
 The full acceptance testing record is available in:
 
-[`../testing/acceptance-tests.md`](../testing/acceptance-tests.md)
+[`../testing/Iteration 2 Acceptance Tests-tests.md`](../testing/Iteration%202%20Acceptance%20Tests-tests.md)
 
 ## Iteration 2 Burn Down Graph
 

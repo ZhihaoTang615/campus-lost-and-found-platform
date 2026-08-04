@@ -23,9 +23,11 @@ Deferred and excluded: US08 Track Claim Status, US09 approval/rejection and
 other state-changing claim review, and US10 Update Item Status. My Reports now
 covers the viewing intent of US11; report editing is not included.
 
-For US04, test only the implemented report-type and category filters. Formal
-confirmation of the difference from historical location/date/status criteria is
-still required.
+For US04, test the confirmed delivered scope: report-type and category filters,
+including their combination with keyword search. Location, date, and status
+filters from the historical planning wording are deferred to avoid late-stage
+scope expansion and regression risk; they are not part of the delivered test
+scope.
 
 ## Test Environment
 
