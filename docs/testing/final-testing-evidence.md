@@ -18,6 +18,11 @@ explicit:
    as final acceptance; see
    [Requirements Traceability](../requirements-traceability.md).
 
+The consolidated [Final Acceptance-Test Matrix](final-acceptance-test-matrix.md)
+maps every delivered baseline story and final user/administrator enhancement to
+its criteria, implementation evidence, automated tests, manual artefacts, and
+final status.
+
 ## Black-box, Grey-box, and White-box Perspectives
 
 ### Black-box

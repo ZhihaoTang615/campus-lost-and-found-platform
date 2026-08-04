@@ -2,6 +2,13 @@
 
 These implementation-aligned sequences show how the delivered function-based Flask application reports an item and submits a claim request. They use the real routes, helpers, database operations, and response behaviour from `app.py`; conceptual Event and Date elements are not presented as runtime participants.
 
+## Combined final PNG export
+
+[![Final project sequence diagrams](images/final-sequence-diagram.png)](images/final-sequence-diagram.png)
+
+The PNG above combines the two authoritative Mermaid sequences below and
+reflects the current final system.
+
 ## Sequence 1: Report an item with an optional photo
 
 The lost-item and found-item routes share `save_item_report()`. Their route-specific values are `report_type` (`lost` or `found`) and the date form field (`date-lost` or `date-found`). The report templates mark the non-photo fields as HTML `required` fields, but `save_item_report()` accesses those values directly and does not perform an additional explicit empty-field validation pass.
@@ -63,17 +70,17 @@ When no file is supplied, `image_path` is inserted as `NULL`. File validation ch
 ```mermaid
 sequenceDiagram
     actor User
-    participant Details as Item Details Page
+    participant ItemPage as Item Details Page
     participant ClaimRoute as Flask claim_request route
     participant DB as MySQL
     participant SaveClaim as save_claim_request()
     participant Success as Claim Success Page
 
-    User->>Details: Open a found item at /items/<item_id>
-    Details-->>User: Display item details
-    Note over Details: Submit Claim Request is displayed only when report_type is found
-    User->>Details: Select Submit Claim Request
-    Details->>ClaimRoute: GET /claim-request/<item_id>
+    User->>ItemPage: Open a found item at /items/<item_id>
+    ItemPage-->>User: Display item details
+    Note over ItemPage: Submit Claim Request is displayed only when report_type is found
+    User->>ItemPage: Select Submit Claim Request
+    ItemPage->>ClaimRoute: GET /claim-request/<item_id>
     ClaimRoute->>DB: SELECT item by id using a parameter
 
     alt Item does not exist
@@ -103,7 +110,7 @@ sequenceDiagram
                 SaveClaim-->>ClaimRoute: Claim stored
                 ClaimRoute-->>User: 302 redirect to /claim-success/<item_id>
                 User->>Success: GET /claim-success/<item_id>
-                Success-->>User: Claim Request Submitted; Current status Pending
+                Success-->>User: Claim Request Submitted, current status Pending
                 Success-->>User: View Item Details and Browse More Items actions
                 Note over Success,User: Submitted contact and verification values are not displayed
             end
