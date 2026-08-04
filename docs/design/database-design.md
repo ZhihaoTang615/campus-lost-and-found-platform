@@ -62,6 +62,13 @@ erDiagram
     }
 ```
 
+### Final PNG export
+
+[![Final implemented entity-relationship diagram](images/final-erd.png)](images/final-erd.png)
+
+The PNG above is the exported form of the authoritative Mermaid diagram and
+reflects the current final schema.
+
 The type labels use underscores because Mermaid attribute types cannot contain
 parentheses. The tables below preserve the exact SQL declarations.
 

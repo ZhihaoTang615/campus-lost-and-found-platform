@@ -38,6 +38,13 @@ flowchart LR
     Routes -->|"redirect or /db-test response"| Browser
 ```
 
+### Final PNG export
+
+[![Final implemented system architecture](images/final-architecture-diagram.png)](images/final-architecture-diagram.png)
+
+The PNG above is the exported form of the authoritative Mermaid diagram and
+reflects the current final system.
+
 This is a locally run Flask/MySQL application architecture. The repository's documentation pages are not a deployment of the Flask application or its database.
 
 ## 3. Presentation layer

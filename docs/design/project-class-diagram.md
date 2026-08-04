@@ -97,6 +97,13 @@ classDiagram
     FlaskApplication ..> UserRecord : authenticates/reads/writes
 ```
 
+### Final PNG export
+
+[![Final conceptual domain class diagram](images/final-class-diagram.png)](images/final-class-diagram.png)
+
+The PNG above is the exported form of the authoritative Mermaid diagram and
+reflects the current final system.
+
 `image_path`, `ItemRecord.user_id`, and `ClaimRecord.user_id` are nullable in the
 database. The two `user_id` fields reference `users.id`; their nullability
 allows pre-enhancement records to remain unowned during migration. Current
